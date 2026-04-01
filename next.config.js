@@ -54,7 +54,6 @@ const nextConfig = {
       },
     ],
   },
-  output: 'export',
     transpilePackages: [
     "@wecre8websites/strapi-page-builder-react",
     "handlebars"
