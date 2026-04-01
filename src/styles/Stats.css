@@ -1,0 +1,77 @@
+.stats {
+  padding: 48px 0 36px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  align-items: center;
+  text-align: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* big numeric values */
+.stat-box h3 {
+  font-size: clamp(28px, 4.6vw, 66px);
+  margin: 0;
+  font-weight: 700;
+  color: var(--navy);
+}
+
+/* caption */
+.stat-box p {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: clamp(13px, 2vw, 15px);
+  line-height: 1.4;
+}
+
+/* small horizontal decorative line and badges under center stats */
+.stat-box .rating-row {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+/* small rounded rating boxes */
+.stat-box .rating {
+  border: 2px solid rgba(0, 166, 214, 0.15);
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+/* Tablets (2 columns layout) */
+@media (max-width: 920px) {
+  .stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    padding: 36px 20px;
+  }
+  .stat-box h3 {
+    font-size: clamp(32px, 6vw, 52px);
+  }
+}
+
+/* Small screens (1 column layout) */
+@media (max-width: 480px) {
+  .stats {
+    /* grid-template-columns: 1fr; */
+    gap: 28px;
+    padding: 28px 16px;
+  }
+  .stat-box h3 {
+    font-size: clamp(28px, 9vw, 44px);
+  }
+  .stat-box p {
+    font-size: 14px;
+  }
+  .stat-box .rating {
+    font-size: 12px;
+    padding: 5px 8px;
+  }
+}

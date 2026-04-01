@@ -1,0 +1,16 @@
+.contents h2{
+    font-size: 1.5rem;
+    margin-block: 1rem 0.2rem;
+    font-weight: 600;
+}
+.contents p{
+    font-size: 1.1rem;
+}
+.contents a{
+    color: #FC8B12;
+    text-decoration: none;
+    font-weight: 500;
+}
+.table-of-contents{
+    background-color: #efefef;
+}

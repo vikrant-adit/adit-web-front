@@ -1,0 +1,228 @@
+.features {
+  padding: 68px 0;
+  position: relative;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.6),
+    rgba(250, 252, 255, 0.8)
+  );
+}
+
+.features h2 {
+  text-align: center;
+  font-weight: 800;
+  font-size: 36px;
+  color: var(--navy);
+  margin-bottom: 5px;
+}
+
+.features p {
+  margin: 0 auto 40px;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+/* container for tabs + image */
+.feature-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+  flex-wrap: wrap;
+  max-width: 92%;
+  margin: 0 auto;
+  padding: 0 18px;
+}
+
+.feature-detail {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+}
+
+.feature-detail .feature-title {
+  font-size: 36px;
+  font-weight: 600;
+  text-align: left;
+}
+
+.feature-detail p {
+  text-align: left;
+  margin-bottom: 21px;
+}
+
+.read-more-btn {
+  border-radius: 26px;
+  padding: 12px 38px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0px 4px 20px 0px rgba(244, 137, 31, 0.5);
+}
+
+/* vertical tabs */
+.feature-tabs {
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+  min-width: 260px;
+  width: 100%;
+}
+
+.feature-tab {
+  padding: 12px 24px;
+  border-radius: 999px;
+  border: 1px solid rgba(3, 44, 71, 0.06);
+  font-weight: 500;
+  background: white;
+  cursor: pointer;
+  text-align: left;
+  font-size: 18px;
+  transition: all 0.3s ease;
+  flex: 1;
+  text-align: center;
+}
+
+.feature-tab.active {
+  background: linear-gradient(
+    90deg,
+    rgba(0, 166, 214, 0.08),
+    rgba(242, 138, 34, 0.06)
+  );
+  border-color: rgba(0, 166, 214, 0.18);
+}
+
+/* tab color variations */
+.feature-tab:nth-child(1) {
+  border-color: #2ea7f4;
+  color: #2ea7f4;
+}
+.feature-tab:nth-child(2) {
+  border-color: #f4a22e;
+  color: #f4a22e;
+}
+.feature-tab:nth-child(3) {
+  border-color: #28b446;
+  color: #28b446;
+}
+.feature-tab:nth-child(4) {
+  border-color: #0d9ca5;
+  color: #0d9ca5;
+}
+
+.feature-tab:hover:nth-child(1) {
+  background-color: #2ea7f4;
+  color: #f9f9f9;
+}
+.feature-tab:hover:nth-child(2) {
+  background-color: #f4a22e;
+  color: #f9f9f9;
+}
+.feature-tab:hover:nth-child(3) {
+  background-color: #28b446;
+  color: #f9f9f9;
+}
+.feature-tab:hover:nth-child(4) {
+  background-color: #0d9ca5;
+  color: #f9f9f9;
+}
+
+.feature-tab.active:nth-child(1) {
+  background-color: #2ea7f4;
+  color: #f9f9f9;
+}
+.feature-tab.active:nth-child(2) {
+  background-color: #f4a22e;
+  color: #f9f9f9;
+}
+.feature-tab.active:nth-child(3) {
+  background-color: #28b446;
+  color: #f9f9f9;
+}
+.feature-tab.active:nth-child(4) {
+  background-color: #0d9ca5;
+  color: #f9f9f9;
+}
+
+/* feature image */
+.feature-image img {
+  max-width: 700px;
+  width: 100%;
+  border-radius: 10px;
+}
+
+/* description below */
+.feature-description {
+  max-width: 800px;
+  margin: 30px auto 0;
+  font-size: 16px;
+  color: #333;
+  text-align: left;
+  line-height: 1.6;
+}
+
+/* existing responsive tweaks */
+@media (max-width: 960px) {
+  .feature-container {
+    flex-direction: column;
+    text-align: center;
+  }
+  .feature-tabs {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .feature-tab {
+    text-align: center;
+  }
+}
+
+/* ----------------------------- */
+/* ✅ Additional Responsive Enhancements */
+/* ----------------------------- */
+
+@media (max-width: 768px) {
+  .features h2 {
+    font-size: 28px;
+  }
+  .features p {
+    font-size: 16px;
+    margin-bottom: 24px;
+  }
+  .feature-detail {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .feature-detail .feature-title {
+    font-size: 28px;
+    text-align: center;
+    margin-bottom: 12px;
+  }
+  .feature-description {
+    font-size: 15px;
+    text-align: center;
+    margin-top: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .feature-tabs {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .feature-tab {
+    font-size: 16px;
+    padding: 10px 20px;
+  }
+  .feature-detail .feature-title {
+    font-size: 24px;
+  }
+  .read-more-btn {
+    padding: 10px 28px;
+    font-size: 16px;
+  }
+}

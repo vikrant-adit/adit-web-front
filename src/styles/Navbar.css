@@ -1,0 +1,482 @@
+/* ============================= */
+/* NAVBAR BASE */
+/* ============================= */
+
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 60;
+  background: white;
+  backdrop-filter: blur(6px);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.navbar--hidden {
+  transform: translateY(-100%);
+}
+
+/* ============================= */
+/* LOGO */
+/* ============================= */
+
+.logo {
+  font-size: 22px;
+  font-weight: 800;
+}
+/* .logo img {
+  width: 100px;
+  height: auto;  
+} */
+
+/* ============================= */
+/* NAV BACKGROUND */
+/* ============================= */
+
+.nav-background {
+  background: linear-gradient(90deg, rgb(242, 136, 32), rgb(37, 168, 224));
+  padding: 2px; /* IMPORTANT: thin border */
+  border-radius: 999px;
+  display: inline-block;
+}
+
+/* ============================= */
+/* NAV LINKS */
+/* ============================= */
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+
+  background: white;
+  border-radius: 999px;
+
+  padding: 6px 16px; /* spacing inside pill */
+
+  box-shadow: none; /* remove shadow */
+}
+.nav-links a {
+  color: #0f172a;
+  text-decoration: none;
+  padding: 6px 14px;
+  /* border-radius: px; */
+  font-size: 15px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.nav-links a:hover {
+  color: #f28820 !important;
+}
+
+/* ============================= */
+/* SIGN IN BUTTON */
+/* ============================= */
+
+.signin-btn {
+  background: linear-gradient(180deg, #f28820, #e97812);
+  color: white;
+  border-radius: 26px;
+  padding: 8px 18px;
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 0 6px 18px rgba(242, 138, 34, 0.18);
+}
+
+.signin-btn:hover {
+  opacity: 0.9;
+}
+
+/* ============================= */
+/* RIGHT SECTION */
+/* ============================= */
+
+.sign-in-btn-menu {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* menu icon container */
+.nav-background-right {
+  display: none;
+}
+
+/* menu icon */
+.menu-icon {
+  display: flex;
+  border: none;
+  background: white;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+/* ============================= */
+/* SIDE DRAWER */
+/* ============================= */
+
+.side-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  visibility: hidden;
+  transition: 0.25s;
+  z-index: 9998;
+}
+
+.side-overlay.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.side-drawer {
+  position: fixed;
+  top: 0;
+  right: -320px;
+  width: 320px;
+  height: 100vh;
+  background: #092a3d;
+  transition: 0.3s;
+  z-index: 9999;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.side-drawer.open {
+  right: 0;
+}
+
+.drawer-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.drawer-link {
+  color: white;
+  text-decoration: none;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: white;
+  align-self: flex-end;
+  cursor: pointer;
+}
+
+/* ============================= */
+/* MEGA MENU */
+/* ============================= */
+
+.mega-menu {
+  display: flex;
+  gap: 40px;
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.mega-column {
+  display: flex;
+  flex-direction: column;
+  min-width: 200px;
+}
+
+.mega-title {
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.mega-items {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.mega-item {
+  /* padding: 6px; */
+  padding: 6px 14px;
+  border-radius: 6px;
+}
+
+.mega-item:hover {
+  background: #f1f5f9;
+}
+
+.mega-simple-item {
+  padding: 6px 0;
+}
+
+/* ============================= */
+/* RESPONSIVE */
+/* ============================= */
+
+/* DESKTOP */
+@media (min-width: 1024px) {
+  .nav-links {
+    display: flex;
+  }
+
+  .nav-background {
+    display: block;
+  }
+
+  .nav-background-right {
+    display: none;
+  }
+}
+
+/* TABLET + MOBILE */
+@media (max-width: 1006px) {
+  .nav-links {
+    display: none;
+  }
+
+  .nav-background {
+    display: none;
+  }
+
+  .nav-background-right {
+    display: flex;
+    background: linear-gradient(90deg, #f28820, #25a8e0);
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .menu-icon {
+    display: flex;
+  }
+}
+
+/* MOBILE SMALL */
+@media (max-width: 480px) {
+  .signin-btn {
+    padding: 6px 14px;
+    font-size: 14px;
+  }
+
+  .side-drawer {
+    width: 260px;
+  }
+}
+/* ============================= */
+/* DROPDOWN CONTAINER FIX */
+/* ============================= */
+
+.dropdown {
+  position: relative;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%; /* remove gap */
+  left: 50%;
+  transform: translateX(-20%);
+
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+
+  /* padding: 24px 32px; */
+
+  display: flex;
+  gap: 48px;
+
+  width: max-content;
+
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+
+  transition: opacity 0.2s ease;
+  z-index: 9999;
+}
+
+/* show state */
+.dropdown:hover .dropdown-menu,
+.dropdown-menu.show {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+/* ============================= */
+/* MEGA MENU LAYOUT FIX */
+/* ============================= */
+
+.mega-menu {
+  display: flex;
+  flex-direction: row;
+  gap: 48px;
+  align-items: flex-start;
+}
+
+.mega-menu-columns {
+  display: flex;
+  flex-direction: row;
+  gap: 48px;
+}
+
+.mega-menu-single {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ============================= */
+/* COLUMN FIX */
+/* ============================= */
+
+.mega-column {
+  display: flex;
+  flex-direction: column;
+  min-width: 180px;
+}
+
+.mega-title {
+  font-weight: 600;
+  margin-bottom: 10px;
+  white-space: nowrap;
+}
+
+.mega-items {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mega-item {
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  color: #0f2d3c;
+  text-decoration: none;
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
+}
+
+/* Icon circle */
+.mega-item .mega-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #eaf2f6; /* light blue/gray circle */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+/* Hover style like image */
+.mega-item:hover {
+  background: #f4f6f8; /* light gray bg */
+  border: 1px solid #f28c28; /* orange border */
+  color: #f28c28; /* orange text */
+}
+
+/* Optional: change icon background on hover */
+.mega-item:hover .mega-icon {
+  background: #fff3e6; /* light orange tint */
+}
+
+/* single column items */
+.mega-single-column {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mega-simple-item {
+  padding: 6px 8px;
+  white-space: nowrap;
+}
+.mega-simple-item .mega-description {
+  white-space: normal;
+}
+/* ============================= */
+/* MOBILE DRAWER FIX */
+/* ============================= */
+
+.side-drawer {
+  background: #0b2d3b; /* Adit dark blue */
+  color: white;
+}
+
+/* drawer nav container */
+.drawer-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* main links */
+.drawer-link,
+.drawer-nav a {
+  color: white !important; /* FIX invisible text */
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 500;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+/* hover */
+.drawer-link:hover,
+.drawer-nav a:hover {
+  color: #f28820 !important;
+}
+
+/* dropdown section label */
+.drawer-section-label {
+  color: white;
+  font-weight: 600;
+}
+
+/* arrow alignment */
+.drawer-nav svg {
+  color: white;
+}
+
+/* close button */
+.close-btn svg {
+  color: white;
+  width: 22px;
+  height: 22px;
+}
+
+/* fix spacing */
+.side-drawer {
+  padding: 24px 20px;
+}
+
+/* prevent inherited navbar styles */
+.side-drawer .nav-links,
+.side-drawer .nav-background {
+  all: unset;
+}
+
+/* ensure links are visible */
+.side-drawer a {
+  color: white !important;
+}
