@@ -41,7 +41,7 @@ const [authorDetails, setAuthorDetails] = useState<Author | null>(null);
       try {
         setLoading(true);
         if (!slug) return <p>Invalid slug.</p>;
-       const res = await fetch(process.env.NEXT_PUBLIC_API_BASE_URL+(`new/${encodeURIComponent(slug)}`));
+       const res = await fetch(process.env.ADIT_URL+(`new/${encodeURIComponent(slug)}`));
         const data = await res.json();
         setArticle(data.data);
         setAuthorDetails(data.authorDetail);

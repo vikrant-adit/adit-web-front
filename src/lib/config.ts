@@ -25,7 +25,7 @@ const NODE_ENV = process.env.NODE_ENV ?? "development";
 const config: AppConfig = {
   api: {
     // Change this default to whatever your local API runs on
-    baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL ?? "https://adit.com/api/v1/",
+    baseUrl: process.env.ADIT_URL ?? "https://adit.com/api/v1/",
   },
   localApi: {
     baseUrl:process.env.STRAPI_API ??"http://localhost:1337/api/",

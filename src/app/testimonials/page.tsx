@@ -37,7 +37,7 @@ const Testimonials = () => {
   useEffect(() => {
     const fetchPage = async () => {
       try {
-        const res = await fetch(process.env.NEXT_PUBLIC_API_BASE_URL+("testimonials"));
+        const res = await fetch(process.env.ADIT_URL+("testimonials"));
         const data = await res.json();
         setPageData(data.page);
 
