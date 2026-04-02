@@ -249,7 +249,7 @@ const formsData = content?.form
             templateJson: normalizedTemplateJson,
             content,
             formMap,
-          }}
+          } as any}
           strapi={{
             url: STRAPI_BASE,
             authToken: STRAPI_TOKEN,
