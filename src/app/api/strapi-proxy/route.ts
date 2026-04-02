@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const STRAPI_BASE = process.env.NEXT_PUBLIC_LOCAL_API_BASE_URL; 
+const STRAPI_BASE = process.env.STRAPI_API; 
 // Example: http://localhost:1337/api/
 
-const TOKEN = process.env.NEXT_PUBLIC_LOCAL_AUTH_TOKEN;
+const TOKEN = process.env.STRAPI_API_AUTH_TOKEN;
 
 export async function GET(req: NextRequest) {
   return handle(req);

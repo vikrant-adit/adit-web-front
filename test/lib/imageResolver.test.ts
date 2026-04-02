@@ -6,7 +6,7 @@ describe('resolveImageUrl', () => {
   beforeEach(() => {
     jest.resetModules();
     process.env = { ...ORIGINAL_ENV };
-    delete process.env.NEXT_PUBLIC_LOCAL_API_BASE_URL_FOR_IMAGES;
+    delete process.env.STRAPI_API_FOR_IMAGES;
   });
 
   afterAll(() => {
@@ -32,36 +32,36 @@ describe('resolveImageUrl', () => {
   });
 
   test('should prefix root-relative path with env base when defined', () => {
-    process.env.NEXT_PUBLIC_LOCAL_API_BASE_URL_FOR_IMAGES = 'https://assets.example.com';
+    process.env.STRAPI_API_FOR_IMAGES = 'https://assets.example.com';
     expect(resolveImageUrl('/uploads/img.png')).toBe('https://assets.example.com/uploads/img.png');
   });
 
   test('should not prefix root-relative path when env base is empty', () => {
-    process.env.NEXT_PUBLIC_LOCAL_API_BASE_URL_FOR_IMAGES = '';
+    process.env.STRAPI_API_FOR_IMAGES = '';
     expect(resolveImageUrl('/uploads/img.png')).toBe('/uploads/img.png');
-    delete process.env.NEXT_PUBLIC_LOCAL_API_BASE_URL_FOR_IMAGES;
+    delete process.env.STRAPI_API_FOR_IMAGES;
     expect(resolveImageUrl('/uploads/img.png')).toBe('/uploads/img.png');
   });
 
   test('should prefix non-root relative path when env base is defined', () => {
-    process.env.NEXT_PUBLIC_LOCAL_API_BASE_URL_FOR_IMAGES = 'https://assets.example.com';
+    process.env.STRAPI_API_FOR_IMAGES = 'https://assets.example.com';
     expect(resolveImageUrl('uploads/img.png')).toBe('https://assets.example.com/uploads/img.png');
   });
 
   test('should not prefix non-root relative path when env base is empty', () => {
-    process.env.NEXT_PUBLIC_LOCAL_API_BASE_URL_FOR_IMAGES = '';
+    process.env.STRAPI_API_FOR_IMAGES = '';
     expect(resolveImageUrl('uploads/img.png')).toBe('uploads/img.png');
-    delete process.env.NEXT_PUBLIC_LOCAL_API_BASE_URL_FOR_IMAGES;
+    delete process.env.STRAPI_API_FOR_IMAGES;
     expect(resolveImageUrl('uploads/img.png')).toBe('uploads/img.png');
   });
 
   test('should trim trailing slash from env base (root-relative input)', () => {
-    process.env.NEXT_PUBLIC_LOCAL_API_BASE_URL_FOR_IMAGES = 'https://assets.example.com/';
+    process.env.STRAPI_API_FOR_IMAGES = 'https://assets.example.com/';
     expect(resolveImageUrl('/uploads/img.png')).toBe('https://assets.example.com/uploads/img.png');
   });
 
   test('should handle object input with url field', () => {
-    process.env.NEXT_PUBLIC_LOCAL_API_BASE_URL_FOR_IMAGES = 'https://assets.example.com';
+    process.env.STRAPI_API_FOR_IMAGES = 'https://assets.example.com';
     expect(resolveImageUrl({ url: '/uploads/img.png' })).toBe('https://assets.example.com/uploads/img.png');
   });
 
@@ -72,18 +72,18 @@ describe('resolveImageUrl', () => {
   });
 
   test('should prefix dot-prefixed relative paths (./ and ../) when env base is defined', () => {
-    process.env.NEXT_PUBLIC_LOCAL_API_BASE_URL_FOR_IMAGES = 'https://assets.example.com';
+    process.env.STRAPI_API_FOR_IMAGES = 'https://assets.example.com';
     expect(resolveImageUrl('./uploads/img.png')).toBe('https://assets.example.com/./uploads/img.png');
     expect(resolveImageUrl('../img.png')).toBe('https://assets.example.com/../img.png');
   });
 
   test('should avoid double slashes when base ends with slash and path is non-root relative', () => {
-    process.env.NEXT_PUBLIC_LOCAL_API_BASE_URL_FOR_IMAGES = 'https://assets.example.com/';
+    process.env.STRAPI_API_FOR_IMAGES = 'https://assets.example.com/';
     expect(resolveImageUrl('uploads/img.png')).toBe('https://assets.example.com/uploads/img.png');
   });
 
   test('should preserve query string and hash when prefixing paths', () => {
-    process.env.NEXT_PUBLIC_LOCAL_API_BASE_URL_FOR_IMAGES = 'https://assets.example.com';
+    process.env.STRAPI_API_FOR_IMAGES = 'https://assets.example.com';
     expect(resolveImageUrl('/uploads/img.png?v=1#x')).toBe('https://assets.example.com/uploads/img.png?v=1#x');
     expect(resolveImageUrl('uploads/img.png?cache=bust#hash')).toBe('https://assets.example.com/uploads/img.png?cache=bust#hash');
   });

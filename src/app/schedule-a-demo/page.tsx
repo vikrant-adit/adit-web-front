@@ -78,12 +78,12 @@ const handlePhoneChange = (value: string) => {
   };
 const submitScheduleDemo = async (payload: typeof form) => {
   const res = await fetch(
- `${process.env.NEXT_PUBLIC_LOCAL_API_BASE_URL}schedule-a-demo-form`,
+ `${process.env.STRAPI_API}schedule-a-demo-form`,
 {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
-    Authorization: `Bearer ${process.env.NEXT_PUBLIC_LOCAL_AUTH_TOKEN}`,
+    Authorization: `Bearer ${process.env.STRAPI_API_AUTH_TOKEN}`,
   },
   body: JSON.stringify({ data: payload}),
 }

@@ -30,7 +30,7 @@ export interface LogoCarouselProps {
 const resolveLogoSrc = (logo?: string): string => {
   if (!logo) return '';
   if (logo.startsWith('http://') || logo.startsWith('https://')) return logo;
-  return `${process.env.NEXT_PUBLIC_LOCAL_API_BASE_URL_FOR_IMAGES || ''}${logo}`;
+  return `${process.env.STRAPI_API_FOR_IMAGES || ''}${logo}`;
 };
 
 const LogoCarousel: React.FC<LogoCarouselProps> = ({

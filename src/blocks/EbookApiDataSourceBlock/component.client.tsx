@@ -18,14 +18,14 @@ export default function EbookApiDataSourceBlock({
       const slug = window.location.pathname.replace(/^\/|\/$/g, "");
 
     const url =
-  `${process.env.NEXT_PUBLIC_LOCAL_API_BASE_URL}${collection}` +
+  `${process.env.STRAPI_API}${collection}` +
   `?filters[slug][$eq]=${slug}` +
   `&populate[tabs][populate]=*` +
   `&populate[whyDownloadGuide][populate][features][populate]=icon`;
 
       const res = await fetch(url, {
         headers: {
-          Authorization: `Bearer ${process.env.NEXT_PUBLIC_LOCAL_AUTH_TOKEN}`,
+          Authorization: `Bearer ${process.env.STRAPI_API_AUTH_TOKEN}`,
         },
       });
 

@@ -35,7 +35,7 @@ export const RootConfig:any = {
   resolveData: async (data: any) => {
     const documentId = data?.props?.menu?.documentId;
     if (!documentId) return data;
-    const apiUrl = process.env.NEXT_PUBLIC_LOCAL_API_BASE_URL;
+    const apiUrl = process.env.STRAPI_API;
     const menu = await fetch(`${apiUrl}navigation/render/${documentId}?type=TREE`);
     const menuJson = await menu.json();
     return {

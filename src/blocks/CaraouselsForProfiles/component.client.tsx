@@ -49,8 +49,8 @@ const resolveSrc = (input: any) => {
   }
 
   const base =
-    (process.env.NEXT_PUBLIC_LOCAL_API_BASE_URL_FOR_IMAGES ||
-      process.env.NEXT_PUBLIC_LOCAL_API_BASE_URL ||
+    (process.env.STRAPI_API_FOR_IMAGES ||
+      process.env.STRAPI_API ||
       '').replace(/\/$/, '');
 
   if (!base) return raw;

@@ -53,9 +53,9 @@ const VideoBlock: React.FC<VideoBlockProps> = ({
   let resolvedSrc = videoSrc;
   if (
     videoSrc.startsWith('/') &&
-    process.env.NEXT_PUBLIC_LOCAL_API_BASE_URL_FOR_IMAGES
+    process.env.STRAPI_API_FOR_IMAGES
   ) {
-    resolvedSrc = `${process.env.NEXT_PUBLIC_LOCAL_API_BASE_URL_FOR_IMAGES}${videoSrc}`;
+    resolvedSrc = `${process.env.STRAPI_API_FOR_IMAGES}${videoSrc}`;
   }
 
   // Detect embeds

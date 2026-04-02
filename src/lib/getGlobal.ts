@@ -1,7 +1,7 @@
 export async function getGlobal() {
   try {
     const res = await fetch(
-        `${process.env.NEXT_PUBLIC_LOCAL_API_BASE_URL}global?
+        `${process.env.STRAPI_API}global?
 populate[footer][fields][0]=copyright
 &populate[footer][fields][1]=logo_description
 &populate[footer][fields][2]=googlePlayLink
@@ -18,7 +18,7 @@ populate[footer][fields][0]=copyright
         cache: "force-cache", // ✅ strong caching
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${process.env.NEXT_PUBLIC_LOCAL_AUTH_TOKEN}`,
+          Authorization: `Bearer ${process.env.STRAPI_API_AUTH_TOKEN}`,
         },
       }
     );

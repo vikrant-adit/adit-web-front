@@ -152,7 +152,7 @@ export default function FeatureSplit({
   const resolvedImageSrc = image?.src
     ? image.src.startsWith('http')
       ? image.src
-      : `${process.env.NEXT_PUBLIC_LOCAL_API_BASE_URL_FOR_IMAGES}${image.src}`
+      : `${process.env.STRAPI_API_FOR_IMAGES}${image.src}`
     : null;
 
   const Content = (

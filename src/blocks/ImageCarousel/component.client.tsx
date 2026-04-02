@@ -339,12 +339,12 @@ export default function ImageCarousel({
                   style={{ display: 'block', textDecoration: 'none', color: 'inherit' }}
                 >
                   <div style={{ width: '100%', height: maxHeight, display: 'block', position: 'relative' }}>
-                    <Image unoptimized src={`${process.env.NEXT_PUBLIC_LOCAL_API_BASE_URL_FOR_IMAGES}${src}`} alt={img?.alt || `Slide ${idx + 1}`} width={800} height={320} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block'  }} />
+                    <Image unoptimized src={`${process.env.STRAPI_API_FOR_IMAGES}${src}`} alt={img?.alt || `Slide ${idx + 1}`} width={800} height={320} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block'  }} />
                   </div>
                 </a>
               ) : (
                 <div style={{ width: '100%', height: maxHeight }}>
-                  <Image unoptimized src={`${process.env.NEXT_PUBLIC_LOCAL_API_BASE_URL_FOR_IMAGES}${src}`} alt={img?.alt || `Slide ${idx + 1}`} width={800} height={320} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+                  <Image unoptimized src={`${process.env.STRAPI_API_FOR_IMAGES}${src}`} alt={img?.alt || `Slide ${idx + 1}`} width={800} height={320} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
                 </div>
               )}
 

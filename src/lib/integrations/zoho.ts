@@ -2,7 +2,7 @@ export async function sendToZoho(
   slug: string,
   fields: Record<string, string>
 ) {
-  const STRAPI_BASE = process.env.NEXT_PUBLIC_LOCAL_API_BASE_URL!;
+  const STRAPI_BASE = process.env.STRAPI_API!;
 
   const response = await fetch(`${STRAPI_BASE}zoho/submit`, {
     method: 'POST',

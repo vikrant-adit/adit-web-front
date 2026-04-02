@@ -42,7 +42,7 @@ export default function BlogListBlock({
     topic?: string
   ) {
     let url =
-      `${process.env.NEXT_PUBLIC_LOCAL_API_BASE_URL}blogs?populate=*`;
+      `${process.env.STRAPI_API}blogs?populate=*`;
 
     if (query) {
       url += `&filters[title][$containsi]=${query}`;
@@ -58,7 +58,7 @@ export default function BlogListBlock({
 
     const res = await fetch(url, {
       headers: {
-        Authorization: `Bearer ${process.env.NEXT_PUBLIC_LOCAL_AUTH_TOKEN}`,
+        Authorization: `Bearer ${process.env.STRAPI_API_AUTH_TOKEN}`,
       },
     });
 
@@ -72,10 +72,10 @@ export default function BlogListBlock({
   async function fetchCategories() {
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_LOCAL_API_BASE_URL}blog-categories`,
+        `${process.env.STRAPI_API}blog-categories`,
         {
           headers: {
-            Authorization: `Bearer ${process.env.NEXT_PUBLIC_LOCAL_AUTH_TOKEN}`,
+            Authorization: `Bearer ${process.env.STRAPI_API_AUTH_TOKEN}`,
           },
         }
       );
@@ -100,10 +100,10 @@ export default function BlogListBlock({
   async function fetchTopics() {
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_LOCAL_API_BASE_URL}blog-topics`,
+        `${process.env.STRAPI_API}blog-topics`,
         {
           headers: {
-            Authorization: `Bearer ${process.env.NEXT_PUBLIC_LOCAL_AUTH_TOKEN}`,
+            Authorization: `Bearer ${process.env.STRAPI_API_AUTH_TOKEN}`,
           },
         }
       );

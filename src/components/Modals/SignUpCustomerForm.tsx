@@ -30,13 +30,13 @@ export default function SignupCustomerForm({ onClose, initial = {} as Partial<Fo
     notes: initial.notes || '',
     optInSms: initial.optInSms || false,
   });
-  const apiUrl = (process.env.NEXT_PUBLIC_LOCAL_API_BASE_URL ?? "").replace(/\/$/, "");
+  const apiUrl = (process.env.STRAPI_API ?? "").replace(/\/$/, "");
   const [promos, setPromos] = useState<any[]>([]);
   const [loadingPromo, setLoadingPromo] = useState(true);
 
   useEffect(() => {
     if (!apiUrl) {
-      console.warn("NEXT_PUBLIC_LOCAL_API_BASE_URL is not set; skipping promos fetch");
+      console.warn("STRAPI_API is not set; skipping promos fetch");
       setLoadingPromo(false);
       return;
     }
@@ -48,8 +48,8 @@ export default function SignupCustomerForm({ onClose, initial = {} as Partial<Fo
           "Accept": "application/json",
           "Content-Type": "application/json",
         };
-        if (process.env.NEXT_PUBLIC_LOCAL_AUTH_TOKEN) {
-          headers["Authorization"] = `Bearer ${process.env.NEXT_PUBLIC_LOCAL_AUTH_TOKEN}`;
+        if (process.env.STRAPI_API_AUTH_TOKEN) {
+          headers["Authorization"] = `Bearer ${process.env.STRAPI_API_AUTH_TOKEN}`;
         }
         const resp = await fetch(
           `${apiUrl}/global-promos?filters[active][$eq]=true&populate=*`,

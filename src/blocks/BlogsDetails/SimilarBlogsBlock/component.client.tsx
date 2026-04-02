@@ -24,7 +24,7 @@ export default function SimilarBlogsBlock({
 
   async function fetchBlogs() {
     let url =
-      `${process.env.NEXT_PUBLIC_LOCAL_API_BASE_URL}blogs` +
+      `${process.env.STRAPI_API}blogs` +
       `?populate=coverImage` +
       `&pagination[limit]=${limit}`;
 
@@ -34,7 +34,7 @@ export default function SimilarBlogsBlock({
 
     const res = await fetch(url, {
       headers: {
-        Authorization: `Bearer ${process.env.NEXT_PUBLIC_LOCAL_AUTH_TOKEN}`,
+        Authorization: `Bearer ${process.env.STRAPI_API_AUTH_TOKEN}`,
       },
     });
 

@@ -1,5 +1,5 @@
-const API_BASE = process.env.NEXT_PUBLIC_LOCAL_API_BASE_URL;
-const AUTH_TOKEN = process.env.NEXT_PUBLIC_LOCAL_AUTH_TOKEN;
+const API_BASE = process.env.STRAPI_API;
+const AUTH_TOKEN = process.env.STRAPI_API_AUTH_TOKEN;
 
 // export async function getGlobalComponent(globalKey: string) {
 //   console.log('🔍 Fetching global component for key:', globalKey);

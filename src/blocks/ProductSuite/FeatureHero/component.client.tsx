@@ -2,7 +2,7 @@
 import React from 'react';
 import DOMPurify from 'dompurify';
 import Image from 'next/image';
-const imageBaseUrl = process.env.NEXT_PUBLIC_LOCAL_API_BASE_URL_FOR_IMAGES;
+const imageBaseUrl = process.env.STRAPI_API_FOR_IMAGES;
 export type FeatureHeroImage = {
   src?: string;
   alt?: string;

@@ -4,10 +4,10 @@ import { Editor } from "@wecre8websites/strapi-page-builder-react";
 import config from "../../blocks/PageBuilderConfig";
 
 const apiUrlForImages =
-  process.env.NEXT_PUBLIC_LOCAL_API_BASE_URL_FOR_IMAGES ||
+  process.env.STRAPI_API_FOR_IMAGES ||
   "http://localhost:1337";
 
-const authToken = process.env.NEXT_PUBLIC_LOCAL_AUTH_TOKEN;
+const authToken = process.env.STRAPI_API_AUTH_TOKEN;
 
 const siteOrigin =
   typeof window !== "undefined"

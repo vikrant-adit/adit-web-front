@@ -87,7 +87,7 @@
 //                   </main>
 //                   {!hideLayout && (
 //                     <SidePopupPromo
-//                       apiUrl={process.env.NEXT_PUBLIC_LOCAL_API_BASE_URL!}
+//                       apiUrl={process.env.STRAPI_API!}
 //                       fallbackDelay={100}
 //                     />
 //                   )}

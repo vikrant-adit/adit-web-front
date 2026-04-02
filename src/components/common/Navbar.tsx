@@ -16,13 +16,13 @@ import Link from "next/link";
 
 type DropdownMenu = string | null;
 
-const apiUrl = (process.env.NEXT_PUBLIC_LOCAL_API_BASE_URL ?? "").replace(
+const apiUrl = (process.env.STRAPI_API ?? "").replace(
   /\/$/,
   "",
 );
 
 const imageBase = (
-  process.env.NEXT_PUBLIC_LOCAL_API_BASE_URL_FOR_IMAGES ?? ""
+  process.env.STRAPI_API_FOR_IMAGES ?? ""
 ).replace(/\/$/, "");
 
 export default function Navbar({
@@ -148,8 +148,8 @@ export default function Navbar({
           "Content-Type": "application/json",
         };
 
-        if (process.env.NEXT_PUBLIC_LOCAL_AUTH_TOKEN) {
-          headers.Authorization = `Bearer ${process.env.NEXT_PUBLIC_LOCAL_AUTH_TOKEN}`;
+        if (process.env.STRAPI_API_AUTH_TOKEN) {
+          headers.Authorization = `Bearer ${process.env.STRAPI_API_AUTH_TOKEN}`;
         }
 
         const resp = await fetch(

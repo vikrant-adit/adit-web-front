@@ -21,7 +21,7 @@ function uid() {
 }
 
 function normalizeSrc(raw: any, opts?: { strapiBase?: string }) {
-  const STRAPI_BASE = process.env.NEXT_PUBLIC_LOCAL_API_BASE_URL as string;
+  const STRAPI_BASE = process.env.STRAPI_API as string;
   if (!raw && raw !== "") return "";
   if (typeof raw === "string") {
     const s = raw.trim();

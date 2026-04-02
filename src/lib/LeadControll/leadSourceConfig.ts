@@ -15,11 +15,11 @@ const CACHE_MS = 24 * 60 * 60 * 1000;
 export async function fetchLeadSourceConfig(): Promise<LeadSourceConfig | null> {
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_LOCAL_API_BASE_URL}lead-source-mapping`,
+      `${process.env.STRAPI_API}lead-source-mapping`,
       {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${process.env.NEXT_PUBLIC_LOCAL_AUTH_TOKEN}`,
+          Authorization: `Bearer ${process.env.STRAPI_API_AUTH_TOKEN}`,
         },
         cache: "no-store",
       }

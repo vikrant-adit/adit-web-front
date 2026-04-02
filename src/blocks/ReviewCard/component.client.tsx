@@ -138,7 +138,7 @@ export default function ReviewCard({
           <div style={iconContainerStyle} className="flex-shrink-0">
             {typeof iconSrc === 'string' && iconSrc.startsWith('data:') ? (
               <Image
-                src={`${process.env.NEXT_PUBLIC_LOCAL_API_BASE_URL_FOR_IMAGES}${iconSrc}`}
+                src={`${process.env.STRAPI_API_FOR_IMAGES}${iconSrc}`}
                 alt={iconAlt || title|| 'Image'}
                 width={80}
                 height={80}
@@ -148,7 +148,7 @@ export default function ReviewCard({
             ) : (
               // Use Next/Image with explicit width/height but let CSS size to container using width:100%/height:100%
               <Image
-                src={iconSrc ? (iconSrc.startsWith('http') ? iconSrc : `${process.env.NEXT_PUBLIC_LOCAL_API_BASE_URL_FOR_IMAGES}${iconSrc}`) : ''}
+                src={iconSrc ? (iconSrc.startsWith('http') ? iconSrc : `${process.env.STRAPI_API_FOR_IMAGES}${iconSrc}`) : ''}
                 alt={iconAlt || title|| 'Image'}
                 width={w}
                 height={h}

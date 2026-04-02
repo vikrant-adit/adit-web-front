@@ -41,8 +41,8 @@ const CompleteSuiteSection = () => {
         `${base}/${String(path).replace(/^\//, "")}`;
 
       // Strapi token for local API
-      const STRAPI_BASE_URL = process.env.NEXT_PUBLIC_LOCAL_API_BASE_URL as string;
-      const STRAPI_TOKEN = process.env.NEXT_PUBLIC_LOCAL_AUTH_TOKEN as string;
+      const STRAPI_BASE_URL = process.env.STRAPI_API as string;
+      const STRAPI_TOKEN = process.env.STRAPI_API_AUTH_TOKEN as string;
 
       const finalUrl = buildUrl(endpoints);
 
@@ -72,7 +72,7 @@ const CompleteSuiteSection = () => {
             : it.bullets ?? it.features ?? [],
           // image_url:apiUrl+it.image_url
           image_url: it.image_url
-            ? `${process.env.NEXT_PUBLIC_LOCAL_API_BASE_URL_FOR_IMAGES}${it.image_url}`
+            ? `${process.env.STRAPI_API_FOR_IMAGES}${it.image_url}`
             : "",
           route:
             it.route ?? it.url ?? (it.slug ? `/feature/${it.slug}` : "/demo"),

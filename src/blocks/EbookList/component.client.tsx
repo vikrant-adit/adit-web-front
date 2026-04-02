@@ -29,7 +29,7 @@ export default function EbookListBlock({
   async function fetchEbooks(query?: string) {
 
     let url =
-      `${process.env.NEXT_PUBLIC_LOCAL_API_BASE_URL}e-books` +
+      `${process.env.STRAPI_API}e-books` +
       `?populate=image` +
       `&pagination[limit]=${limit}`;
 
@@ -39,7 +39,7 @@ export default function EbookListBlock({
 
     const res = await fetch(url, {
       headers: {
-        Authorization: `Bearer ${process.env.NEXT_PUBLIC_LOCAL_AUTH_TOKEN}`,
+        Authorization: `Bearer ${process.env.STRAPI_API_AUTH_TOKEN}`,
       },
     });
 

@@ -84,12 +84,12 @@ export default function DynamicForm({
 
     try {
       const res = await fetch(
-        process.env.NEXT_PUBLIC_LOCAL_API_BASE_URL + schema.submit.endpoint,
+        process.env.STRAPI_API + schema.submit.endpoint,
         {
           method: schema.submit.method,
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${process.env.NEXT_PUBLIC_LOCAL_AUTH_TOKEN}`,
+            Authorization: `Bearer ${process.env.STRAPI_API_AUTH_TOKEN}`,
           },
           body: JSON.stringify({ data: payload }),
         },

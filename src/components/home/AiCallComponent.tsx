@@ -11,11 +11,11 @@ type Card = {
 };
 
 const baseImage = (name: string) =>
-  (process.env.NEXT_PUBLIC_LOCAL_API_BASE_URL_FOR_IMAGES ?? "").replace(
+  (process.env.STRAPI_API_FOR_IMAGES ?? "").replace(
     /\/$/,
     ""
   ) +
-  (process.env.NEXT_PUBLIC_LOCAL_API_BASE_URL_FOR_IMAGES
+  (process.env.STRAPI_API_FOR_IMAGES
     ? `/uploads/${name}`
     : `/assets/${name}`);
 
@@ -140,7 +140,7 @@ export default function AiCallComponent({
   }, []);
 
   const bgUrl =
-    (process.env.NEXT_PUBLIC_LOCAL_API_BASE_URL_FOR_IMAGES ?? "").replace(
+    (process.env.STRAPI_API_FOR_IMAGES ?? "").replace(
       /\/$/,
       ""
     ) + "/uploads/home_adit_ai_section_bgimg_0d2d0650f3.webp";

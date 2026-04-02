@@ -27,7 +27,7 @@ const resolveSrc = (src?: string) => {
   if (!src) return "";
   if (typeof src !== "string") return "";
   if (src.startsWith("http://") || src.startsWith("https://")) return src;
-  return `${process.env.NEXT_PUBLIC_LOCAL_API_BASE_URL_FOR_IMAGES || ""}${src}`;
+  return `${process.env.STRAPI_API_FOR_IMAGES || ""}${src}`;
 };
 
 const SupportFeatures: React.FC<SupportFeaturesProps> = ({

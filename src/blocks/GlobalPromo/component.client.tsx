@@ -199,7 +199,7 @@ const GlobalPromo: React.FC<GlobalPromoProps> = ({
     if (bgVal && looksLikeImage(bgVal)) {
       let bgUrl = bgVal;
       const base =
-        (process.env.NEXT_PUBLIC_LOCAL_API_BASE_URL_FOR_IMAGES ?? "").replace(
+        (process.env.STRAPI_API_FOR_IMAGES ?? "").replace(
           /\/$/,
           ""
         );

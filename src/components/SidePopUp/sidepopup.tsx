@@ -45,8 +45,8 @@ export default function SidePopupPromo({
           'Content-Type': 'application/json',
         };
 
-        if (process.env.NEXT_PUBLIC_LOCAL_AUTH_TOKEN) {
-          headers.Authorization = `Bearer ${process.env.NEXT_PUBLIC_LOCAL_AUTH_TOKEN}`;
+        if (process.env.STRAPI_API_AUTH_TOKEN) {
+          headers.Authorization = `Bearer ${process.env.STRAPI_API_AUTH_TOKEN}`;
         }
 
         const resp = await fetch(
