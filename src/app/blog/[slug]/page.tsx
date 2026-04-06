@@ -8,7 +8,7 @@ type TOCItem = { id: string; text: string };
 
 import Image from "next/image";
 import Link from "next/link";
-import { resolveImageUrl } from '@/lib/imageResolver';
+import { buildImageUrl } from '@/lib/defaults';
 import SiteLayout from "@/components/layout/SiteLayout";
 
 type NewsArticle = {
@@ -109,7 +109,7 @@ const [authorDetails, setAuthorDetails] = useState<Author | null>(null);
       {/* Image */}
       {article.image?.url && (
         <Image
-        src={resolveImageUrl(`/uploads/istockphoto_1392500126_612x612_49e8a39689.jpg`)}
+        src={buildImageUrl('istockphoto_1392500126_612x612_49e8a39689.jpg')}
           alt={article.image.alt_attribute_translated || article.title.en}
             width={800}
           height={400}
@@ -156,7 +156,7 @@ const [authorDetails, setAuthorDetails] = useState<Author | null>(null);
          
         >
           <Image
-             src={resolveImageUrl(`/uploads/istockphoto_1392500126_612x612_49e8a39689.jpg`)}
+             src={buildImageUrl('istockphoto_1392500126_612x612_49e8a39689.jpg')}
             width={100}
             height={100}
             alt=""

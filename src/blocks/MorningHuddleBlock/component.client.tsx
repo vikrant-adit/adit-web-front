@@ -24,7 +24,7 @@ export default function MorningHuddleBlock(props: MorningHuddleBlockProps) {
     'Our dedicated onboarding experts will work at your pace to get your team and practice up to speed and fully integrated with Adit\'s all‑in‑one software.';
   const imageSrc =
     props.imageSrc ??
-    'http://localhost:1337/uploads/practice_analytics_video_ezgif_com_video_to_gif_converter_cc85c26835.gif';
+    `${process.env.STRAPI_API_FOR_IMAGES}/uploads/practice_analytics_video_ezgif_com_video_to_gif_converter_cc85c26835.gif`;
   const imageAlt = props.imageAlt ?? 'Practice analytics morning huddle dashboard';
   const buttonText = props.buttonText ?? 'Schedule a Demo';
   const buttonUrl = props.buttonUrl ?? '/schedule-a-demo';

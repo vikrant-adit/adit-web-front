@@ -8,12 +8,13 @@ import config from "../../blocks/PageBuilderConfig";
 import { resolveGlobalRefs } from "@/lib/globalComponentResolver";
 import { FormMapProvider } from "@/context/FormMapContext";
 import SiteLayout from "@/components/layout/SiteLayout";
+import { getStrapiImagesUrl, getStrapiApiUrl, getEnvVar } from "../../lib/defaults";
 
 /* -------------------------------------------------
  * ENV
  * ------------------------------------------------- */
-const STRAPI_BASE = process.env.STRAPI_API as string; // already includes /api/
-const STRAPI_TOKEN = process.env.STRAPI_API_AUTH_TOKEN as string;
+const STRAPI_BASE = getStrapiApiUrl(); // already includes /api/
+const STRAPI_TOKEN = getEnvVar('STRAPI_API_AUTH_TOKEN');
 
 type StrapiRaw = any;
 
@@ -253,7 +254,7 @@ const formsData = content?.form
           strapi={{
             url: STRAPI_BASE,
             authToken: STRAPI_TOKEN,
-            imageUrl: `${process.env.STRAPI_API_FOR_IMAGES}/uploads/`,
+            imageUrl: `${getStrapiImagesUrl()}/uploads/`,
             locale,
           }}
         />

@@ -9,7 +9,13 @@ export default async function SiteLayout({
   children: React.ReactNode;
   pageLayout?: any;
 }) {
- const global = await getGlobal();
+  let global = null;
+
+  try {
+    global = await getGlobal();
+  } catch (err) {
+    console.error("Global API failed:", err);
+  }
 
   // 🚫 If API fails → block page (your requirement)
   if (!global) {

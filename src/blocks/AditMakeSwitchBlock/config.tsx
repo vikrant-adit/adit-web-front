@@ -64,7 +64,7 @@ export const AditMakeSwitchBlockConfig: Omit<
       'Our dedicated onboarding team will get your practice up to speed with perfect clarity, providing personalized support every step of the way. No headaches, no strain—just a seamless integration at your own pace.',
     benefits: [
       {
-        icon: 'http://localhost:1337/uploads/placeholder.png',
+        icon: `${process.env.STRAPI_API_FOR_IMAGES}/uploads/placeholder.png`,
         iconAlt: 'Benefit icon',
         title: 'Dedicated Onboarding and Unlimited Trainings',
         text: 'You have goals; our job is to help you reach them.',

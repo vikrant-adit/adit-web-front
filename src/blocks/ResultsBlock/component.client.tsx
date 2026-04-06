@@ -86,7 +86,7 @@ export default function ResultsBlock(props: ResultsBlockProps) {
 
   const defaultCards: CaseCard[] = [
     {
-      imageSrc: 'http://localhost:1337/uploads/case_study_placeholder.png',
+      imageSrc: `${process.env.STRAPI_API_FOR_IMAGES}/uploads/case_study_placeholder.png`,
       imageAlt: 'Case study',
       title: 'Sample case study result',
       stats: [

@@ -147,7 +147,7 @@ export default function Industries(): JSX.Element {
           {/* Industry Description with Image */}
           <div className="industry-image">
             <Image
-              src="http://localhost:1337/uploads/dental_industry_tabimg_e04fa2ed84.png"
+              src=`${process.env.STRAPI_API_FOR_IMAGES}/uploads/dental_industry_tabimg_e04fa2ed84.png`
               alt={activeIndustry?.name || "Default Alt Text"}
               width={200}
               height={200}

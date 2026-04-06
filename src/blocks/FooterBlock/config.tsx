@@ -112,7 +112,7 @@ export const FooterConfig: Omit<ComponentConfig<FooterProps, FooterProps>, "type
   label: "Footer",
 
   defaultProps: {
-    logoUrl: "http://localhost:1337/uploads/logo_9fe8b06174.svg",
+    logoUrl: `${process.env.STRAPI_API_FOR_IMAGES}/uploads/logo_9fe8b06174.svg`,
     tagline: "The All In One AI-Powered Platform",
     contact: {
       email: "info@adit.com",

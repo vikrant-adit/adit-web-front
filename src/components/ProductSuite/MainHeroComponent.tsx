@@ -31,7 +31,7 @@ const ProductSuiteHeroComponent: React.FC<ProductSuiteHeroProps> = ({
             className="absolute inset-0 z-[-1] bg-cover bg-center"
             style={{
               backgroundImage:
-                "url('http://localhost:1337/uploads/innerpage_hero_section_bgpattern_ecbfe42bf8.png')",
+                "url(`${process.env.STRAPI_API_FOR_IMAGES}/uploads/innerpage_hero_section_bgpattern_ecbfe42bf8.png`)",
             }}
           ></div>
 

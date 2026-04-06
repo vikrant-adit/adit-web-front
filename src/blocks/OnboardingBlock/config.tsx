@@ -150,7 +150,7 @@ export const OnboardingBlockConfig: Omit<
           {
             number: 1,
             title: 'Kickoff and Connect Phones',
-            icon: 'http://localhost:1337/uploads/placeholder.png',
+            icon: `${process.env.STRAPI_API_FOR_IMAGES}/uploads/placeholder.png`,
             iconAlt: 'Icon',
             bulletPoints: ['Action item 1', 'Action item 2'],
             time: '2.5 hours',

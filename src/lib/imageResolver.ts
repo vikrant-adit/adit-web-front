@@ -1,4 +1,6 @@
 // lib/imageResolver.ts
+import { getStrapiImagesUrl } from './defaults';
+
 export const resolveImageUrl = (imagePath?: string | { url?: string }): string => {
   if (!imagePath) return '';
 
@@ -9,7 +11,7 @@ export const resolveImageUrl = (imagePath?: string | { url?: string }): string =
   if (/^https?:\/\/|^\/\//i.test(path)) return path;
 
   // prefix relative paths with env var
-  const base = (process.env.STRAPI_API_FOR_IMAGES ?? '').replace(/\/$/, '');
+  const base = getStrapiImagesUrl();
   if (path.startsWith('/')) {
     return base ? `${base}${path}` : path;
   }

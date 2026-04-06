@@ -68,7 +68,7 @@ body {
 
 .home-banner-image-top-right {
   content: "";
-  background: url("http://localhost:1337/uploads/home_banner_right_patternimg_bfa2e3fb47.png");
+  background: var(--home-banner-image-top-right);
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
@@ -80,7 +80,7 @@ body {
   z-index: -1;
 }
 .blue-dotted-circle-square {
-  background-image: url("http://localhost:1337/uploads/dots_pattern_blue_037f89b1ba.png");
+  background-image: var(--dots-pattern-blue);
   top: 10%;
   left: 3%;
   position: absolute;
@@ -115,7 +115,7 @@ body {
 
 .home-banner-image-bottom-left {
   content: "";
-  background-image: url("http://localhost:1337/uploads/home_banner_left_patternimg_a7e936bfdc.png");
+  background-image: var(--home-banner-image-bottom-left);
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
@@ -130,7 +130,7 @@ body {
 }
 
 .orange-dotted-circle-square {
-  background-image: url("http://localhost:1337/uploads/dots_pattern_orange_703e4f69c4.png");
+  background-image: var(--dots-pattern-orange);
   bottom: -3%;
   right: 3%;
   position: absolute;

@@ -5,14 +5,14 @@ import config from "../../blocks/PageBuilderConfig";
 
 const apiUrlForImages =
   process.env.STRAPI_API_FOR_IMAGES ||
-  "http://localhost:1337";
+  `${process.env.STRAPI_API_FOR_IMAGES}`;
 
 const authToken = process.env.STRAPI_API_AUTH_TOKEN;
 
 const siteOrigin =
   typeof window !== "undefined"
     ? window.location.origin
-    : "http://localhost:1337";
+    : `${process.env.STRAPI_API_FOR_IMAGES}`;
 
 // const proxyBase = `${siteOrigin}/api/strapi-proxy`;
 

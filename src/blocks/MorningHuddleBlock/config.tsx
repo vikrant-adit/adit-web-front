@@ -59,7 +59,7 @@ export const MorningHuddleBlockConfig: Omit<
     description:
       'Our dedicated onboarding experts will work at your pace to get your team and practice up to speed and fully integrated with Adit\'s all‑in‑one software.',
     imageSrc:
-      'http://localhost:1337/uploads/practice_analytics_video_ezgif_com_video_to_gif_converter_cc85c26835.gif',
+      `${process.env.STRAPI_API_FOR_IMAGES}/uploads/practice_analytics_video_ezgif_com_video_to_gif_converter_cc85c26835.gif`,
     imageAlt: 'Practice analytics morning huddle dashboard',
     buttonText: 'Schedule a Demo',
     buttonUrl: '/schedule-a-demo',

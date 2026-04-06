@@ -2,6 +2,7 @@
 "use client";
 import Link from "next/link";
 import React, { useRef, useState, useEffect } from "react";
+import { getStrapiImagesUrl, buildImageUrl } from "../../lib/defaults";
 
 type Card = {
   id: number;
@@ -10,14 +11,7 @@ type Card = {
   image?: string; // optional thumbnail path
 };
 
-const baseImage = (name: string) =>
-  (process.env.STRAPI_API_FOR_IMAGES ?? "").replace(
-    /\/$/,
-    ""
-  ) +
-  (process.env.STRAPI_API_FOR_IMAGES
-    ? `/uploads/${name}`
-    : `/assets/${name}`);
+const baseImage = (name: string) => buildImageUrl(name);
 
 const defaultCards: Card[] = [
   {
@@ -139,11 +133,7 @@ export default function AiCallComponent({
     return () => el.removeEventListener("keydown", onKey as any);
   }, []);
 
-  const bgUrl =
-    (process.env.STRAPI_API_FOR_IMAGES ?? "").replace(
-      /\/$/,
-      ""
-    ) + "/uploads/home_adit_ai_section_bgimg_0d2d0650f3.webp";
+  const bgUrl = buildImageUrl("home_adit_ai_section_bgimg_0d2d0650f3.webp");
 
   return (
     <section
@@ -163,7 +153,7 @@ export default function AiCallComponent({
               <h2 className="text-4xl flex text-center font-extrabold text-white">
                 Supercharge your front desk with{" "}
                 <img
-                  src="http://localhost:1337/uploads/adit_ai_colored_icon_0d3302310d.webp"
+                  src={buildImageUrl("adit_ai_colored_icon_0d3302310d.webp")}
                   alt=""
                   width={40}
                   className="mx-4"

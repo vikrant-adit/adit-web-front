@@ -50,7 +50,7 @@ export default function AllStepsBlock(props: AllStepsBlockProps) {
       title: "Feature Title",
       cards: [
         {
-          image: "http://localhost:1337/uploads/placeholder.png",
+          image: `${process.env.STRAPI_API_FOR_IMAGES}/uploads/placeholder.png`,
           alt: "Feature image",
           caption: "Feature description",
         },

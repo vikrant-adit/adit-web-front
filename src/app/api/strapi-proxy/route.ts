@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getStrapiApiUrl, getEnvVar } from "@/lib/defaults";
 
-const STRAPI_BASE = process.env.STRAPI_API; 
-// Example: http://localhost:1337/api/
+const STRAPI_BASE = getStrapiApiUrl(); 
+// Example: ${process.env.STRAPI_API_FOR_IMAGES}/api/ (use STRAPI_API_FOR_IMAGES for image host)
 
-const TOKEN = process.env.STRAPI_API_AUTH_TOKEN;
+const TOKEN = getEnvVar('STRAPI_API_AUTH_TOKEN');
 
 export async function GET(req: NextRequest) {
   return handle(req);

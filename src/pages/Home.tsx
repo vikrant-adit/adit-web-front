@@ -7,6 +7,7 @@ import CompleteSuiteSection from "@/components/home/CompleteSuiteSection";
 import CaseStudyHighlight from "@/components/common/CaseStudyHighlight/CaseStudyHighlighted";
 import { useEffect, useRef, useState } from "react";
 import AiCallComponent from "@/components/home/AiCallComponent";
+import { buildImageUrl } from "../lib/defaults";
 const AUTO_SLIDE_INTERVAL = 4000;
 
 const Home = () => {
@@ -32,7 +33,7 @@ const Home = () => {
         },
       ],
       imageUrl:
-        "http://localhost:1337/uploads/dedicated_dentistry_casestudy_slider_thumbnail_6baa2a8e04.webp",
+        buildImageUrl("dedicated_dentistry_casestudy_slider_thumbnail_6baa2a8e04.webp"),
       buttonText: "Download Case Study",
       buttonLink:
         "https://adit.com/storage/files/dedicated-dentistry-case-study-adit.pdf",
@@ -57,7 +58,7 @@ const Home = () => {
         },
       ],
       imageUrl:
-        "http://localhost:1337/uploads/lynnwood_dental_studio_casestudy_slider_thumbnail_016dbec5b5.webp",
+        buildImageUrl("lynnwood_dental_studio_casestudy_slider_thumbnail_016dbec5b5.webp"),
       buttonText: "Download Case Study",
       buttonLink:
         "https://adit.com/storage/files/lynnwood-dental-studio-case-study-adit.pdf",
@@ -80,7 +81,7 @@ const Home = () => {
         },
       ],
       imageUrl:
-        "http://localhost:1337/uploads/petaluma_dental_group_casestudy_slider_thumbnail_50171ba397.webp",
+        buildImageUrl("petaluma_dental_group_casestudy_slider_thumbnail_50171ba397.webp"),
       buttonText: "Download Case Study",
       buttonLink:
         "https://adit.com/storage/files/lynnwood-dental-studio-case-study-adit.pdf",
@@ -103,7 +104,7 @@ const Home = () => {
         },
       ],
       imageUrl:
-        "http://localhost:1337/uploads/socialite_vision_casestudy_slider_thumbnail_35cf4910de.webp",
+        buildImageUrl("socialite_vision_casestudy_slider_thumbnail_35cf4910de.webp"),
       buttonText: "Download Case Study",
       buttonLink:
         "https://adit.com/storage/files/dedicated-dentistry-case-study-adit.pdf",

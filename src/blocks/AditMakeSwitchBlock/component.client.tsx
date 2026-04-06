@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import { buildImageUrl } from '../../lib/defaults';
 
 export type BenefitCard = {
   icon: string;
@@ -27,7 +28,7 @@ export default function AditMakeSwitchBlock(props: AditMakeSwitchBlockProps) {
 
   const defaultBenefits: BenefitCard[] = [
     {
-      icon: 'http://localhost:1337/uploads/placeholder.png',
+      icon: buildImageUrl('placeholder.png'),
       iconAlt: 'Benefit icon',
       title: 'Benefit Title',
       text: 'Benefit description text',

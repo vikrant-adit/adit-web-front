@@ -2,7 +2,8 @@
 import React from 'react';
 import DOMPurify from 'dompurify';
 import Image from 'next/image';
-const imageBaseUrl = process.env.STRAPI_API_FOR_IMAGES;
+import { buildImageUrl, getStrapiImagesUrl } from '@/lib/defaults';
+
 export type FeatureHeroImage = {
   src?: string;
   alt?: string;
@@ -51,7 +52,7 @@ const FeatureHero: React.FC<FeatureHeroProps> = ({
               <div className="w-full flex items-center gap-3 justify-center">
                 {iconUrl && (
                   <div className="inline-block">
-                    <Image src={`${imageBaseUrl}${iconUrl.src}`} alt="icon" width={40} height={40} className="w-10 h-10 object-contain" unoptimized />
+                    <Image src={iconUrl.src ? buildImageUrl(iconUrl.src.replace(/^\//, '')) : getStrapiImagesUrl()} alt="icon" width={40} height={40} className="w-10 h-10 object-contain" unoptimized />
                   </div>
                 )}
 
@@ -75,7 +76,7 @@ const FeatureHero: React.FC<FeatureHeroProps> = ({
           <div className="w-full flex justify-center mt-4">
             {image?.src ? (
               <Image
-                src={`${imageBaseUrl}${image.src}`}
+                src={buildImageUrl(image.src.replace(/^\//, ''))}
                 alt={image.alt || 'Feature image'}
                 width={720}
                 height={500}
