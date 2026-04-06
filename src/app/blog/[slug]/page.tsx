@@ -182,7 +182,7 @@ const [authorDetails, setAuthorDetails] = useState<Author | null>(null);
           {authorDetails && (
   <div className="flex flex-row">
     <Image
- src={resolveImageUrl(`/uploads/istockphoto_1392500126_612x612_49e8a39689.jpg`)}    alt=""
+ src={buildImageUrl('istockphoto_1392500126_612x612_49e8a39689.jpg')}    alt=""
       width={100}
       height={100}
       loading="lazy"
