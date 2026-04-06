@@ -2,17 +2,16 @@
 
 import { Editor } from "@wecre8websites/strapi-page-builder-react";
 import config from "../../blocks/PageBuilderConfig";
+import { getStrapiImagesUrl, getEnvVar } from "@/lib/defaults";
 
-const apiUrlForImages =
-  process.env.STRAPI_API_FOR_IMAGES ||
-  `${process.env.STRAPI_API_FOR_IMAGES}`;
+const apiUrlForImages = getStrapiImagesUrl();
 
-const authToken = process.env.STRAPI_API_AUTH_TOKEN;
+const authToken = getEnvVar('STRAPI_API_AUTH_TOKEN');
 
 const siteOrigin =
   typeof window !== "undefined"
     ? window.location.origin
-    : `${process.env.STRAPI_API_FOR_IMAGES}`;
+    : getStrapiImagesUrl();
 
 // const proxyBase = `${siteOrigin}/api/strapi-proxy`;
 

@@ -2,6 +2,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { buildImageUrl } from "@/lib/defaults";
 
 const AditVoiceHomeComponent = () => {
   const router = useRouter();
@@ -33,7 +34,7 @@ const AditVoiceHomeComponent = () => {
         {/* Right Image */}
         <div className="flex-1 text-center min-w-[55%]">
           <Image
-            src=`${process.env.STRAPI_API_FOR_IMAGES}/uploads/adit_voice_page_banner_img_afcebdc89d.png`
+            src={buildImageUrl('adit_voice_page_banner_img_afcebdc89d.png')}
             alt="Adit VoIP Phones"
             width={600}
             height={400}

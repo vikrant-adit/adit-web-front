@@ -13,17 +13,13 @@ import { usePathname } from "next/navigation";
 import GlobalPromo from "../../blocks/GlobalPromo/component.client";
 import ClientOnly from "../../components/ClientOnly";
 import Link from "next/link";
+import { getStrapiApiUrl, getStrapiImagesUrl, getEnvVar } from "@/lib/defaults";
 
 type DropdownMenu = string | null;
 
-const apiUrl = (process.env.STRAPI_API ?? "").replace(
-  /\/$/,
-  "",
-);
+const apiUrl = getStrapiApiUrl();
 
-const imageBase = (
-  process.env.STRAPI_API_FOR_IMAGES ?? ""
-).replace(/\/$/, "");
+const imageBase = getStrapiImagesUrl();
 
 export default function Navbar({
   headerData,
@@ -148,8 +144,9 @@ export default function Navbar({
           "Content-Type": "application/json",
         };
 
-        if (process.env.STRAPI_API_AUTH_TOKEN) {
-          headers.Authorization = `Bearer ${process.env.STRAPI_API_AUTH_TOKEN}`;
+        const authToken = getEnvVar('STRAPI_API_AUTH_TOKEN');
+        if (authToken) {
+          headers.Authorization = `Bearer ${authToken}`;
         }
 
         const resp = await fetch(

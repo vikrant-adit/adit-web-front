@@ -5,7 +5,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import ReactDOM from "react-dom";
 import DOMPurify from "dompurify";
 import Image from "next/image";
-import { resolveImageUrl } from "@/lib/imageResolver";
+import { getStrapiImagesUrl } from "@/lib/defaults";
 import SignupCustomerForm from "@/components/Modals/SignUpCustomerForm";
 
 export type GlobalPromoProps = {
@@ -198,11 +198,7 @@ const GlobalPromo: React.FC<GlobalPromoProps> = ({
     // If looks like image, prefix relative paths with env base and set background-image
     if (bgVal && looksLikeImage(bgVal)) {
       let bgUrl = bgVal;
-      const base =
-        (process.env.STRAPI_API_FOR_IMAGES ?? "").replace(
-          /\/$/,
-          ""
-        );
+      const base = getStrapiImagesUrl();
       if (bgUrl.startsWith("/") && base) {
         bgUrl = `${base}${bgUrl}`;
       }

@@ -3,6 +3,7 @@ import { JSX, useState, useEffect } from "react";
 import "../../styles/Industries.css";
 import { useMemo } from "react";
 import Image from "next/image";
+import { buildImageUrl } from "@/lib/defaults";
 type Industry = {
   name: string;
   icon: JSX.Element;
@@ -147,7 +148,7 @@ export default function Industries(): JSX.Element {
           {/* Industry Description with Image */}
           <div className="industry-image">
             <Image
-              src=`${process.env.STRAPI_API_FOR_IMAGES}/uploads/dental_industry_tabimg_e04fa2ed84.png`
+              src={buildImageUrl('dental_industry_tabimg_e04fa2ed84.png')}
               alt={activeIndustry?.name || "Default Alt Text"}
               width={200}
               height={200}

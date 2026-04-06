@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { resolveImageUrl } from '@/lib/imageResolver';
+import { getEnvVar } from '@/lib/defaults';
 
 type Promo = {
   id: number;
@@ -45,8 +45,9 @@ export default function SidePopupPromo({
           'Content-Type': 'application/json',
         };
 
-        if (process.env.STRAPI_API_AUTH_TOKEN) {
-          headers.Authorization = `Bearer ${process.env.STRAPI_API_AUTH_TOKEN}`;
+        const authToken = getEnvVar('STRAPI_API_AUTH_TOKEN');
+        if (authToken) {
+          headers.Authorization = `Bearer ${authToken}`;
         }
 
         const resp = await fetch(

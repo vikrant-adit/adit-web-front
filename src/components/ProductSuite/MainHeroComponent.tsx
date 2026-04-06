@@ -1,5 +1,6 @@
 import Image from "next/image";
 import React from "react";
+import { buildImageUrl } from "@/lib/defaults";
 
 interface ProductSuiteHeroProps {
   title: string;
@@ -31,7 +32,7 @@ const ProductSuiteHeroComponent: React.FC<ProductSuiteHeroProps> = ({
             className="absolute inset-0 z-[-1] bg-cover bg-center"
             style={{
               backgroundImage:
-                "url(`${process.env.STRAPI_API_FOR_IMAGES}/uploads/innerpage_hero_section_bgpattern_ecbfe42bf8.png`)",
+                `url(${buildImageUrl('innerpage_hero_section_bgpattern_ecbfe42bf8.png')})`,
             }}
           ></div>
 

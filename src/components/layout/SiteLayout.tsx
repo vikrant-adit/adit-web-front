@@ -7,7 +7,7 @@ export default async function SiteLayout({
   pageLayout,
 }: {
   children: React.ReactNode;
-  pageLayout?: any;
+  pageLayout?: { showHeader?: boolean; showFooter?: boolean };
 }) {
   let global = null;
 

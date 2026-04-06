@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useState, useEffect, useCallback } from "react";
 import config from "@/lib/config";
 import Image from "next/image";
+import { getStrapiApiUrl, getEnvVar } from "@/lib/defaults";
 interface Feature {
   id: string;
   name: string;
@@ -41,8 +42,8 @@ const CompleteSuiteSection = () => {
         `${base}/${String(path).replace(/^\//, "")}`;
 
       // Strapi token for local API
-      const STRAPI_BASE_URL = process.env.STRAPI_API as string;
-      const STRAPI_TOKEN = process.env.STRAPI_API_AUTH_TOKEN as string;
+      const STRAPI_BASE_URL = getStrapiApiUrl();
+      const STRAPI_TOKEN = getEnvVar('STRAPI_API_AUTH_TOKEN');
 
       const finalUrl = buildUrl(endpoints);
 

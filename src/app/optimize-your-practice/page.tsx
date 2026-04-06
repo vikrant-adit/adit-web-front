@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Counter from "@/components/common/CounterAnimation";
 import SiteLayout from "@/components/layout/SiteLayout";
+import { buildApiUrl, getEnvVar } from "@/lib/defaults";
 
 export default function ScheduleDemo() {
   const [form, setForm] = useState({
@@ -77,12 +78,12 @@ const handlePhoneChange = (value: string) => {
   };
 const submitScheduleDemo = async (payload: typeof form) => {
   const res = await fetch(
- `${process.env.STRAPI_API}schedule-a-demo-form`,
+ buildApiUrl('schedule-a-demo-form'),
 {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
-    Authorization: `Bearer ${process.env.STRAPI_API_AUTH_TOKEN}`,
+    Authorization: `Bearer ${getEnvVar('STRAPI_API_AUTH_TOKEN')}`,
   },
   body: JSON.stringify({ data: payload}),
 }

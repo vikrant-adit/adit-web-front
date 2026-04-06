@@ -8,7 +8,7 @@ import { getStoredUTMs } from "@/lib/utm-client";
 import { getDefaultUTMs } from "@/lib/LeadControll/utm-default-data";
 import { getLeadSourceConfigCached } from "@/lib/LeadControll/leadSourceConfig";
 import { trackLeadSourceTS } from "@/lib/LeadControll/leadSourceResolver";
-import { resolveImageUrl } from "@/lib/imageResolver";
+import { buildApiUrl, getEnvVar } from "@/lib/defaults";
 
 type Props = {
   schema: FormSchema;
@@ -84,12 +84,12 @@ export default function DynamicForm({
 
     try {
       const res = await fetch(
-        process.env.STRAPI_API + schema.submit.endpoint,
+        buildApiUrl(schema.submit.endpoint),
         {
           method: schema.submit.method,
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${process.env.STRAPI_API_AUTH_TOKEN}`,
+            Authorization: `Bearer ${getEnvVar('STRAPI_API_AUTH_TOKEN')}`,
           },
           body: JSON.stringify({ data: payload }),
         },

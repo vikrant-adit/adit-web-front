@@ -2,6 +2,7 @@
 'use client';
 import GlobalPromo from '@/blocks/GlobalPromo/component.client';
 import React, { useEffect, useState } from 'react';
+import { getStrapiApiUrl, getEnvVar } from '@/lib/defaults';
 
 type FormState = {
   practiceName: string;
@@ -30,7 +31,7 @@ export default function SignupCustomerForm({ onClose, initial = {} as Partial<Fo
     notes: initial.notes || '',
     optInSms: initial.optInSms || false,
   });
-  const apiUrl = (process.env.STRAPI_API ?? "").replace(/\/$/, "");
+  const apiUrl = getStrapiApiUrl();
   const [promos, setPromos] = useState<any[]>([]);
   const [loadingPromo, setLoadingPromo] = useState(true);
 
@@ -48,8 +49,9 @@ export default function SignupCustomerForm({ onClose, initial = {} as Partial<Fo
           "Accept": "application/json",
           "Content-Type": "application/json",
         };
-        if (process.env.STRAPI_API_AUTH_TOKEN) {
-          headers["Authorization"] = `Bearer ${process.env.STRAPI_API_AUTH_TOKEN}`;
+        const authToken = getEnvVar('STRAPI_API_AUTH_TOKEN');
+        if (authToken) {
+          headers["Authorization"] = `Bearer ${authToken}`;
         }
         const resp = await fetch(
           `${apiUrl}/global-promos?filters[active][$eq]=true&populate=*`,
