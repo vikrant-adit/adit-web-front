@@ -94,10 +94,7 @@ const AllStepsSection: React.FC<AllStepsSectionProps> = ({ steps = defaultSteps 
           step={step.step}
           tag={step.tag}
           title={step.title}
-          cards={step.cards.map(card => ({
-            ...card,
-            image: resolveImageUrl(card.image),
-          }))}
+          cards={step.cards}
           showArrows={step.showArrows}
         />
       ))}
