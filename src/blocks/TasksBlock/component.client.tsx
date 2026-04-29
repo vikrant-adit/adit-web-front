@@ -39,17 +39,17 @@ const TasksBlock: React.FC<TasksBlockProps> = ({
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) return;
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
 
-          const id = entry.target.getAttribute('data-id');
-          if (!id) return;
+          const id = (entry.target as HTMLElement).dataset.id;
+          if (!id) continue;
 
           const index = safeItems.findIndex((t) => t.id === id);
           if (index !== -1) {
             setActiveIndex(index);
           }
-        });
+        }
       },
       {
         threshold: 0.5,
@@ -91,14 +91,15 @@ const TasksBlock: React.FC<TasksBlockProps> = ({
       </h2>
 
       <ul className="space-y-3 mb-6">
-        {item.features?.map((f, idx) => (
-          <li key={idx} className="flex items-start gap-3">
-            <span className="w-2 h-2 bg-green-400 rounded-full mt-2"></span>
-            <span className="text-sm leading-relaxed">
-              {typeof f === 'string' ? f : f.value}
-            </span>
-          </li>
-        ))}
+        {item.features?.map((f, idx) => {
+          const text = typeof f === 'string' ? f : f?.value;
+          return (
+            <li key={text ?? `feature-${idx}`} className="flex items-start gap-3">
+              <span className="w-2 h-2 bg-green-400 rounded-full mt-2"></span>
+              <span className="text-sm leading-relaxed">{text}</span>
+            </li>
+          );
+        })}
       </ul>
 
       {ctaText && (
@@ -145,14 +146,15 @@ const TasksBlock: React.FC<TasksBlockProps> = ({
                 )}
 
                 <ul className="space-y-3 mb-6">
-                  {item.features?.map((f, idx) => (
-                    <li key={idx} className="flex items-start gap-3">
-                      <span className="w-2 h-2 bg-[#00d084] rounded-full mt-2"></span>
-                      <span className="text-[#333]">
-                        {typeof f === 'string' ? f : f.value}
-                      </span>
-                    </li>
-                  ))}
+                  {item.features?.map((f, idx) => {
+                    const text = typeof f === 'string' ? f : f?.value;
+                    return (
+                      <li key={text ?? `feature-${idx}`} className="flex items-start gap-3">
+                        <span className="w-2 h-2 bg-[#00d084] rounded-full mt-2"></span>
+                        <span className="text-[#333]">{text}</span>
+                      </li>
+                    );
+                  })}
                 </ul>
 
                 {ctaText && (

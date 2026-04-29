@@ -1,6 +1,6 @@
 
 import Image from 'next/image';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useEditorGlow } from '@/hooks/useEditorGlow';
 import { resolveImageUrl } from '@/lib/imageResolver';
 
@@ -52,7 +52,7 @@ export default function IntegrationBlock({
   ],
   columns = 5,
   isGlobal
-}: IntegrationBlockProps) {
+}: Readonly<IntegrationBlockProps>) {
   const { shouldGlow } = useEditorGlow(isGlobal);
   
   const ref = useRef<HTMLElement | null>(null);
@@ -100,7 +100,7 @@ export default function IntegrationBlock({
           <div className="flex gap-1 sm:gap-2 md:gap-4 justify-center overflow-x-auto w-[98%] sm:w-[95%] md:w-[80%] lg:w-[60%] border-b border-sky-200 pb-2">
             {tabs.map((t, i) => (
               <button
-                key={i}
+                key={`${t.title}-${i}`}
                 type="button"
                 onClick={() => setActiveTab(i)}
                 aria-pressed={activeTab === i}
@@ -124,7 +124,7 @@ export default function IntegrationBlock({
         >
           {(tabs[activeTab]?.logos || []).map((logo, idx) => (
             <div
-              key={idx}
+              key={`${logo.name}-${idx}`}
               className="min-w-[80px] sm:min-w-[100px] md:min-w-[120px] lg:min-w-[140px] h-[32px] sm:h-[40px] md:h-[50px] lg:h-[60px] flex items-center justify-center px-2 sm:px-3 md:px-4 bg-white/90 rounded-lg border border-sky-200 shadow-md hover:-translate-y-1 hover:shadow-lg transition-all duration-300"
               style={{ animationDelay: `${idx * 0.04}s` }}
             >

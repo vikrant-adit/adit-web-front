@@ -1,6 +1,7 @@
 "use client";
 
 import { resolveImageUrl } from "@/lib/imageResolver";
+import { buildImageUrl } from "@/lib/defaults";
 import Image from "next/image";
 
 export type FeatureCard = {
@@ -30,7 +31,7 @@ export type AllStepsBlockProps = {
   captionFontSize?: string;
 };
 
-export default function AllStepsBlock(props: AllStepsBlockProps) {
+export default function AllStepsBlock(props: Readonly<AllStepsBlockProps>) {
   const rawBg = props.backgroundColor;
 
   const isRawColor =
@@ -40,7 +41,7 @@ export default function AllStepsBlock(props: AllStepsBlockProps) {
       rawBg.startsWith("linear") ||
       rawBg.startsWith("hsl"));
 
-  const bgClass = !isRawColor ? (rawBg ?? "bg-white") : "";
+  const bgClass = isRawColor ? "" : (rawBg ?? "bg-white");
   const bgStyle: React.CSSProperties = isRawColor ? { background: rawBg } : {};
 
   const defaultSteps: FeatureStep[] = [
@@ -50,7 +51,7 @@ export default function AllStepsBlock(props: AllStepsBlockProps) {
       title: "Feature Title",
       cards: [
         {
-          image: `${process.env.STRAPI_API_FOR_IMAGES}/uploads/placeholder.png`,
+          image: buildImageUrl("placeholder.png"),
           alt: "Feature image",
           caption: "Feature description",
         },
@@ -107,8 +108,8 @@ export default function AllStepsBlock(props: AllStepsBlockProps) {
 
             {/* Feature cards grid */}
             <div className="grid gap-3 sm:gap-4 md:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
-              {step.cards.map((card, idx) => (
-                <div key={`card-${idx}`} className="flex flex-col">
+              {step.cards.map((card) => (
+                <div key={card.caption} className="flex flex-col">
                   <div className="relative aspect-video overflow-hidden rounded-[12px] bg-gray-100">
                     <Image
                       src={resolveImageUrl(card.image)}

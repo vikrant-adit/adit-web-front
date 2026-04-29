@@ -2,6 +2,7 @@
 'use client';
 import type { ComponentConfig } from '@wecre8websites/strapi-page-builder-react';
 import ResultsBlock, { ResultsBlockProps } from './component.client';
+import { buildImageUrl } from '@/lib/defaults';
 
 export const ResultsBlockConfig: Omit<ComponentConfig<ResultsBlockProps, ResultsBlockProps>, 'type'> =
   {
@@ -65,7 +66,7 @@ export const ResultsBlockConfig: Omit<ComponentConfig<ResultsBlockProps, Results
       heading: 'Eye‑Opening Results With Adit',
       caseCards: [
         {
-          imageSrc: `${process.env.STRAPI_API_FOR_IMAGES}/uploads/case_study_placeholder.png`,
+          imageSrc: buildImageUrl('case_study_placeholder.png'),
           imageAlt: 'Case study',
           title: 'Sample case study result',
           stats: [

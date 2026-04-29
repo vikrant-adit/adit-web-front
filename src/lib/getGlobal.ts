@@ -1,17 +1,19 @@
-import { getEnvVar, buildApiUrl } from "./defaults";
+import { getStrapiApiUrl, getStrapiAuthToken, buildApiUrl } from "./defaults";
 
 export async function getGlobal() {
   try {
-    const strapiUrl = getEnvVar('STRAPI_API');
+    const strapiUrl = getStrapiApiUrl();
     if (!strapiUrl) {
       console.error(
-        "STRAPI_API is not defined. Set it in .env (e.g. https://my-strapi.example.com/)."
+        "STRAPI_API is not defined. Set it in .env (e.g. https://my-strapi.example.com/).",
       );
       return null;
     }
 
+    // Guard against offline ngrok tunnels
+
     const res = await fetch(
-        buildApiUrl(`global?
+      buildApiUrl(`global?
 populate[footer][fields][0]=copyright
 &populate[footer][fields][1]=logo_description
 &populate[footer][fields][2]=googlePlayLink
@@ -28,9 +30,9 @@ populate[footer][fields][0]=copyright
         cache: "force-cache", // ✅ strong caching
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${getEnvVar('STRAPI_API_AUTH_TOKEN')}`,
+          Authorization: `Bearer ${getStrapiAuthToken()}`,
         },
-      }
+      },
     );
 
     if (!res.ok) {
@@ -46,7 +48,7 @@ populate[footer][fields][0]=copyright
         "Global API did not return JSON:",
         contentType,
         text.slice(0, 512),
-        "(did you set STRAPI_API to the proper Strapi endpoint?)"
+        "(did you set STRAPI_API to the proper Strapi endpoint?)",
       );
       return null;
     }
@@ -58,7 +60,6 @@ populate[footer][fields][0]=copyright
       console.error("Global JSON parse error:", err, text.slice(0, 512));
       return null;
     }
-
   } catch (err) {
     console.error("Global fetch error:", err);
     return null; // ✅ prevent crash + stop retries

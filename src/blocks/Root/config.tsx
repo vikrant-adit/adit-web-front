@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 import { RootComponent, RootProps } from "./component";
+import { getStrapiApiUrl } from "@/lib/defaults";
 
 export const RootConfig:any = {
   fields: {
@@ -35,7 +36,7 @@ export const RootConfig:any = {
   resolveData: async (data: any) => {
     const documentId = data?.props?.menu?.documentId;
     if (!documentId) return data;
-    const apiUrl = process.env.STRAPI_API;
+    const apiUrl = getStrapiApiUrl();
     const menu = await fetch(`${apiUrl}navigation/render/${documentId}?type=TREE`);
     const menuJson = await menu.json();
     return {

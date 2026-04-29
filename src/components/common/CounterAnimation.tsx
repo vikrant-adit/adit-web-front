@@ -9,7 +9,6 @@ const Counter: React.FC<CounterProps> = ({ value, duration = 1500 }) => {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
-    const start = 0;
     const startTime = performance.now();
 
     const animate = (time: number) => {

@@ -12,8 +12,6 @@ export function setCookie(
 }
 
 export function getCookie(name: string): string | null {
-  const match = document.cookie.match(
-    new RegExp('(^| )' + name + '=([^;]+)')
-  );
+  const match = new RegExp(new RegExp('(^| )' + name + '=([^;]+)')).exec(document.cookie);
   return match ? decodeURIComponent(match[2]) : null;
 }

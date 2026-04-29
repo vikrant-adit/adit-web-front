@@ -41,12 +41,12 @@ const { shouldGlow } = useEditorGlow(isGlobal);
         )}
 
         <h3 className="text-base sm:text-lg font-semibold text-slate-800 leading-snug mb-2">
-          {headline.split(highlight ? highlight : '').map((part, i, arr) => {
+          {headline.split(highlight || '').map((part, i) => {
             // render highlighted segment if highlight exists
             if (!highlight) return part;
             // reconstruct with highlight bolded
             if (i === 0) return part;
-            return <span key={i} className="font-semibold">{highlight}</span>;
+            return <span key={part} className="font-semibold">{highlight}</span>;
           })}
         </h3>
 

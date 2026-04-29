@@ -1,5 +1,4 @@
 /* eslint-disable react-hooks/purity */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import React from 'react';
@@ -42,10 +41,11 @@ const FormBlock: React.FC<FormBlockProps> = ({
 }) => {
   const { shouldGlow } = useEditorGlow(isGlobal);
 
-  const generatedId = React.useMemo(
-    () => id ?? `formfield-${Math.random().toString(36).slice(2, 9)}`,
-    [id]
-  );
+  const generatedId = React.useMemo(() => {
+  if (id) return id;
+
+  return `formfield-${crypto.randomUUID()}`;
+}, [id]);
 
   const optionList =
     options
@@ -101,8 +101,8 @@ const FormBlock: React.FC<FormBlockProps> = ({
             <option value="">
               {placeholder || 'Select an option'}
             </option>
-            {optionList.map((opt, i) => (
-              <option key={i} value={opt}>
+            {optionList.map((opt) => (
+              <option key={opt} value={opt}>
                 {opt}
               </option>
             ))}

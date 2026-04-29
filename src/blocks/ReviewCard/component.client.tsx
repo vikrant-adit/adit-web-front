@@ -4,6 +4,7 @@
 import React, { KeyboardEvent } from 'react';
 import Image from 'next/image';
 import { useEditorGlow } from '@/hooks/useEditorGlow';
+import { getStrapiImagesUrl } from '@/lib/defaults';
 
 export interface ReviewCardProps {
   title?: string;
@@ -32,8 +33,9 @@ export interface ReviewCardProps {
 }
 
 /** simple star SVG generator; returns partial fill using gradient mask */
-function StarSvg({ fill = 1, size = 20 }: { fill: number; size: number }) {
-  const id = `mask-${Math.random().toString(36).slice(2, 9)}`;
+function StarSvg({ fill = 1, size = 20 }: Readonly<{ fill: number; size: number }>) {
+  const baseId = React.useId();
+  const id = `mask-${baseId.replaceAll(':', '')}`;
   return (
     <svg
       viewBox="0 0 24 24"
@@ -127,6 +129,15 @@ export default function ReviewCard({
     padding: Math.max(2, Math.round(Math.min(w, h) * 0.08)),
   };
 
+  let resolvedImageSrc = '';
+  if (iconSrc) {
+    if (iconSrc.startsWith('http')) {
+      resolvedImageSrc = iconSrc;
+    } else {
+      resolvedImageSrc = `${getStrapiImagesUrl()}${iconSrc}`;
+    }
+  }
+
   const cardContent = (
     <article
       className={`review-card rounded-md border p-1 flex flex-col items-center  bg-white ${shouldGlow ? 'editor-global-glow' : ''}`}
@@ -138,7 +149,7 @@ export default function ReviewCard({
           <div style={iconContainerStyle} className="flex-shrink-0">
             {typeof iconSrc === 'string' && iconSrc.startsWith('data:') ? (
               <Image
-                src={`${process.env.STRAPI_API_FOR_IMAGES}${iconSrc}`}
+                src={`${getStrapiImagesUrl()}${iconSrc}`}
                 alt={iconAlt || title|| 'Image'}
                 width={80}
                 height={80}
@@ -148,7 +159,7 @@ export default function ReviewCard({
             ) : (
               // Use Next/Image with explicit width/height but let CSS size to container using width:100%/height:100%
               <Image
-                src={iconSrc ? (iconSrc.startsWith('http') ? iconSrc : `${process.env.STRAPI_API_FOR_IMAGES}${iconSrc}`) : ''}
+                src={resolvedImageSrc}
                 alt={iconAlt || title|| 'Image'}
                 width={w}
                 height={h}
@@ -181,20 +192,15 @@ export default function ReviewCard({
       <div style={{ flex: 1 }}>
         <div className="flex items-start flex-col justify-between">
           <div style={{ flex: '1 1 auto' }}>
-            {/* {title && <div className="text-sm font-semibold text-slate-900">{title}</div>}
-            {subtitle && <div className="text-xs text-slate-500">{subtitle}</div>} */}
+           
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginLeft: 8 }}>
-            <div
-              role={editable ? 'slider' : 'img'}
-              aria-label={`Rating: ${normalizedRating} out of ${maxStars}`}
-              aria-valuenow={normalizedRating}
-              aria-valuemin={0}
-              aria-valuemax={maxStars}
-              className="inline-flex items-center gap-1"
-              style={{ color: starColor }}
-            >
+          <span
+  aria-label={`Rating: ${normalizedRating} out of ${maxStars}`}
+  className="inline-flex items-center gap-1"
+  style={{ color: starColor }}
+>
               {stars.map((s) => (
                 <button
                   key={s.index}
@@ -218,7 +224,7 @@ export default function ReviewCard({
                   <StarSvg fill={s.fill} size={starSize} />
                 </button>
               ))}
-            </div>
+            </span>
 
             <div className="text-sm text-slate-700" style={{ minWidth: 36, textAlign: 'right' }}>
               {Number(normalizedRating).toFixed(1)}

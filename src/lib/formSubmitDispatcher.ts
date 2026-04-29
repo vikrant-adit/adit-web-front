@@ -5,12 +5,12 @@ export async function submitForm(
   config: SubmitConfig,
   data: Record<string, any>
 ) {
-  switch (config.type) {
-    case "api":
-      return submitViaApi(config, data);
-    default:
-      throw new Error("Unsupported submit type");
+  if(config.type=="api"){
+    return submitViaApi(config, data);
+  }else{
+    throw new Error("Unsupported submit type");
   }
+
 }
 
 async function submitViaApi(
@@ -21,7 +21,7 @@ async function submitViaApi(
     method: config.method,
     headers: {
       "Content-Type": "application/json",
-      ...(config.headers ?? {}),
+      ...config.headers,
     },
     body: JSON.stringify(data),
   });

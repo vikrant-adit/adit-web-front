@@ -2,6 +2,7 @@
 'use client';
 import type { ComponentConfig } from '@wecre8websites/strapi-page-builder-react';
 import AllStepsBlock, { AllStepsBlockProps } from './component.client';
+import { buildImageUrl } from '@/lib/defaults';
 
 export const AllStepsBlockConfig: Omit<
   ComponentConfig<AllStepsBlockProps, AllStepsBlockProps>,
@@ -92,7 +93,7 @@ captionFontSize: {
         title: 'Feature Title',
         cards: [
           {
-            image: `${process.env.STRAPI_API_FOR_IMAGES}/uploads/placeholder.png`,
+            image: buildImageUrl('placeholder.png'),
             alt: 'Feature image',
             caption: 'Feature description',
           },

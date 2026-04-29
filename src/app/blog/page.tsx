@@ -141,74 +141,80 @@ export default function NewsPage() {
         </div>
 
         {/* Show loading or articles */}
-        {loading && page === 1 ? (
-          <div className="flex items-center justify-center p-4 text-blue-500">
-            <Loader2 className="h-8 w-8 animate-spin" />
-          </div>
-        ) : articles.length === 0 ? (
-          <p className="text-center p-4 text-gray-600">No news available.</p>
-        ) : (
-          articles.map((article, index) => {
-            const isLast = index === articles.length - 1;
+        {(() => {
+          if (loading && page === 1) {
             return (
-              <div
-                key={article.id}
-                ref={isLast ? lastArticleRef : null}
-                className="bg-white shadow-lg rounded-2xl p-3 mb-2 flex"
-              >
-                <div className="leftimg w-[30%]">
-                  <Link
-                    href={`/blog/${article.slug.en}`}
-                    className="block rounded-2xl"
-                  >
-                    {article.image?.url && (
-                      <Image
-                       src={resolveImageUrl(`/uploads/istockphoto_1392500126_612x612_49e8a39689.jpg`)}
-                      alt={
-                          article.image.alt_attribute_translated ||
-                          article.title.en
-                        }
-                        width={400}
-                        height={300}
-                        className="rounded-xl mb-4"
-                        unoptimized
-                      />
-                    )}
-                  </Link>
-                </div>
-
-                <div className="righttext w-[70%]">
-                  <Link
-                    href={`/blog/${article.slug.en}`}
-                    className="block rounded-2xl"
-                  >
-                    <h1 className="text-2xl font-bold mb-2 hover:text-[#FC8B12]">
-                      {article.title.en}
-                    </h1>
-                  </Link>
-
-                  <div
-                    className="prose prose-lg max-w-none line-clamp-5"
-                    dangerouslySetInnerHTML={{
-                      __html: DOMPurify.sanitize(article.body.en || ""),
-                    }}
-                  />
-
-                  <p className="text-lg text-gray-500 mb-4 flex justify-between w-[100%]">
-                    <span>
-                      {new Date(article.date).toLocaleDateString("en-US", {
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                      })}
-                    </span>
-                    <span>{article.author}</span>
-                  </p>
-                </div>
+              <div className="flex items-center justify-center p-4 text-blue-500">
+                <Loader2 className="h-8 w-8 animate-spin" />
               </div>
             );
-          })
-        )}
+          } else if (articles.length === 0) {
+            return (
+              <p className="text-center p-4 text-gray-600">No news available.</p>
+            );
+          } else {
+            return articles.map((article, index) => {
+              const isLast = index === articles.length - 1;
+              return (
+                <div
+                  key={article.id}
+                  ref={isLast ? lastArticleRef : null}
+                  className="bg-white shadow-lg rounded-2xl p-3 mb-2 flex"
+                >
+                  <div className="leftimg w-[30%]">
+                    <Link
+                      href={`/blog/${article.slug.en}`}
+                      className="block rounded-2xl"
+                    >
+                      {article.image?.url && (
+                        <Image
+                         src={resolveImageUrl(`/uploads/istockphoto_1392500126_612x612_49e8a39689.jpg`)}
+                        alt={
+                            article.image.alt_attribute_translated ||
+                            article.title.en
+                          }
+                          width={400}
+                          height={300}
+                          className="rounded-xl mb-4"
+                          unoptimized
+                        />
+                      )}
+                    </Link>
+                  </div>
+
+                  <div className="righttext w-[70%]">
+                    <Link
+                      href={`/blog/${article.slug.en}`}
+                      className="block rounded-2xl"
+                    >
+                      <h1 className="text-2xl font-bold mb-2 hover:text-[#FC8B12]">
+                        {article.title.en}
+                      </h1>
+                    </Link>
+
+                    <div
+                      className="prose prose-lg max-w-none line-clamp-5"
+                      dangerouslySetInnerHTML={{
+                        __html: DOMPurify.sanitize(article.body.en || ""),
+                      }}
+                    />
+
+                    <p className="text-lg text-gray-500 mb-4 flex justify-between w-[100%]">
+                      <span>
+                        {new Date(article.date).toLocaleDateString("en-US", {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        })}
+                      </span>
+                      <span>{article.author}</span>
+                    </p>
+                  </div>
+                </div>
+              );
+            });
+          }
+        })()}
 
         {loadingMore && (
           <div className="flex items-center justify-center p-4 text-blue-500">
@@ -248,8 +254,9 @@ export default function NewsPage() {
 
         <h1 className="text-2xl font-semibold mb-4 mt-6">Browse topics</h1>
         {categories.map((category) => (
-          <div
+          <button
             key={category.id}
+            type="button"
             onClick={() =>
               setSelectedCategory(
                 selectedCategory === category.category_slug
@@ -257,7 +264,7 @@ export default function NewsPage() {
                   : category.category_slug
               )
             }
-            className={`cursor-pointer w-full flex items-center p-2 rounded-lg ${
+            className={`w-full flex items-center p-2 rounded-lg ${
               selectedCategory === category.category_slug
                 ? "bg-blue-100 font-bold"
                 : "hover:bg-gray-100"
@@ -265,7 +272,7 @@ export default function NewsPage() {
           >
             <ChevronRight className="text-[#FC8B12]" />
             <span>{category.category_title}</span>
-          </div>
+          </button>
         ))}
       </div>
     </div>

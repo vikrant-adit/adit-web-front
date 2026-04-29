@@ -284,27 +284,30 @@ export default function Stories() {
             Browse topics
           </h2>
           <ul className="flex flex-col gap-2">
-            <li
-              className={`cursor-pointer flex items-center gap-2 text-sm hover:text-[#22a9e1] transition ${
-                category === "all"
-                  ? "font-semibold text-[#22a9e1]"
-                  : "text-gray-700"
-              }`}
-              onClick={() => onSelectCategory("all")}
-            >
-              <span className="text-[#22a9e1]">&rsaquo;</span> All
-            </li>
-            {categories.map((c) => (
-              <li
-                key={c.id}
-                className={`cursor-pointer flex items-center gap-2 text-sm hover:text-[#22a9e1] transition ${
-                  category === c.slug
+            <li key="all">
+              <button
+                className={`w-full text-left flex items-center gap-2 text-sm hover:text-[#22a9e1] transition ${
+                  category === "all"
                     ? "font-semibold text-[#22a9e1]"
                     : "text-gray-700"
                 }`}
-                onClick={() => onSelectCategory(c.slug)}
+                onClick={() => onSelectCategory("all")}
               >
-                <span className="text-[#22a9e1]">&rsaquo;</span> {c.title}
+                <span className="text-[#22a9e1]">&rsaquo;</span> All
+              </button>
+            </li>
+            {categories.map((c) => (
+              <li key={c.id}>
+                <button
+                  className={`w-full text-left flex items-center gap-2 text-sm hover:text-[#22a9e1] transition ${
+                    category === c.slug
+                      ? "font-semibold text-[#22a9e1]"
+                      : "text-gray-700"
+                  }`}
+                  onClick={() => onSelectCategory(c.slug)}
+                >
+                  <span className="text-[#22a9e1]">&rsaquo;</span> {c.title}
+                </button>
               </li>
             ))}
           </ul>

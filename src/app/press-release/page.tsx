@@ -46,18 +46,18 @@ export type PressReleasesResponse = {
   prev_page_url: string | null;
   total: number;
 };
+           const skeletonKeys = ["sk-1", "sk-2", "sk-3"];
 
 function stripHtml(html?: string): string {
   if (!html) return "";
   const div =
-    typeof window !== "undefined" ? document.createElement("div") : null;
+    globalThis.window === undefined ? null : document.createElement("div");
   if (div) {
     div.innerHTML = html;
     return (div.textContent || div.innerText || "").trim();
   }
   return html
-    .replace(/<[^>]+>/g, " ")
-    .replace(/\s+/g, " ")
+.replaceAll(/<[^<>]*>/g, " ")    .replaceAll(/\s+/g, " ")
     .trim();
 }
 
@@ -115,7 +115,7 @@ function toDate(item: PressReleaseItem): Date | null {
   const d = item.date || item.published_at || item.created_at;
   if (!d) return null;
   const dt = new Date(d);
-  return isNaN(dt.getTime()) ? null : dt;
+  return Number.isNaN(dt.getTime()) ? null : dt;
 }
 
 function formatDate(d: Date | null): string {
@@ -318,17 +318,18 @@ const PressRelease: React.FC = () => {
 
         {items.length === 0 && loading && (
           <div className="pr-list" aria-busy>
-            {Array.from({ length: 3 }).map((_, i) => (
-              <div className="sk-item" key={i}>
-                <div className="sk-box sk-thumb" />
-                <div>
-                  <div className="sk-box sk-line lg" />
-                  <div className="sk-box sk-line md" />
-                  <div className="sk-box sk-line md" />
-                  <div className="sk-box sk-line sm" />
-                </div>
-              </div>
-            ))}
+
+{skeletonKeys.map((key) => (
+  <div className="sk-item" key={key}>
+    <div className="sk-box sk-thumb" />
+    <div>
+      <div className="sk-box sk-line lg" />
+      <div className="sk-box sk-line md" />
+      <div className="sk-box sk-line md" />
+      <div className="sk-box sk-line sm" />
+    </div>
+  </div>
+))}
           </div>
         )}
 

@@ -33,12 +33,12 @@ const ParagraphBlock: React.FC<ParagraphBlockProps> = ({
   const { shouldGlow } = useEditorGlow(isGlobal);
 
   // alignment -> safe tailwind class
-  const alignClass =
-    align === 'left'
-      ? 'text-left'
-      : align === 'right'
-      ? 'text-right'
-      : 'text-center';
+  let alignClass = 'text-center';
+  if (align === 'left') {
+    alignClass = 'text-left';
+  } else if (align === 'right') {
+    alignClass = 'text-right';
+  }
 
   // determine if color is a tailwind class
   const isTailwindColor =

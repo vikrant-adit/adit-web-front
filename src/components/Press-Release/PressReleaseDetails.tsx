@@ -4,6 +4,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import SafeHtml from "../common/SafeHtml";
 import { useParams } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 
 const API_BASE = "https://adit.com/api/v1/press-release";
 const FILES_BASE = "https://adit.com/storage/files/";
@@ -58,7 +59,7 @@ function getLocalizedString(input: LocalizedString): string | undefined {
   if (isObject(input)) {
     if (typeof input.en === "string") return input.en;
     for (const k of Object.keys(input)) {
-      const v = (input as any)[k];
+      const v = (input as never)[k];
       if (typeof v === "string") return v;
     }
   }
@@ -68,7 +69,7 @@ function getLocalizedString(input: LocalizedString): string | undefined {
 function pickLocalized(...vals: LocalizedString[]): string | undefined {
   for (const v of vals) {
     const str = getLocalizedString(v);
-    if (str && str.trim().length) return str;
+    if (str?.trim().length) return str;
   }
   return undefined;
 }
@@ -93,7 +94,7 @@ function toImage(item?: PressReleaseDetail | null): string | undefined {
   if (typeof item.image === "string") return item.image;
 
   if (isObject(item.image)) {
-    const obj = item.image as ImageObject;
+    const obj = item.image;
     const url = obj.url || obj.original_url || obj.path;
     if (url)
       return url.startsWith("http")
@@ -101,15 +102,13 @@ function toImage(item?: PressReleaseDetail | null): string | undefined {
         : FILES_BASE + url.replace(/^\/+/, "");
     if (obj.name) return FILES_BASE + obj.name;
   }
-
-  return;
 }
 
 function toDate(item?: PressReleaseDetail | null): Date | null {
   const d = item?.created_at || item?.date || item?.published_at;
   if (!d) return null;
   const dt = new Date(d);
-  return isNaN(dt.getTime()) ? null : dt;
+  return Number.isNaN(dt.getTime()) ? null : dt;
 }
 
 function formatDate(d: Date | null): string {
@@ -205,13 +204,15 @@ const PressReleaseDetails: React.FC = () => {
 
             {publisher && <div>{publisher}</div>}
 
-            {hero && (
-              <img
-                src={hero}
-                alt={title || "Image"}
-                className="prd-hero"
-              />
-            )}
+           {hero && (
+  <Image
+    src={hero}
+    alt={title || "Image"}
+    width={1200}
+    height={600}
+    className="prd-hero"
+  />
+)}
 
             {bodyHtml && (
               <SafeHtml html={bodyHtml} className="prd-body" />

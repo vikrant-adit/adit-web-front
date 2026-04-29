@@ -12,7 +12,7 @@ export type NewFormBlockProps = {
   popup_button_text?: string;
 };
 
-export default function NewFormBlock(props: NewFormBlockProps) {
+export default function NewFormBlock(props: Readonly<NewFormBlockProps>) {
   const { formKey, display_mode = "inline", popup_button_text = "Open Form" } =
     props;
 
@@ -74,10 +74,10 @@ export default function NewFormBlock(props: NewFormBlockProps) {
 function FormPopup({
   schema,
   buttonText,
-}: {
+}: Readonly<{
   schema: any;
   buttonText: string;
-}) {
+}>) {
   const [open, setOpen] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
@@ -100,35 +100,7 @@ function FormPopup({
             className="relative w-full max-w-sm sm:max-w-2xl md:max-w-5xl rounded-lg sm:rounded-2xl bg-white shadow-xl overflow-hidden flex flex-col"
             style={{ maxHeight: '90vh' }}
           >
-            {!submitted ? (
-              <>
-                {/* ✅ Header only before submission (if configured) */}
-                {schema?.popup?.headerTitle && (
-                  <div className="relative flex items-center justify-center border-b px-3 py-2 sm:px-6 sm:py-3">
-                    <h2 className="text-sm sm:text-base md:text-xl font-semibold">
-                      {schema.popup.headerTitle}
-                    </h2>
-
-                    <button
-                      type="button"
-                      onClick={() => setOpen(false)}
-                      className="absolute right-2 sm:right-4 rounded-lg px-2 py-1 sm:px-3 text-xs sm:text-sm hover:bg-gray-100"
-                    >
-                      ✕
-                    </button>
-                  </div>
-                )}
-
-                {/* Body */}
-                <div className="p-3 sm:p-6 overflow-y-auto">
-                  <DynamicForm
-                    schema={schema}
-                    variant="popup"
-                    onSuccess={() => setSubmitted(true)} // ✅ trigger success view
-                  />
-                </div>
-              </>
-            ) : (
+            {submitted ? (
               // ✅ Success state (no header)
             <div className="p-4 sm:p-8 md:p-10 text-center space-y-4 sm:space-y-6 overflow-y-auto">
   {/* SUCCESS IMAGE */}
@@ -164,6 +136,34 @@ function FormPopup({
   )}
 </div>
 
+            ) : (
+              <>
+                {/* ✅ Header only before submission (if configured) */}
+                {schema?.popup?.headerTitle && (
+                  <div className="relative flex items-center justify-center border-b px-3 py-2 sm:px-6 sm:py-3">
+                    <h2 className="text-sm sm:text-base md:text-xl font-semibold">
+                      {schema.popup.headerTitle}
+                    </h2>
+
+                    <button
+                      type="button"
+                      onClick={() => setOpen(false)}
+                      className="absolute right-2 sm:right-4 rounded-lg px-2 py-1 sm:px-3 text-xs sm:text-sm hover:bg-gray-100"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                )}
+
+                {/* Body */}
+                <div className="p-3 sm:p-6 overflow-y-auto">
+                  <DynamicForm
+                    schema={schema}
+                    variant="popup"
+                    onSuccess={() => setSubmitted(true)} // ✅ trigger success view
+                  />
+                </div>
+              </>
             )}
           </div>
         </div>

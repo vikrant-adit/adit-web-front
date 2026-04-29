@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { resolveImageUrl } from "@/lib/imageResolver";
+import { getStrapiApiUrl, getStrapiAuthToken } from "@/lib/defaults";
 
 export interface SimilarBlogsBlockProps {
   title?: string;
@@ -18,13 +19,13 @@ export default function SimilarBlogsBlock({
   excludeSlug,
   fetchFromApi = "true",
   items = [],
-}: SimilarBlogsBlockProps) {
+}: Readonly<SimilarBlogsBlockProps>) {
 
   const [blogs, setBlogs] = useState<any[]>(items);
 
   async function fetchBlogs() {
     let url =
-      `${process.env.STRAPI_API}blogs` +
+      `${getStrapiApiUrl()}/blogs` +
       `?populate=coverImage` +
       `&pagination[limit]=${limit}`;
 
@@ -34,7 +35,7 @@ export default function SimilarBlogsBlock({
 
     const res = await fetch(url, {
       headers: {
-        Authorization: `Bearer ${process.env.STRAPI_API_AUTH_TOKEN}`,
+        Authorization: `Bearer ${getStrapiAuthToken()}`,
       },
     });
 

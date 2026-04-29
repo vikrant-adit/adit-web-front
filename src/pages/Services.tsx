@@ -110,8 +110,8 @@ const Services = () => {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {coreServices.map((service, index) => (
-              <Card key={index} className="h-full hover:shadow-lg transition-shadow">
+            {coreServices.map((service) => (
+              <Card key={service.title} className="h-full hover:shadow-lg transition-shadow">
                 <CardHeader>
                   <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
                     <service.icon className="w-6 h-6 text-primary" />
@@ -140,8 +140,8 @@ const Services = () => {
           </div>
 
           <div className="grid md:grid-cols-2 gap-8">
-            {industries.map((industry, index) => (
-              <Card key={index} className="h-full">
+            {industries.map((industry) => (
+              <Card key={industry.name} className="h-full">
                 <CardHeader>
                   <div className="flex items-center gap-4 mb-4">
                     <div className="w-12 h-12 bg-orange/10 rounded-lg flex items-center justify-center">
@@ -155,8 +155,8 @@ const Services = () => {
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-2">
-                    {industry.features.map((feature, featureIndex) => (
-                      <li key={featureIndex} className="flex items-center gap-2 text-sm text-muted-foreground">
+                    {industry.features.map((feature) => (
+                      <li key={feature} className="flex items-center gap-2 text-sm text-muted-foreground">
                         <div className="w-2 h-2 bg-primary rounded-full"></div>
                         {feature}
                       </li>

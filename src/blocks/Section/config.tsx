@@ -327,6 +327,10 @@ justifyDesktop: {
       min: 0,
       max: 50,
     },
+    dropZone: {
+      type: "slot",
+      label: "Section Content",
+    },
   },
 
   defaultProps: {
@@ -376,6 +380,8 @@ justifyDesktop: {
     position: "relative",
     zIndex: undefined,
     overflow: "visible",
+
+    dropZone: [],
 
     allow: [
       { name: "ParagraphBlock" },

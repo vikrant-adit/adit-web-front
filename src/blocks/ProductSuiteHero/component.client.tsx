@@ -1,5 +1,6 @@
 'use client';
 import { resolveImageUrl } from "@/lib/imageResolver";
+import { buildImageUrl } from "@/lib/defaults";
 import Image from "next/image";
 import React from "react";
 
@@ -36,7 +37,7 @@ const ProductSuiteHeroBlock: React.FC<ProductSuiteHeroProps> = ({
             className="absolute inset-0 z-[-1] bg-cover bg-center"
             style={{
               backgroundImage:
-                "url(`${process.env.STRAPI_API_FOR_IMAGES}/uploads/innerpage_hero_section_bgpattern_ecbfe42bf8.png`)",
+                `url(${buildImageUrl('innerpage_hero_section_bgpattern_ecbfe42bf8.png')})`,
             }}
           ></div>
 

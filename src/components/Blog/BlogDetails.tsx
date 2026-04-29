@@ -73,10 +73,11 @@ export default function NewsDetail() {
     const h2Elements = Array.from(doc.querySelectorAll("h2"));
     const toc = h2Elements.map((el, index) => {
       const text = el.textContent || `Heading ${index + 1}`;
-      const headingSlug = text
-        .toLowerCase()
-        .replace(/[^\w]+/g, "-")
-        .replace(/^-+|-+$/g, "");
+    const headingSlug = text
+  .toLowerCase()
+  .split(/\W+/)
+  .filter(Boolean)
+  .join("-");
 
       el.id = headingSlug;
       return { id: headingSlug, text };

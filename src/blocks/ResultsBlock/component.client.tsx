@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import { buildImageUrl } from '@/lib/defaults';
 
 export type Stat = {
   value: string;
@@ -86,7 +87,7 @@ export default function ResultsBlock(props: ResultsBlockProps) {
 
   const defaultCards: CaseCard[] = [
     {
-      imageSrc: `${process.env.STRAPI_API_FOR_IMAGES}/uploads/case_study_placeholder.png`,
+      imageSrc: buildImageUrl('case_study_placeholder.png'),
       imageAlt: 'Case study',
       title: 'Sample case study result',
       stats: [

@@ -1,12 +1,12 @@
 'use client';
 
-import { ReactNode } from "react";
+import React from "react";
 import { useIsEditor } from "@/lib/EditorContext";
 
-type Props = {
-  isGlobal?: boolean | string;
-  children: ReactNode;
-};
+interface Props {
+  readonly isGlobal?: boolean;
+  readonly children: React.ReactNode;
+}
 
 function isTruthyGlobal(value: boolean | string | undefined) {
   return value === true || value === "true" || value === "1";

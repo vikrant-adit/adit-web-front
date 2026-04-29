@@ -1,10 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
-import {
-  DefaultComponentProps,
-  DropZone,
-} from "@wecre8websites/strapi-page-builder-react";
+import { DefaultComponentProps } from "@wecre8websites/strapi-page-builder-react";
 import { FC, ReactElement } from "react";
 
 /* -------------------------------
@@ -12,12 +9,13 @@ import { FC, ReactElement } from "react";
  * ------------------------------- */
 export interface RootProps extends DefaultComponentProps {
   isEditor?: boolean; // kept for future use (editor-only UI)
+  children?: React.ReactNode;
 }
 
 /* -------------------------------
  * ROOT COMPONENT
  * ------------------------------- */
-export const RootComponent: FC<RootProps> = () => {
+export const RootComponent: FC<RootProps> = ({ children }) => {
 
   return (
     <div className="antialiased text-gray-800 min-h-screen flex flex-col">
@@ -29,10 +27,9 @@ export const RootComponent: FC<RootProps> = () => {
       </a>
 
       <main id="main-content" className="flex-1 relative">
-        <DropZone
-          zone="default-zone"
-          className={`flex-1 relative h-full `}
-        />
+        <div className="flex-1 relative h-full">
+          {children}
+        </div>
       </main>
     </div>
   ) as ReactElement;

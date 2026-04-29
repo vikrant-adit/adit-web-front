@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import type { FormSchema, Field } from "../../../packages/schemas/form";
 
 import { getStoredUTMs } from "@/lib/utm-client";
 import { getDefaultUTMs } from "@/lib/LeadControll/utm-default-data";
 import { getLeadSourceConfigCached } from "@/lib/LeadControll/leadSourceConfig";
 import { trackLeadSourceTS } from "@/lib/LeadControll/leadSourceResolver";
-import { buildApiUrl, getEnvVar } from "@/lib/defaults";
+import { buildApiUrl, getEnvVar, resolveImageUrl } from "@/lib/defaults";
 
 type Props = {
   schema: FormSchema;
@@ -20,14 +20,14 @@ export default function DynamicForm({
   schema,
   variant = "inline",
   onSuccess,
-}: Props) {
+}: Readonly<Props>) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
   const confirmation = schema?.confirmation || {};
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
@@ -38,7 +38,7 @@ export default function DynamicForm({
     const stored = getStoredUTMs();
     const utms = {
       ...getDefaultUTMs(),
-      ...(stored || {}),
+      ...stored,
     };
 
     const leadSourceConfig = await getLeadSourceConfigCached();
@@ -114,18 +114,19 @@ export default function DynamicForm({
   const promo = (schema as any)?.promo;
   const showSplitPromo =
     (schema as any)?.layout === "split-left-promo" && promo;
-  const columns =
-    schema?.layout === "single-column"
-      ? 1
-      : schema?.layout === "three-column"
-        ? 3
-        : 2;
-  const gridClass =
-    columns === 1
-      ? "grid grid-cols-1 gap-6"
-      : columns === 2
-        ? "grid grid-cols-1 md:grid-cols-2 gap-6"
-        : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6";
+  let columns = 2;
+  if (schema?.layout === "single-column") {
+    columns = 1;
+  } else if (schema?.layout === "three-column") {
+    columns = 3;
+  }
+
+  const gridClasses: Record<number, string> = {
+    1: "grid grid-cols-1 gap-6",
+    2: "grid grid-cols-1 md:grid-cols-2 gap-6",
+    3: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6",
+  };
+  const gridClass = gridClasses[columns] || gridClasses[2];
   const formElement = (
     <form
       onSubmit={handleSubmit}
@@ -189,7 +190,7 @@ export default function DynamicForm({
 
   return formElement;
 }
-export function FormSuccess({ confirmation }: { confirmation: any }) {
+export function FormSuccess({ confirmation }: Readonly<{ confirmation: any }>) {
   const layout = confirmation?.successLayout || "minimal";
 
   return (
@@ -214,7 +215,7 @@ export function FormSuccess({ confirmation }: { confirmation: any }) {
  * Field Renderer
  * ---------------------------------- */
 
-function FormField({ field }: { field: Field }) {
+function FormField({ field }: Readonly<{ field: Field }>) {
   const [value, setValue] = useState("");
 
   switch (field.type) {
@@ -275,7 +276,7 @@ function FormField({ field }: { field: Field }) {
   }
 }
 function formatPhone(value: string) {
-  const numbers = value.replace(/\D/g, "").slice(0, 10);
+  const numbers = value.replaceAll(/\D/g, "").slice(0, 10);
 
   const parts = [];
 

@@ -56,7 +56,7 @@ const Faq = () => {
       <div className="space-y-4">
         {faqData.map((item, index) => (
           <div
-            key={index}
+            key={item.answer}
             className="border rounded-lg shadow-sm overflow-hidden"
           >
             <button

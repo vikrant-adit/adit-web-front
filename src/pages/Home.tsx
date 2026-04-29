@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import Layout from "@/components/layout/Layout";
 import FinalCtaSection from "@/components/common/FinalCtaSection";
 import Hero from "@/components/home/Hero";
@@ -16,7 +16,8 @@ const Home = () => {
 
   const list = [
     {
-      title: "Goodbye Lighthouse360, Hello $1.6M: How Adit became Dedicated Dentistry’s growth engine",
+      title:
+        "Goodbye Lighthouse360, Hello $1.6M: How Adit became Dedicated Dentistry’s growth engine",
       highlightedName: "Dedicated Dentistry’s",
       highlightedStat: "40%",
       description:
@@ -32,8 +33,9 @@ const Home = () => {
           label: "Annual production (record-high)",
         },
       ],
-      imageUrl:
-        buildImageUrl("dedicated_dentistry_casestudy_slider_thumbnail_6baa2a8e04.webp"),
+      imageUrl: buildImageUrl(
+        "dedicated_dentistry_casestudy_slider_thumbnail_6baa2a8e04.webp",
+      ),
       buttonText: "Download Case Study",
       buttonLink:
         "https://adit.com/storage/files/dedicated-dentistry-case-study-adit.pdf",
@@ -41,7 +43,8 @@ const Home = () => {
     // Duplicate 3 more slides for demo
     // You can replace with real data later
     {
-      title: "Lynnwood Dental Studio  generated $227K in production with online scheduling and cut no-shows by 40%",
+      title:
+        "Lynnwood Dental Studio  generated $227K in production with online scheduling and cut no-shows by 40%",
       highlightedName: "Lynnwood Dental Studio",
       highlightedStat: "40%",
       description:
@@ -57,8 +60,9 @@ const Home = () => {
           label: "New patient boost",
         },
       ],
-      imageUrl:
-        buildImageUrl("lynnwood_dental_studio_casestudy_slider_thumbnail_016dbec5b5.webp"),
+      imageUrl: buildImageUrl(
+        "lynnwood_dental_studio_casestudy_slider_thumbnail_016dbec5b5.webp",
+      ),
       buttonText: "Download Case Study",
       buttonLink:
         "https://adit.com/storage/files/lynnwood-dental-studio-case-study-adit.pdf",
@@ -80,14 +84,16 @@ const Home = () => {
           label: "Saved monthly budget",
         },
       ],
-      imageUrl:
-        buildImageUrl("petaluma_dental_group_casestudy_slider_thumbnail_50171ba397.webp"),
+      imageUrl: buildImageUrl(
+        "petaluma_dental_group_casestudy_slider_thumbnail_50171ba397.webp",
+      ),
       buttonText: "Download Case Study",
       buttonLink:
         "https://adit.com/storage/files/lynnwood-dental-studio-case-study-adit.pdf",
     },
     {
-      title: "Socialite Vision boosts revenue by 20% and grows new patients by 40% with Adit",
+      title:
+        "Socialite Vision boosts revenue by 20% and grows new patients by 40% with Adit",
       highlightedName: "Socialite Vision",
       highlightedStat: "40%",
       description:
@@ -103,8 +109,9 @@ const Home = () => {
           label: "More new patients",
         },
       ],
-      imageUrl:
-        buildImageUrl("socialite_vision_casestudy_slider_thumbnail_35cf4910de.webp"),
+      imageUrl: buildImageUrl(
+        "socialite_vision_casestudy_slider_thumbnail_35cf4910de.webp",
+      ),
       buttonText: "Download Case Study",
       buttonLink:
         "https://adit.com/storage/files/dedicated-dentistry-case-study-adit.pdf",
@@ -116,7 +123,7 @@ const Home = () => {
     if (!scrollRef.current) return;
 
     const idx = Math.round(
-      scrollRef.current.scrollLeft / scrollRef.current.offsetWidth
+      scrollRef.current.scrollLeft / scrollRef.current.offsetWidth,
     );
     setActive(idx);
   };
@@ -136,35 +143,35 @@ const Home = () => {
     }, AUTO_SLIDE_INTERVAL);
 
     return () => clearInterval(interval);
-  }, [active]);
+  }, [active, list.length]);
 
   return (
     <Layout>
       <Hero />
       <Testimonials />
       <CompleteSuiteSection />
-      
-    <AiCallComponent/>
-    {/* <CaseStudiesSection /> */}
+
+      <AiCallComponent />
+      {/* <CaseStudiesSection /> */}
       {/* Horizontal Slider */}
-   <div className="text-center mt-8 bg-white">
-          <h2 className="text-5xl font-semibold text-[#0a2240] mb-2">
-            Real practices, real results
-          </h2>
-          <p className="text-xl text-gray-600 max-w-5xl mx-auto leading-relaxed">
-            See how Adit is transforming practices with unified practice
-            management software systems. From reducing no-shows to improving
-            patient satisfaction, our doctors share the real-world impact of
-            streamlined, connected communication.
-          </p>
-        </div>
+      <div className="text-center mt-8 bg-white">
+        <h2 className="text-5xl font-semibold text-[#0a2240] mb-2">
+          Real practices, real results
+        </h2>
+        <p className="text-xl text-gray-600 max-w-5xl mx-auto leading-relaxed">
+          See how Adit is transforming practices with unified practice
+          management software systems. From reducing no-shows to improving
+          patient satisfaction, our doctors share the real-world impact of
+          streamlined, connected communication.
+        </p>
+      </div>
       <div
         className="homeCaseStudyScroll bg-white"
         ref={scrollRef}
         onScroll={handleScroll}
       >
-        {list.map((item, idx) => (
-          <div className="caseSlide" key={idx}>
+        {list.map((item) => (
+          <div className="caseSlide" key={item.title}>
             <CaseStudyHighlight {...item} />
           </div>
         ))}
@@ -172,32 +179,31 @@ const Home = () => {
 
       {/* Dots */}
       <div className="dotsContainer">
-  {list.map((_, i) => (
-    <div
-      key={i}
-      className={`dot ${active === i ? "active" : ""}`}
-      onClick={() => {
-        if (!scrollRef.current) return;
-        scrollRef.current.scrollTo({
-          left: i * scrollRef.current.offsetWidth,
-          behavior: "smooth",
-        });
-        setActive(i);
-      }}
-      style={{ cursor: "pointer" }}
-    />
-  ))}
-</div>
+        {list.map((item, i) => (
+          <button
+            key={item.title}
+            className={`dot ${active === i ? "active" : ""}`}
+            onClick={() => {
+              if (!scrollRef.current) return;
+              scrollRef.current.scrollTo({
+                left: i * scrollRef.current.offsetWidth,
+                behavior: "smooth",
+              });
+              setActive(i);
+            }}
+            aria-label={`Go to slide ${i + 1}`}
+          />
+        ))}
+      </div>
 
-<div className="bg-white mt-8">
-  <FinalCtaSection
-        title="Ready to simplify and grow your practice?"
-        description="Adit gives you all the tools you need to streamline operations, reduce costs, and keep patients engaged, all in one easy-to-use, affordable platform. Spend less time on busy work and more time delivering great patient care."
-        buttonText="Book a Demo"
-        buttonLink="/schedule-a-demo"
-      />
-</div>
-      
+      <div className="bg-white mt-8">
+        <FinalCtaSection
+          title="Ready to simplify and grow your practice?"
+          description="Adit gives you all the tools you need to streamline operations, reduce costs, and keep patients engaged, all in one easy-to-use, affordable platform. Spend less time on busy work and more time delivering great patient care."
+          buttonText="Book a Demo"
+          buttonLink="/schedule-a-demo"
+        />
+      </div>
     </Layout>
   );
 };

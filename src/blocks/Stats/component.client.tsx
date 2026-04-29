@@ -46,7 +46,7 @@ function useCountUp(target: number, duration: number, decimals: number) {
   const startRef = useRef<number | null>(null);
 
   useEffect(() => {
-    if (!isFinite(target) || duration <= 0) {
+    if (!Number.isFinite(target) || duration <= 0) {
       setCurrent(target);
       return;
     }
@@ -54,7 +54,7 @@ function useCountUp(target: number, duration: number, decimals: number) {
     startRef.current = null;
 
     const step = (ts: number) => {
-      if (startRef.current === null) startRef.current = ts;
+      startRef.current ??= ts;
       const elapsed = ts - (startRef.current || 0);
       const progress = Math.min(1, elapsed / duration);
       const eased = 1 - Math.pow(1 - progress, 3);
@@ -164,13 +164,19 @@ export default function StatsClient({
   editable = false,
   numberColor = '#06263a',
   labelColor = '#6b7280',
-}: StatsProps) {
+}: Readonly<StatsProps>) {
   const safeItems: StatItem[] = Array.isArray(items) ? items : Object.values(items ?? {});
+
+  const getJustifyContent = (a?: string) => {
+    if (a === 'left') return 'flex-start';
+    if (a === 'right') return 'flex-end';
+    return 'center';
+  };
 
   const containerStyle: React.CSSProperties = {
     display: 'flex',
     gap: `clamp(0.5rem, 3vw, ${gap}px)`,
-    justifyContent: align === 'left' ? 'flex-start' : align === 'right' ? 'flex-end' : 'center',
+    justifyContent: getJustifyContent(align),
     alignItems: 'stretch',
     flexWrap: 'wrap',
     width: '100%',

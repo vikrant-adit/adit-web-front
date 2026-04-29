@@ -19,8 +19,11 @@ export const SelectableCardsConfig: Omit<
         id: { type: 'text', label: 'ID (optional)' },
         label: { type: 'textarea', label: 'Label (HTML allowed)' },
       },
-      getItemSummary: (it: Item) =>
-        it?.label ? (it.label.length > 30 ? it.label.slice(0, 28) + '…' : it.label) : 'Card',
+      getItemSummary: (it: Item) => {
+        if (!it?.label) return 'Card';
+        if (it.label.length > 30) return it.label.slice(0, 28) + '…';
+        return it.label;
+      },
       max: 24,
     },
     columns: { type: 'number', label: 'Columns (desktop)' },
@@ -72,8 +75,8 @@ export const SelectableCardsConfig: Omit<
   // normalize items shape: support { label }, { label: { value } }, legacy shapes
   if (Array.isArray(normalized.items)) {
     normalized.items = normalized.items.map((it: any) => ({
-      id: it?.id ?? it?.value ?? (it?.id?.value ?? null) ?? null,
-      label: it?.label?.value ?? it?.label ?? (it?.value?.label ?? '') ?? '',
+      id: it?.id ?? it?.value ?? it?.id?.value ?? null,
+      label: it?.label?.value ?? it?.label ?? it?.value?.label ?? '',
     }));
   } else {
     normalized.items = [];
@@ -84,7 +87,7 @@ export const SelectableCardsConfig: Omit<
     if (v === true || v === 'true') return true;
     if (v === false || v === 'false') return false;
     if (v && typeof v === 'object' && 'value' in v) {
-      const vv = (v as any).value;
+      const vv = v.value;
       return vv === true || vv === 'true';
     }
     return Boolean(v);

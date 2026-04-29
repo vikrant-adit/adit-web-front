@@ -6,6 +6,12 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
+        protocol: "http",
+        hostname: "localhost",
+        port: "1337",
+        pathname: "/uploads/**",
+      },
+      {
         protocol: "https",
         hostname: "enfolytics.com",
         pathname: "/adit/home-v2/images/**",
@@ -54,11 +60,11 @@ const nextConfig = {
       },
     ],
   },
-    transpilePackages: [
+  transpilePackages: [
     "@wecre8websites/strapi-page-builder-react",
-    "handlebars"
+    "handlebars",
   ],
-   webpack: (config) => {
+  webpack: (config) => {
     config.resolve.alias = {
       ...config.resolve.alias,
       handlebars: "handlebars/dist/handlebars.min.js",

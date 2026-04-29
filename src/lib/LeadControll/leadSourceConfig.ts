@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { buildApiUrl, getEnvVar } from '@/lib/defaults';
 
 export type LeadSourceConfig = {
   utm_source_map?: Record<string, string>;
@@ -15,17 +16,28 @@ const CACHE_MS = 24 * 60 * 60 * 1000;
 export async function fetchLeadSourceConfig(): Promise<LeadSourceConfig | null> {
   try {
     const res = await fetch(
-      `${process.env.STRAPI_API}lead-source-mapping`,
+      buildApiUrl('lead-source-mapping'),
       {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${process.env.STRAPI_API_AUTH_TOKEN}`,
+          Authorization: `Bearer ${getEnvVar('STRAPI_API_AUTH_TOKEN')}`,
         },
         cache: "no-store",
       }
     );
 
-    if (!res.ok) return null;
+    if (!res.ok) {
+      const text = await res.text();
+      console.warn("fetchLeadSourceConfig bad response", res.status, text);
+      return null;
+    }
+
+    const contentType = res.headers.get('content-type') || '';
+    if (!contentType.includes('application/json')) {
+      const text = await res.text();
+      console.warn('fetchLeadSourceConfig non-JSON response', contentType, text);
+      return null;
+    }
 
     const json = await res.json();
 

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
@@ -23,14 +24,11 @@ export interface EbookInsideTabsBlockProps {
 export default function EbookInsideTabsBlock({
   items = [],
   fetchFromApi = "false",
-  data,
-}: EbookInsideTabsBlockProps) {
+}: Readonly<EbookInsideTabsBlockProps>) {
 
   const [activeIndex, setActiveIndex] = useState(0);
   const [tabs, setTabs] = useState<TabItem[]>(items);
-const getPageApiData = () => {
-  return (window as any).__PAGE_API_DATA__ || null;
-};
+
   /* ---------------------------------------------
   READ FROM PAGE CONTENT
   --------------------------------------------- */
@@ -41,7 +39,7 @@ useEffect(() => {
   }
 
   const loadTabs = () => {
-    const apiData = (window as any).__PAGE_API_DATA__;
+    const apiData = (globalThis as any).__PAGE_API_DATA__;
     if (apiData?.tabs) {
       console.log("apiTabs", apiData);
       setTabs(apiData.tabs);
@@ -78,7 +76,7 @@ useEffect(() => {
               const activeTab = index === activeIndex;
 
               return (
-                <li key={index}>
+                <li key={item.label }>
                   <button
                     onClick={() => setActiveIndex(index)}
                     className={`flex items-center w-full text-left pl-6 py-4 transition-all

@@ -14,8 +14,7 @@ import UTMInitializer from "@/components/UTMInitializer";
 import LeadSourceConfigInitializer from "@/components/LeadSourceConfigInitializer";
 import LoadingScreen from "./Loading";
 type LayoutClientProps = {
-  children: React.ReactNode;
-  global: any;
+readonly  children: React.ReactNode;
 };
 
 export default function LayoutClient({

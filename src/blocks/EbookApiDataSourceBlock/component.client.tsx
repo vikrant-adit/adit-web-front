@@ -2,6 +2,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { getStrapiApiUrl, getStrapiAuthToken } from "@/lib/defaults";
 
 export interface EbookApiDataSourceBlockProps {
   collection?: string;
@@ -15,17 +16,17 @@ export default function EbookApiDataSourceBlock({
 
     async function loadData() {
 
-      const slug = window.location.pathname.replace(/^\/|\/$/g, "");
+      const slug = globalThis.location.pathname.replaceAll(/^\/|\/$/g, "");
 
     const url =
-  `${process.env.STRAPI_API}${collection}` +
+  `${getStrapiApiUrl()}/${collection}` +
   `?filters[slug][$eq]=${slug}` +
   `&populate[tabs][populate]=*` +
   `&populate[whyDownloadGuide][populate][features][populate]=icon`;
 
       const res = await fetch(url, {
         headers: {
-          Authorization: `Bearer ${process.env.STRAPI_API_AUTH_TOKEN}`,
+          Authorization: `Bearer ${getStrapiAuthToken()}`,
         },
       });
 
@@ -37,9 +38,9 @@ export default function EbookApiDataSourceBlock({
 
    const data = entry.attributes || entry;
 
-(window as any).__PAGE_API_DATA__ = data;
+(globalThis as any).__PAGE_API_DATA__ = data;
 
-window.dispatchEvent(new Event("page-api-loaded"));
+globalThis.dispatchEvent(new Event("page-api-loaded"));
 
     }
 

@@ -34,8 +34,7 @@ import {FormBlockProps} from "./FormBlock/component.client";
 import { HeroTypedProps } from "./Hero/component.client";
 import TypedHeroConfig from "./Hero/config";
 
-// import { GlobalPromoProps } from "./GlobalPromo/component.client";
-// import GlobalPromoConfig from "./GlobalPromo/config";
+
 
 import LogoCarouselConfig from "./LogoCarousel/config";
 import { LogoCarouselProps } from "./LogoCarousel/ccomponent.client";
@@ -243,8 +242,7 @@ import SimilarBlogsBlockConfig from "./BlogsDetails/SimilarBlogsBlock/config";
 
 import { BlogSectionBlockProps } from "./BlogsDetails/BlogSectionBlock/component.client";
 import BlogSectionBlockConfig from "./BlogsDetails/BlogSectionBlock/config";
-// import FormBlockConfig from "./NewFormBlock/config";
-// import {FormBlockProps} from "./NewFormBlock/component.client";
+
 /* =============================================
  * PAGE BUILDER BLOCK TYPE DEFINITIONS
  * ============================================= */

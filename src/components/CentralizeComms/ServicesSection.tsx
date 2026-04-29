@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { DataForProduct } from "../common/DemoData/DataArrayFromProduct";
@@ -23,14 +23,13 @@ interface CentrazlieCommsServicesSectionProps {
   buttonLink?: string;
 }
 
-const CentrazlieCommsServicesSection: React.FC<CentrazlieCommsServicesSectionProps> = ({
-  sectionKey = "CentralComms",
-  title,
-}) => {
+const CentrazlieCommsServicesSection: React.FC<
+  CentrazlieCommsServicesSectionProps
+> = ({ sectionKey = "CentralComms", title }) => {
   const section: SectionData | undefined = DataForProduct?.[sectionKey];
 
   // ✅ Safe guard if sectionKey is invalid
-  if (!section || !section.items) {
+  if (!section?.items) {
     return (
       <section className="py-12 text-center text-gray-600">
         <p>No services found for the provided section key.</p>
@@ -53,8 +52,7 @@ const CentrazlieCommsServicesSection: React.FC<CentrazlieCommsServicesSectionPro
       <div className="flex flex-wrap justify-center gap-6 max-w-7xl mx-auto px-4">
         {services.map((service, index) => (
           <div
-            key={index}
-            className="
+key={service.route}            className="
               bg-white rounded-2xl shadow-md p-6 flex flex-col items-center text-center
               hover:bg-sky-500 hover:shadow-lg transition-all duration-300
               group w-full sm:w-[45%] lg:w-[30%]

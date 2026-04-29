@@ -12,7 +12,7 @@ export default function FeatureSection({
   description,
   bullets,
   align = "left",
-}: FeatureProps) {
+}: Readonly<FeatureProps>) {
   const isReverse = align === "right";
 
   return (

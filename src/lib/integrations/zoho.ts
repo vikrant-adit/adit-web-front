@@ -1,10 +1,10 @@
+import { buildApiUrl } from '@/lib/defaults';
+
 export async function sendToZoho(
   slug: string,
   fields: Record<string, string>
 ) {
-  const STRAPI_BASE = process.env.STRAPI_API!;
-
-  const response = await fetch(`${STRAPI_BASE}zoho/submit`, {
+  const response = await fetch(buildApiUrl('zoho/submit'), {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

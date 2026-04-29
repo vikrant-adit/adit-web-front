@@ -49,19 +49,16 @@ const { shouldGlow } = useEditorGlow(isGlobal);
         <div className="w-full lg:flex-1 lg:min-w-[320px] text-left">
           {/* Dynamic Title */}
         <h2 className="text-[1.5rem] sm:text-[1.8rem] lg:text-[2.2rem] leading-snug mb-4">
-  {(highlightedName
-    ? title.split(highlightedName)
-    : [title]
-  ).map((part, index, arr) => (
-    <React.Fragment key={index}>
-      {part}
-      {highlightedName && index < arr.length - 1 && (
-        <span className="text-[#0a4a6d] font-extrabold">
-          {highlightedName}
-        </span>
-      )}
-    </React.Fragment>
-  ))}
+ {(highlightedName ? title.split(highlightedName) : [title]).map((part, index, arr) => (
+ <React.Fragment key={`${part}-${index}`}>
+    {part}
+    {highlightedName && index < arr.length - 1 && (
+      <span className="text-[#0a4a6d] font-extrabold">
+        {highlightedName}
+      </span>
+    )}
+  </React.Fragment>
+))}
   {highlightedStat && (
     <>
       {" "}
@@ -87,11 +84,11 @@ const { shouldGlow } = useEditorGlow(isGlobal);
           {/* Dynamic Stats Row */}
          <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3 sm:gap-5 mb-6 w-full">
   {Array.isArray(stats) &&
-    stats.map((stat, i) => (
-      <div
-        key={i}
-        className="w-full sm:flex-1 sm:min-w-[120px] bg-[#D8F2FF] border border-[#d6e9f5] rounded-xl px-4 sm:px-6 py-3 text-center"
-      >
+  stats.map((stat) => (
+    <div
+      key={stat.value}
+      className="w-full sm:flex-1 sm:min-w-[120px] bg-[#D8F2FF] border border-[#d6e9f5] rounded-xl px-4 sm:px-6 py-3 text-center"
+    >
         <h3 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#0a4a6d] border-b-2 border-[#316ac0b9] pb-1">
           {stat.unitSecondary}
           <Counter value={Number(stat.value || 0)} duration={500} />

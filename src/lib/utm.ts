@@ -9,7 +9,7 @@ export type UTMData = {
 };
 
 export function getUTMDataFromURL(): UTMData {
-  const params = new URLSearchParams(window.location.search);
+  const params = new URLSearchParams(globalThis.location.search);
 
   return {
     utm_source: params.get('utm_source'),

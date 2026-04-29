@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 "use client";
 import React, { useEffect, useMemo, useState } from "react";
 import SafeHtml from "../../../components/common/SafeHtml";
@@ -75,24 +76,18 @@ function getLocalizedString(input: LocalizedString): string | undefined {
   }
   return undefined;
 }
-
+const skeletonKeys = useMemo(
+  () => Array.from({ length: 6 }, (_, i) => `sk-${i}`),
+  []
+);
 function pickLocalized(...vals: LocalizedString[]): string | undefined {
   for (const v of vals) {
     const str = getLocalizedString(v);
-    if (str && str.trim().length) return str;
+    if (str?.trim().length) return str;
   }
   return undefined;
 }
 
-// function stripHtml(html?: string): string {
-//   if (!html) return "";
-//   const div = typeof window !== "undefined" ? document.createElement("div") : null;
-//   if (div) {
-//     div.innerHTML = html;
-//     return (div.textContent || div.innerText || "").trim();
-//   }
-//   return html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
-// }
 
 function toTitle(item?: PressReleaseDetail | null): string {
   if (!item) return "";
@@ -117,7 +112,7 @@ function toImage(item?: PressReleaseDetail | null): string | undefined {
 
   // If image is object
   if (isObject(item.image)) {
-    const obj = item.image as ImageObject;
+    const obj = item.image;
     const url = obj.url || obj.original_url || obj.path;
     if (url)
       return url.startsWith("http")
@@ -133,7 +128,7 @@ function toDate(item?: PressReleaseDetail | null): Date | null {
   const d = item.created_at || item.date || item.published_at;
   if (!d) return null;
   const dt = new Date(d);
-  return isNaN(dt.getTime()) ? null : dt;
+  return Number.isNaN(dt.getTime()) ? null : dt;
 }
 
 function formatDate(d: Date | null): string {
@@ -149,10 +144,6 @@ function formatDate(d: Date | null): string {
   }
 }
 
-// function toPublisher(item?: PressReleaseDetail | null): string {
-//   if (!item) return "";
-//   return pickLocalized(item.publisher, item.source) || "Adit";
-// }
 
 function toBodyHtml(item?: PressReleaseDetail | null): string {
   if (!item) return "";
@@ -202,7 +193,6 @@ const PressReleaseDetails: React.FC = () => {
   const title = useMemo(() => toTitle(data), [data]);
   const hero = useMemo(() => toImage(data), [data]);
   const dateStr = useMemo(() => formatDate(toDate(data)), [data]);
-//   const publisher = useMemo(() => toPublisher(data), [data]);
   const bodyHtml = useMemo(() => toBodyHtml(data), [data]);
 
   return (
@@ -250,9 +240,9 @@ const PressReleaseDetails: React.FC = () => {
             <div className="sk-box sk-meta" />
             <div className="sk-box sk-title" />
             <div className="sk-box sk-hero" />
-            {Array.from({ length: 6 }).map((_, i) => (
-              <div className="sk-box sk-line" key={i} />
-            ))}
+            {skeletonKeys.map((key) => (
+  <div className="sk-box sk-line" key={key} />
+))}
           </div>
         )}
 

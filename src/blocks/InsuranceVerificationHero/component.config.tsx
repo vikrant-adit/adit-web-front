@@ -49,7 +49,7 @@ const { shouldGlow } = useEditorGlow(isGlobal);
 
   try {
     if (Array.isArray(stats)) {
-      normalizedStats = stats as StatItem[];
+      normalizedStats = stats;
     } else if (typeof stats === 'string') {
       const parsed = JSON.parse(stats);
       if (Array.isArray(parsed)) normalizedStats = parsed;
@@ -69,9 +69,7 @@ const { shouldGlow } = useEditorGlow(isGlobal);
   return (
     <section className={`w-full py-12 px-6 md:px-12 ${shouldGlow ? 'editor-global-glow' : ''}`} data-component="insurance_verification">
       <div
-        className={`max-w-7xl mx-auto grid gap-8 items-center md:grid-cols-2 ${
-          isImageRight ? 'md:grid-cols-2' : 'md:grid-cols-2'
-        }`}
+        className="max-w-7xl mx-auto grid gap-8 items-center md:grid-cols-2"
       >
         {/* LEFT: content */}
         <div className="space-y-4 md:pr-8">
@@ -146,8 +144,8 @@ const { shouldGlow } = useEditorGlow(isGlobal);
               </p>
 
               <div className="grid grid-cols-3 gap-4 pt-4 border-t border-slate-100">
-                {normalizedStats.slice(0, 3).map((s, i) => (
-                  <div key={i} className="text-center">
+                {normalizedStats.slice(0, 3).map((s) => (
+                  <div key={`${s.value}-${s.label}`} className="text-center">
                     <div className="text-3xl md:text-4xl font-extrabold text-slate-900">
                       {s.value}
                     </div>

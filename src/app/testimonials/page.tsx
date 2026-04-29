@@ -53,7 +53,7 @@ const Testimonials = () => {
 
           const parsedTestimonials: Testimonial[] = Array.from(items).map(
             (item) => {
-              const category = item.getAttribute("data-category") || "Other";
+              const category = item.dataset.category || "Other";
               const videoUrl =
                 (item.querySelector("a") as HTMLAnchorElement)?.href || "";
               const image =

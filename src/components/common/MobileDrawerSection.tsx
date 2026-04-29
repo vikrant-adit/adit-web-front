@@ -14,7 +14,7 @@ export default function MobileDrawerSection({
   toggle,
   children,
   ariaId,
-}: MobileDrawerSectionProps) {
+}: Readonly<MobileDrawerSectionProps>) {
   return (
     <>
       <button

@@ -45,12 +45,13 @@ const HeadingBlock: React.FC<HeadingBlockProps> = ({
   }
 
   // Alignment class
-  const alignClass =
-    align === 'left'
-      ? 'text-left'
-      : align === 'right'
-      ? 'text-right'
-      : 'text-center';
+ let alignClass = 'text-center';
+
+if (align === 'left') {
+  alignClass = 'text-left';
+} else if (align === 'right') {
+  alignClass = 'text-right';
+}
 
   // Class builder
   const className = [

@@ -4,6 +4,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { resolveImageUrl } from "@/lib/imageResolver";
+import { getStrapiApiUrl, getStrapiAuthToken } from "@/lib/defaults";
 
 export interface EbookListBlockProps {
   title?: string;
@@ -18,7 +19,7 @@ export default function EbookListBlock({
   limit = 12,
   fetchFromApi = false,
   data,
-}: EbookListBlockProps) {
+}: Readonly<EbookListBlockProps>) {
 
   const [ebooks, setEbooks] = useState<any[]>([]);
   const [search, setSearch] = useState("");
@@ -29,7 +30,7 @@ export default function EbookListBlock({
   async function fetchEbooks(query?: string) {
 
     let url =
-      `${process.env.STRAPI_API}e-books` +
+      `${getStrapiApiUrl()}/e-books` +
       `?populate=image` +
       `&pagination[limit]=${limit}`;
 
@@ -39,7 +40,7 @@ export default function EbookListBlock({
 
     const res = await fetch(url, {
       headers: {
-        Authorization: `Bearer ${process.env.STRAPI_API_AUTH_TOKEN}`,
+        Authorization: `Bearer ${getStrapiAuthToken()}`,
       },
     });
 

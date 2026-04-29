@@ -4,6 +4,7 @@ import Link from "next/link";
 import React from "react";
 
 interface ServiceItem {
+  id?: string;
   icon?: React.ReactNode;
   title?: string;
   description?: string;
@@ -20,7 +21,6 @@ export interface CentralCommsServicesProps {
 const CentralCommsServicesBlock: React.FC<CentralCommsServicesProps> = ({
   heading = "Our Services",
   items = [],
-  isGlobal,
 }) => {
   // Safe guard if items is invalid
   if (!items || items.length === 0) {
@@ -44,7 +44,7 @@ const CentralCommsServicesBlock: React.FC<CentralCommsServicesProps> = ({
       <div className="flex flex-wrap justify-center gap-6 max-w-7xl mx-auto px-4">
         {items.map((service, index) => (
           <div
-            key={index}
+            key={service.id || index}
             className="
               bg-white rounded-2xl shadow-md p-6 flex flex-col items-center text-center
               hover:bg-sky-500 hover:shadow-lg transition-all duration-300

@@ -21,7 +21,7 @@ export default function FrontDeskDemoBlock({
   videoUrl,
   audioUrl,
   captions,
-}: FrontDeskDemoBlockProps) {
+}: Readonly<FrontDeskDemoBlockProps>) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const [prev2, setPrev2] = useState('');
@@ -96,9 +96,17 @@ export default function FrontDeskDemoBlock({
           </div>
 
           {/* Audio */}
-          <audio ref={audioRef} controls className="w-full">
-            <source src={audioUrl} type="audio/mpeg" />
-          </audio>
+         <audio ref={audioRef} controls className="w-full">
+  <source src={audioUrl} type="audio/mpeg" />
+  <track
+    kind="captions"
+    src="/captions/audio-captions.vtt"
+    srcLang="en"
+    label="English captions"
+    default
+  />
+  Your browser does not support the audio element.
+</audio>
         </div>
       </div>
     </section>

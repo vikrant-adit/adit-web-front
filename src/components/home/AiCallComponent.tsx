@@ -2,7 +2,8 @@
 "use client";
 import Link from "next/link";
 import React, { useRef, useState, useEffect } from "react";
-import { getStrapiImagesUrl, buildImageUrl } from "../../lib/defaults";
+import {  buildImageUrl } from "../../lib/defaults";
+import Image from "next/image";
 
 type Card = {
   id: number;
@@ -76,11 +77,10 @@ const defaultCards: Card[] = [
 
 export default function AiCallComponent({
   cards = defaultCards,
-  visible = 2,
-}: {
+}: Readonly<{
   cards?: Card[];
   visible?: number;
-}) {
+}>) {
   const trackRef = useRef<HTMLDivElement | null>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
@@ -152,10 +152,11 @@ export default function AiCallComponent({
             <div className="flex flex-col items-center gap-2">
               <h2 className="text-4xl flex text-center font-extrabold text-white">
                 Supercharge your front desk with{" "}
-                <img
+                <Image
                   src={buildImageUrl("adit_ai_colored_icon_0d3302310d.webp")}
                   alt=""
                   width={40}
+                  height={40}
                   className="mx-4"
                 />{" "}
                 call intelligence
@@ -175,7 +176,7 @@ export default function AiCallComponent({
           {/* Track */}
           <div
             ref={trackRef}
-            tabIndex={0}
+            
             className="relative overflow-x-auto no-scrollbar focus:outline-none"
             style={{ WebkitOverflowScrolling: "touch" }}
             aria-label="AI call features carousel"
@@ -184,13 +185,11 @@ export default function AiCallComponent({
               {cards.map((c) => {
                 const displayNum = String(c.id).padStart(2, "0");
                 return (
-                  <article
-                    key={c.id}
-                    className="relative flex-shrink-0 w-[45%] rounded-[22px] border border-[#25a8e0cc] bg-gradient-to-br from-slate-800/90 to-slate-900/90 text-white p-8 shadow-xl overflow-visible"
-                    role="group"
-                    aria-roledescription="slide"
-                    aria-label={c.title}
-                  >
+                <article
+  key={c.id}
+  className="relative flex-shrink-0 w-[45%] rounded-[22px] border border-[#25a8e0cc] bg-gradient-to-br from-slate-800/90 to-slate-900/90 text-white p-8 shadow-xl overflow-visible"
+  aria-label={c.title}
+>
                     <div className="flex gap-6">
                       {/* Left big number */}
                       <div className="flex-shrink-0 flex items-start">
@@ -211,11 +210,15 @@ export default function AiCallComponent({
                     {/* Overlapping screenshots in bottom-left */}
 
                     <div className="w-[100%]  rounded-lg shadow-2xl overflow-hidden">
-                      <img
-                        src={c.image}
-                        alt={`${c.title} screenshot`|| 'Image'}
-                        className="w-full h-full object-cover"
-                      />
+                     {c.image && (
+  <Image
+    src={c.image}
+    alt={c.title ? `${c.title} screenshot` : 'Image'}
+    width={800}
+    height={600}
+    className="w-full h-full object-cover"
+  />
+)}
                     </div>
                   </article>
                 );
@@ -231,7 +234,7 @@ export default function AiCallComponent({
               onClick={() => scrollByPage("left")}
               disabled={!canScrollLeft}
               className={`p-3 rounded-full border bg-white/8 hover:bg-white/14 transition ${
-                !canScrollLeft ? "opacity-40 cursor-not-allowed" : ""
+                canScrollLeft ? "" : "opacity-40 cursor-not-allowed"
               }`}
             >
               <svg
@@ -257,7 +260,7 @@ export default function AiCallComponent({
               onClick={() => scrollByPage("right")}
               disabled={!canScrollRight}
               className={`p-3 rounded-full border bg-white/8 hover:bg-white/14 transition ${
-                !canScrollRight ? "opacity-40 cursor-not-allowed" : ""
+                canScrollRight ? "" : "opacity-40 cursor-not-allowed"
               }`}
             >
               <svg

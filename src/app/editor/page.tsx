@@ -3,9 +3,9 @@ import EditorClient from "./EditorClient";
 
 export default async function EditorPage({
   searchParams,
-}: {
+}: Readonly<{
   searchParams: Promise<{ _pagebuilderToken?: string }>;
-}) {
+}>) {
   const { _pagebuilderToken } = await searchParams;
 
   if (!_pagebuilderToken) return notFound();

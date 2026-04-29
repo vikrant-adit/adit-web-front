@@ -47,7 +47,7 @@ export default function CaseStudyHeroBlock({
   statsBackground = "#2f9cc3",
   borderColor = "#4bb6d6",
   statsRowTopPostionValue = "-73px",
-}: CaseStudyHeroBlockProps) {
+}: Readonly<CaseStudyHeroBlockProps>) {
   return (
     <section className="w-full overflow-hidden">
       {/* HERO SECTION */}
@@ -141,9 +141,9 @@ export default function CaseStudyHeroBlock({
       >
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 text-center gap-10 px-6">
           <div className="flex gap-10 items-center justify-center">
-            {stats?.map((stat, index) => (
+            {stats?.map((stat) => (
               <div
-                key={index}
+                key={`${stat.value}-${stat.label}`}
                 className="flex flex-col items-center justify-center py-6"
               >
                 {/* Value */}

@@ -5,7 +5,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import ReactDOM from "react-dom";
 import DOMPurify from "dompurify";
 import Image from "next/image";
-import { getStrapiImagesUrl } from "@/lib/defaults";
+import { getStrapiImagesUrl, resolveImageUrl } from "@/lib/defaults";
 import SignupCustomerForm from "@/components/Modals/SignUpCustomerForm";
 
 export type GlobalPromoProps = {
@@ -36,16 +36,16 @@ function routeMatchesPatterns(
   patterns: string[] = []
 ): boolean {
   if (!patterns || patterns.length === 0) return false;
-  const normalized = pathname === "/" ? "/" : pathname.replace(/\/+$/, "");
+  const normalized = pathname === "/" ? "/" : pathname.replace(/\/{1,250}$/, "");
   return patterns.some((patternRaw) => {
     if (!patternRaw) return false;
     const pat = patternRaw.trim();
     if (!pat) return false;
-    const pattern = pat === "/" ? "/" : pat.replace(/\/+$/, "");
+    const pattern = pat === "/" ? "/" : pat.replace(/\/{1,250}$/, "");
     if (pattern.includes("*")) {
       const escaped = pattern
-        .replace(/[.+^${}()|[\]\\]/g, "\\$&")
-        .replace(/\\\*/g, ".*");
+        .replaceAll(/[.+^${}()|[\]\\]/g, String.raw`\$&`)
+        .replaceAll(String.raw`\*`, ".*");
       const re = new RegExp(`^${escaped}$`);
       return re.test(normalized);
     }
@@ -91,9 +91,9 @@ const GlobalPromo: React.FC<GlobalPromoProps> = ({
   }, [hiddenRoutes]);
 
   const computeShouldHide = (): boolean | null => {
-    if (typeof window === "undefined") return null;
+    if (typeof globalThis === "undefined") return null;
     if (!hiddenPatterns || hiddenPatterns.length === 0) return false;
-    const pathname = window.location.pathname || "/";
+    const pathname = globalThis.location.pathname || "/";
     return routeMatchesPatterns(pathname, hiddenPatterns);
   };
 
@@ -101,23 +101,8 @@ const GlobalPromo: React.FC<GlobalPromoProps> = ({
   const [isMounted, setIsMounted] = useState(false);
 
   // --- Phone Formatting State and Handler ---
-  const [phoneValue, setPhoneValue] = useState("");
 
-  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const input = e.target.value;
-    const numbersOnly = input.replace(/\D/g, "");
-    let formattedNumber = numbersOnly;
-    if (numbersOnly.length > 0) {
-      formattedNumber = `(${numbersOnly.slice(0, 3)}`;
-    }
-    if (numbersOnly.length >= 4) {
-      formattedNumber += `) ${numbersOnly.slice(3, 6)}`;
-    }
-    if (numbersOnly.length >= 7) {
-      formattedNumber += `-${numbersOnly.slice(6, 10)}`;
-    }
-    setPhoneValue(formattedNumber);
-  };
+
   // ------------------------------------------
 
   // --- Scroll Lock & Mount Logic ---
@@ -147,11 +132,11 @@ const GlobalPromo: React.FC<GlobalPromoProps> = ({
       const nv = computeShouldHide();
       setShouldHide((prev) => (prev === nv ? prev : nv));
     };
-    window.addEventListener("popstate", onPop);
-    window.addEventListener("pushstate" as any, onPop);
+    globalThis.addEventListener("popstate", onPop);
+    globalThis.addEventListener("pushstate" as any, onPop);
     return () => {
-      window.removeEventListener("popstate", onPop);
-      window.removeEventListener("pushstate" as any, onPop);
+      globalThis.removeEventListener("popstate", onPop);
+      globalThis.removeEventListener("pushstate" as any, onPop);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(hiddenPatterns)]);
@@ -218,13 +203,7 @@ const GlobalPromo: React.FC<GlobalPromoProps> = ({
       // fallback background if nothing provided
       s.background = "#1f2937";
     }
-    // if(showButton==true){
-    //   s.paddingRight="60px";
-    //   console.log("Padding right set to 60px because showButton is true");
-    // }else{
-    //   s.paddingRight="0px";
-    //   console.log("Padding right set to 0px because showButton is false");
-    // }
+
     return s;
   }, [backgroundColor, zIndex]);
 
@@ -245,10 +224,9 @@ const GlobalPromo: React.FC<GlobalPromoProps> = ({
 
   return (
     <>
-      <div
+      <section
         className={className || ""}
         style={containerStyle}
-        role="region"
         aria-label="Global promotion banner"
       >
         <div className="flex flex-wrap items-center justify-center gap-3 px-4 py-3 text-white">
@@ -313,7 +291,7 @@ const GlobalPromo: React.FC<GlobalPromoProps> = ({
             </button>
           )}
         </div>
-      </div>
+      </section>
 
       {isMounted &&
         isPopupOpen &&

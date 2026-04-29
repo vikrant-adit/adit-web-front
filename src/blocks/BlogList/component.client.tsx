@@ -4,6 +4,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { resolveImageUrl } from "@/lib/imageResolver";
+import { getStrapiApiUrl, getStrapiAuthToken } from "@/lib/defaults";
 
 export interface BlogListBlockProps {
   title?: string;
@@ -12,12 +13,24 @@ export interface BlogListBlockProps {
   data?: any;
 }
 
+/* --------------------------------------------
+FORMAT DATE
+--------------------------------------------- */
+function formatDate(dateStr?: string) {
+  if (!dateStr) return "";
+  return new Date(dateStr).toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+}
+
 export default function BlogListBlock({
   title = "Latest Blogs",
   limit = 9,
   fetchFromApi = "false",
   data,
-}: BlogListBlockProps) {
+}: Readonly<BlogListBlockProps>) {
 
   const [blogs, setBlogs] = useState<any[]>([]);
   const [search, setSearch] = useState("");
@@ -42,7 +55,7 @@ export default function BlogListBlock({
     topic?: string
   ) {
     let url =
-      `${process.env.STRAPI_API}blogs?populate=*`;
+      `${getStrapiApiUrl()}/blogs?populate=*`;
 
     if (query) {
       url += `&filters[title][$containsi]=${query}`;
@@ -58,7 +71,7 @@ export default function BlogListBlock({
 
     const res = await fetch(url, {
       headers: {
-        Authorization: `Bearer ${process.env.STRAPI_API_AUTH_TOKEN}`,
+        Authorization: `Bearer ${getStrapiAuthToken()}`,
       },
     });
 
@@ -72,10 +85,10 @@ export default function BlogListBlock({
   async function fetchCategories() {
     try {
       const res = await fetch(
-        `${process.env.STRAPI_API}blog-categories`,
+        `${getStrapiApiUrl()}/blog-categories`,
         {
           headers: {
-            Authorization: `Bearer ${process.env.STRAPI_API_AUTH_TOKEN}`,
+            Authorization: `Bearer ${getStrapiAuthToken()}`,
           },
         }
       );
@@ -100,10 +113,10 @@ export default function BlogListBlock({
   async function fetchTopics() {
     try {
       const res = await fetch(
-        `${process.env.STRAPI_API}blog-topics`,
+        `${getStrapiApiUrl()}/blog-topics`,
         {
           headers: {
-            Authorization: `Bearer ${process.env.STRAPI_API_AUTH_TOKEN}`,
+            Authorization: `Bearer ${getStrapiAuthToken()}`,
           },
         }
       );
@@ -153,17 +166,6 @@ export default function BlogListBlock({
     return () => clearTimeout(delay);
   }, [search, activeCategory, activeTopic]);
 
-  /* --------------------------------------------
-  FORMAT DATE
-  --------------------------------------------- */
-  function formatDate(dateStr?: string) {
-    if (!dateStr) return "";
-    return new Date(dateStr).toLocaleDateString("en-GB", {
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-    });
-  }
 
   return (
     <section className="py-12 px-6 md:px-10">
@@ -270,19 +272,21 @@ export default function BlogListBlock({
 
             <ul className="space-y-2 text-sm text-gray-700">
               {topics.map((topic) => (
-                <li
-                  key={topic.slug}
-                  className={`
-                    cursor-pointer hover:text-blue-600
-                    ${
-                      activeTopic === topic.slug
-                        ? "text-blue-600 font-medium"
-                        : ""
-                    }
-                  `}
-                  onClick={() => setActiveTopic(topic.slug)}
-                >
-                  • {topic.name}
+                <li key={topic.slug}>
+                  <button
+                    type="button"
+                    onClick={() => setActiveTopic(topic.slug)}
+                    className={`
+                      w-full text-left hover:text-blue-600
+                      ${
+                        activeTopic === topic.slug
+                          ? "text-blue-600 font-medium"
+                          : ""
+                      }
+                    `}
+                  >
+                    • {topic.name}
+                  </button>
                 </li>
               ))}
             </ul>

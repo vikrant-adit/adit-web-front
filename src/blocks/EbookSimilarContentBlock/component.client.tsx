@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import { useRef } from "react";
-import { useEffect, useState } from "react";
+import { useRef , useEffect, useState } from "react";
+
 import Link from "next/link";
 import { resolveImageUrl } from "@/lib/imageResolver";
+import { getStrapiApiUrl, getStrapiAuthToken } from "@/lib/defaults";
 
 export interface SimilarEbooksBlockProps {
   title?: string;
@@ -20,7 +21,7 @@ export default function SimilarEbooksBlock({
   excludeSlug,
   fetchFromApi = "false",
   items = [],
-}: SimilarEbooksBlockProps) {
+}: Readonly<SimilarEbooksBlockProps>) {
 const scrollRef = useRef<HTMLDivElement>(null);
 
 const scroll = (dir: "left" | "right") => {
@@ -33,7 +34,6 @@ const scroll = (dir: "left" | "right") => {
   });
 };
 const [ebooks, setEbooks] = useState<any[]>(items);
-const [loading, setLoading] = useState(true);
 
 useEffect(() => {
   let ignore = false;
@@ -46,7 +46,6 @@ useEffect(() => {
     if (fetchFromApi !== "true") {
       if (!ignore) {
         setEbooks(items || []);
-        setLoading(false);
       }
       return;
     }
@@ -55,9 +54,8 @@ useEffect(() => {
     FETCH FROM STRAPI
     --------------------------------------------- */
     try {
-      // console.log("Fetching similar ebooks with params:", { excludeSlug });
       const url =
-        `${process.env.STRAPI_API}e-books` +
+        `${getStrapiApiUrl()}/e-books` +
         `?populate=image` +
         `&pagination[limit]=${limit}` +
         (excludeSlug ? `&filters[slug][$ne]=${excludeSlug}` : "");
@@ -66,7 +64,7 @@ useEffect(() => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${process.env.STRAPI_API_AUTH_TOKEN}`,
+          Authorization: `Bearer ${getStrapiAuthToken()}`,
         },
       });
 
@@ -78,10 +76,6 @@ useEffect(() => {
 
     } catch (err) {
       console.error("Ebook fetch failed", err);
-    } finally {
-      if (!ignore) {
-        setLoading(false);
-      }
     }
   };
 

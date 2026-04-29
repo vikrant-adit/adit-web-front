@@ -2,6 +2,7 @@
 import React from "react";
 import Image from "next/image";
 import { useEditorGlow } from '@/hooks/useEditorGlow';
+import { getStrapiImagesUrl } from '@/lib/defaults';
 
 export type FeatureCard = {
   id?: string | number;
@@ -27,7 +28,7 @@ const resolveSrc = (src?: string) => {
   if (!src) return "";
   if (typeof src !== "string") return "";
   if (src.startsWith("http://") || src.startsWith("https://")) return src;
-  return `${process.env.STRAPI_API_FOR_IMAGES || ""}${src}`;
+  return `${getStrapiImagesUrl() || ""}${src}`;
 };
 
 const SupportFeatures: React.FC<SupportFeaturesProps> = ({

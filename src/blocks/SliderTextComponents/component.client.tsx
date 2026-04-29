@@ -66,13 +66,13 @@ const AditSlider: React.FC<AditSliderProps> = ({
   useEffect(() => {
     if (!autoplay || slideCount <= 1) return;
 
-    timerRef.current = window.setInterval(() => {
+    timerRef.current = globalThis.setInterval(() => {
       setIndex((i) => i + 1);
     }, autoplayInterval) as unknown as number;
 
     return () => {
       if (timerRef.current) {
-        window.clearInterval(timerRef.current);
+        globalThis.clearInterval(timerRef.current);
         timerRef.current = null;
       }
     };
@@ -153,11 +153,11 @@ const AditSlider: React.FC<AditSliderProps> = ({
       {/* DOTS */}
       {showDots && slideCount > 1 && (
         <div className="flex justify-center gap-3 py-4 bg-orange-50">
-          {slidesArr.map((_, i) => {
+          {slidesArr.map((s, i) => {
             const active = (index - 1 + slideCount) % slideCount === i;
             return (
               <button
-                key={i}
+                key={s?.id ? `dot-${s.id}` : `dot-${i}`}
                 aria-label={`Go to slide ${i + 1}`}
                 onClick={() => setIndex(i + 1)}
                 className={`w-3 h-3 rounded-full border transition-colors ${

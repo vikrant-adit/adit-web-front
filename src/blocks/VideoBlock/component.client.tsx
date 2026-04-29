@@ -1,6 +1,7 @@
 'use client';
 import React from 'react';
 import { useEditorGlow } from '@/hooks/useEditorGlow';
+import { getStrapiImagesUrl } from '@/lib/defaults';
 
 export interface VideoBlockProps {
   video?: {
@@ -53,9 +54,9 @@ const VideoBlock: React.FC<VideoBlockProps> = ({
   let resolvedSrc = videoSrc;
   if (
     videoSrc.startsWith('/') &&
-    process.env.STRAPI_API_FOR_IMAGES
+    getStrapiImagesUrl()
   ) {
-    resolvedSrc = `${process.env.STRAPI_API_FOR_IMAGES}${videoSrc}`;
+    resolvedSrc = `${getStrapiImagesUrl()}${videoSrc}`;
   }
 
   // Detect embeds
@@ -63,45 +64,58 @@ const VideoBlock: React.FC<VideoBlockProps> = ({
     resolvedSrc.includes('youtube.com') || resolvedSrc.includes('youtu.be');
   const isVimeoEmbed = resolvedSrc.includes('vimeo.com');
 
+  const renderVideo = () => {
+    if (isYouTubeEmbed) {
+      return (
+        <iframe
+          width="100%"
+          height="100%"
+          src={resolvedSrc}
+          title={video?.title || 'Video'}
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+          style={{ borderRadius, border: 'none' }}
+        />
+      );
+    }
+    
+    if (isVimeoEmbed) {
+      return (
+        <iframe
+          width="100%"
+          height="100%"
+          src={resolvedSrc}
+          title={video?.title || 'Video'}
+          allow="autoplay; fullscreen; picture-in-picture"
+          allowFullScreen
+          style={{ borderRadius, border: 'none' }}
+        />
+      );
+    }
+    
+    return (
+      // eslint-disable-next-line jsx-a11y/media-has-caption
+      <video
+        width="100%"
+        height="100%"
+        controls={controls}
+        loop={loop}
+        muted={muted}
+        autoPlay={autoplay}
+        style={{ borderRadius, margin, objectFit: 'cover' }}
+        title={video?.title || 'Video'}
+      >
+        <source src={resolvedSrc} type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+    );
+  };
+
   return (
     <div className={shouldGlow ? 'editor-global-glow' : ''}>
       <div className="flex justify-center my-4 px-3 sm:px-6" style={{ margin }}>
         <div className="w-full max-w-4xl" style={{ aspectRatio: `${width}/${height}` }}>
-          {isYouTubeEmbed ? (
-            <iframe
-              width="100%"
-              height="100%"
-              src={resolvedSrc}
-              title={video?.title || 'Video'}
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              style={{ borderRadius, border: 'none' }}
-            />
-          ) : isVimeoEmbed ? (
-            <iframe
-              width="100%"
-              height="100%"
-              src={resolvedSrc}
-              title={video?.title || 'Video'}
-              allow="autoplay; fullscreen; picture-in-picture"
-              allowFullScreen
-              style={{ borderRadius, border: 'none' }}
-            />
-          ) : (
-            <video
-              width="100%"
-              height="100%"
-              controls={controls}
-              loop={loop}
-              muted={muted}
-              autoPlay={autoplay}
-              style={{ borderRadius, margin, objectFit: 'cover' }}
-              title={video?.title || 'Video'}
-            >
-              <source src={resolvedSrc} type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
-          )}
+          {renderVideo()}
         </div>
       </div>
     </div>

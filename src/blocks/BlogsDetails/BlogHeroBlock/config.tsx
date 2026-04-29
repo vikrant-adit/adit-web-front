@@ -1,6 +1,5 @@
 import { ComponentConfig } from "@wecre8websites/strapi-page-builder-react";
-import BlogHeroBlock from "./component.client"; // make sure it's imported
-import { BlogHeroBlockProps } from "./component.client";
+import BlogHeroBlock, { BlogHeroBlockProps } from "./component.client"; // make sure it's imported
 
 const BlockConfig: ComponentConfig<BlogHeroBlockProps> = {
   label: "Blog Hero",

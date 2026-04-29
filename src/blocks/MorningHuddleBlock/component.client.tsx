@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { buildImageUrl } from '@/lib/defaults';
 
 export type MorningHuddleBlockProps = {
   eyebrow?: string;
@@ -14,7 +15,7 @@ export type MorningHuddleBlockProps = {
   backgroundColor?: string;
 };
 
-export default function MorningHuddleBlock(props: MorningHuddleBlockProps) {
+export default function MorningHuddleBlock(props: Readonly<MorningHuddleBlockProps>) {
   const eyebrow = props.eyebrow ?? 'Practice Analytics';
   const heading =
     props.heading ??
@@ -24,7 +25,7 @@ export default function MorningHuddleBlock(props: MorningHuddleBlockProps) {
     'Our dedicated onboarding experts will work at your pace to get your team and practice up to speed and fully integrated with Adit\'s all‑in‑one software.';
   const imageSrc =
     props.imageSrc ??
-    `${process.env.STRAPI_API_FOR_IMAGES}/uploads/practice_analytics_video_ezgif_com_video_to_gif_converter_cc85c26835.gif`;
+    buildImageUrl('practice_analytics_video_ezgif_com_video_to_gif_converter_cc85c26835.gif');
   const imageAlt = props.imageAlt ?? 'Practice analytics morning huddle dashboard';
   const buttonText = props.buttonText ?? 'Schedule a Demo';
   const buttonUrl = props.buttonUrl ?? '/schedule-a-demo';
@@ -41,7 +42,7 @@ export default function MorningHuddleBlock(props: MorningHuddleBlockProps) {
         {/* Heading */}
         <h2 className="mt-3 text-[1.9rem] font-extrabold leading-tight text-[#013552] md:text-[2.1rem]">
           {heading.split('\n').map((line, i) => (
-            <div key={i}>{line}</div>
+            <div key={`${line}-${i}`}>{line}</div>
           ))}
         </h2>
 

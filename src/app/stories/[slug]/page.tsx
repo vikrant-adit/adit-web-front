@@ -6,6 +6,7 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import stories from "@/assets/stories.jpeg";
 import SiteLayout from "@/components/layout/SiteLayout";
+import Image from "next/image";
 
 interface WebStoryDetailItem {
   id: number | string;
@@ -24,8 +25,7 @@ const normalizeDetail = (raw:any): WebStoryDetailItem => {
     image: w?.image ? stories : undefined,
     body: w?.body?.en ?? "",
     // Extract CSS from <style> block in summary.en (if exists)
-    summaryCss: w?.summary?.en?.match(/<style.*?>([\s\S]*?)<\/style>/)?.[1] ?? "",
-    categories: w?.categories ?? [],
+summaryCss: w?.summary?.en?.match(/<style\b[^>]*>([^<]*)<\/style>/i)?.[1] ?? "",    categories: w?.categories ?? [],
   };
 };
 
@@ -33,7 +33,7 @@ function InjectStoryCSS({ css }: { css: string }) {
   useEffect(() => {
     if (!css) return;
     const styleEl = document.createElement("style");
-    styleEl.setAttribute("data-story-style", "true");
+    styleEl.dataset.storyStyle = "true";
     styleEl.innerHTML = css;
     document.head.appendChild(styleEl);
 
@@ -52,8 +52,7 @@ const params = useParams<{ slug: string }>();
 // params will be an object like { slug: "some-value" }
 // Access it safely:
 const slug = params?.slug;
-  const [story, setStory] = useState<WebStoryDetailItem | any>(null);
-  const [loading, setLoading] = useState(false);
+const [story, setStory] = useState<WebStoryDetailItem | null>(null);  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -109,7 +108,7 @@ const slug = params?.slug;
       </Link>
 
       {story.image ? (
-        <img
+        <Image
           src={story.image}
           alt={story.title || 'Image'}
           className="w-full rounded-2xl shadow"
@@ -122,14 +121,13 @@ const slug = params?.slug;
 
       {/* <h1 className="mt-6 text-3xl font-bold text-[#002D42]">{story.title}</h1> */}
 
-      {story.categories?.length > 0 && (
+      {(story.categories?.length ?? 0) > 0 && (
         <div className="mt-3 flex flex-wrap gap-2">
-          {story.categories.map((cat:any) => (
+          {story.categories?.map((cat:any) => (
             <span
               key={cat.id}
               className="text-xs font-medium text-[#22A9E1] bg-[#E6F7FB] px-3 py-1 rounded-full"
             >
-              {/* {cat.category_title} */}
             </span>
           ))}
         </div>

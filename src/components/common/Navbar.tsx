@@ -21,16 +21,107 @@ const apiUrl = getStrapiApiUrl();
 
 const imageBase = getStrapiImagesUrl();
 
+/* -------------------------------------------------
+ * Sub-components (to reduce nesting depth)
+ * ------------------------------------------------- */
+
+const MegaItem = ({ category }: { category: any }) => (
+  <Link
+    href={category.href ?? "#"}
+    className="mega-item"
+  >
+    <div className="flex items-center gap-2">
+      <span className="mega-icon" />
+      <span>{category.title}</span>
+    </div>
+  </Link>
+);
+
+const MegaColumn = ({ child }: { child: any }) => {
+  if (!child.categories?.length) return null;
+
+  return (
+    <div className="mega-column">
+      <Link
+        href={child.href ?? "#"}
+        className="mega-simple-item"
+      >
+        <div className="mega-title">{child.label}</div>
+      </Link>
+      <div className="mega-items">
+        {child.categories.map((category: any) => (
+          <MegaItem key={category.id} category={category} />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const MegaSingleItem = ({ child }: { child: any }) => (
+  <Link
+    href={child.href ?? "#"}
+    className="mega-item"
+  >
+    {child.label?.endsWith("CS") ? (
+      <span className="flex items-center gap-2">
+        {child.label.replace(" CS", "")}
+
+        <span className="bg-orange-500 text-white text-xs font-semibold px-2 py-0.5 rounded-r-md relative">
+          Coming Soon
+        </span>
+      </span>
+    ) : (
+      child.label
+    )}
+    {child.description && (
+      <div className="mega-description text-sm text-gray-600 mt-2 whitespace-normal w-[500px]">
+        {child.description}
+      </div>
+    )}
+  </Link>
+);
+
+const MobileNavLink = ({ child, onClick }: { child: any; onClick: () => void }) => (
+  <Link
+    key={child.id}
+    href={child.href ?? "#"}
+    onClick={onClick}
+  >
+    {child.label}
+  </Link>
+);
+
+const MobileNavSection = ({
+  link,
+  isOpen,
+  toggle,
+  onClose,
+}: {
+  link: any;
+  isOpen: boolean;
+  toggle: () => void;
+  onClose: () => void;
+}) => (
+  <MobileDrawerSection
+    key={link.id}
+    label={link.label}
+    isOpen={isOpen}
+    toggle={toggle}
+  >
+    {link.children.map((child: any) => (
+      <MobileNavLink key={child.id} child={child} onClick={onClose} />
+    ))}
+  </MobileDrawerSection>
+);
+
 export default function Navbar({
   headerData,
-  variant,
-}: {
+}: Readonly<{
   headerData: any;
   variant?: string;
-}) {
-  // console.log("Navbar received headerData:", headerData);
+}>) {
 
-  const isClient = typeof window !== "undefined";
+  const isClient = typeof globalThis !== "undefined";
 
   const lastScrollY = useRef<number>(isClient ? window.scrollY : 0);
   const ticking = useRef(false);
@@ -48,6 +139,13 @@ export default function Navbar({
   const isAiRoute = pathname?.startsWith("/call-intelligence") ?? false;
 
   const [drawerOpen, setDrawerOpen] = useState<Record<string, boolean>>({});
+
+  const toggleDrawer = (label: string) => {
+    setDrawerOpen((prev) => ({
+      ...prev,
+      [label]: !prev[label],
+    }));
+  };
 
   /*
   =====================
@@ -67,16 +165,14 @@ export default function Navbar({
 
       ticking.current = true;
 
-      window.requestAnimationFrame(() => {
-        const scY = window.scrollY;
+      globalThis.requestAnimationFrame(() => {
+        const scY = globalThis.scrollY;
 
         if (scY < 50) {
           if (!showRef.current) setShowNavbar(true);
         } else if (scY > lastScrollY.current) {
           if (showRef.current) setShowNavbar(false);
-        } else {
-          if (!showRef.current) setShowNavbar(true);
-        }
+        } else if (!showRef.current) setShowNavbar(true);
 
         lastScrollY.current = scY;
         ticking.current = false;
@@ -237,61 +333,14 @@ export default function Navbar({
             >
               {hasAnyCategories ? (
                 // ✅ COLUMN LAYOUT
-                link.children.map((child: any) => {
-                  if (!child.categories?.length) return null;
-
-                  return (
-                    <div key={child.id} className="mega-column">
-                      <Link
-                        key={child.id}
-                        href={child.href ?? "#"}
-                        className="mega-simple-item"
-                      >
-                        <div className="mega-title">{child.label}</div>
-                      </Link>
-                      <div className="mega-items">
-                        {child.categories.map((category: any) => (
-                          <Link
-                            key={category.id}
-                            href={category.href ?? "#"}
-                            className="mega-item"
-                          >
-                            <div className="flex items-center gap-2">
-                              <span className="mega-icon" />
-                              <span>{category.title}</span>
-                            </div>
-                          </Link>
-                        ))}
-                      </div>
-                    </div>
-                  );
-                })
+                link.children.map((child: any) => (
+                  <MegaColumn key={child.id} child={child} />
+                ))
               ) : (
                 // ✅ SINGLE COLUMN LAYOUT
                 <div className="mega-single-column">
                   {link.children.map((child: any) => (
-                    <Link
-                      key={child.id}
-                      href={child.href ?? "#"}
-                      className="mega-item  "
-                    >
-                      {child.label?.endsWith("CS") ? (
-                        <span className="flex items-center gap-2">
-                          {child.label.replace(" CS", "")}
-
-                          <span className="bg-orange-500 text-white text-xs font-semibold px-2 py-0.5 rounded-r-md relative">
-                            Coming Soon
-                          </span>
-                        </span>
-                      ) : (
-                        child.label
-                      )}
-                      {child.description && (
-                        <div className="mega-description text-sm text-gray-600 mt-2 whitespace-normal w-[500px] ">
-                          {child.description}
-                        </div>
-                      )}
-                    </Link>
+                    <MegaSingleItem key={child.id} child={child} />
                   ))}
                 </div>
               )}
@@ -325,27 +374,13 @@ export default function Navbar({
 
       if (hasChildren) {
         return (
-          <MobileDrawerSection
+          <MobileNavSection
             key={link.id}
-            label={link.label}
+            link={link}
             isOpen={drawerOpen[link.label]}
-            toggle={() =>
-              setDrawerOpen((prev) => ({
-                ...prev,
-                [link.label]: !prev[link.label],
-              }))
-            }
-          >
-            {link.children.map((child: any) => (
-              <Link
-                key={child.id}
-                href={child.href ?? "#"}
-                onClick={() => setSideMenuOpen(false)}
-              >
-                {child.label}
-              </Link>
-            ))}
-          </MobileDrawerSection>
+            toggle={() => toggleDrawer(link.label)}
+            onClose={() => setSideMenuOpen(false)}
+          />
         );
       }
 
@@ -413,9 +448,12 @@ export default function Navbar({
         </div>
 
         {/* Overlay */}
-        <div
+        <button
           className={`side-overlay ${sideMenuOpen ? "open" : ""}`}
           onClick={() => setSideMenuOpen(false)}
+          aria-label="Close menu"
+          aria-hidden={!sideMenuOpen}
+          tabIndex={sideMenuOpen ? 0 : -1}
         />
 
         {/* Drawer */}

@@ -18,7 +18,7 @@ export type AditMakeSwitchBlockProps = {
   iconBackgroundColor?: string;
 };
 
-export default function AditMakeSwitchBlock(props: AditMakeSwitchBlockProps) {
+export default function AditMakeSwitchBlock(props: Readonly<AditMakeSwitchBlockProps>) {
   const heading = props.heading ?? 'Adit Makes Switching Simple And Easy!';
   const description =
     props.description ??
@@ -52,9 +52,9 @@ export default function AditMakeSwitchBlock(props: AditMakeSwitchBlockProps) {
       {/* benefit cards */}
       <div className="mx-auto mt-8 max-w-6xl px-4">
         <div className="grid gap-5 md:grid-cols-4">
-          {benefits.map((item, idx) => (
+          {benefits.map((item) => (
             <div
-              key={`benefit-${idx}`}
+              key={item.title}
               className="flex flex-col items-center rounded-[22px] bg-white px-5 py-6 text-center shadow-[0_10px_30px_rgba(0,55,90,0.08)]"
             >
               <div className={`mb-4 flex h-14 w-14 items-center justify-center rounded-[18px] ${iconBgClass} text-white`}>

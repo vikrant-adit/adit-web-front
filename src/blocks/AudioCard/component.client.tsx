@@ -2,7 +2,6 @@
 
 import { resolveImageUrl } from '@/lib/imageResolver';
 import Image from 'next/image';
-import React from 'react';
 
 export type AudioCardProps = {
   title?: string;
@@ -16,7 +15,7 @@ export type AudioCardProps = {
   };
 };
 
-export default function AudioCard(props: AudioCardProps) {
+export default function AudioCard(props: Readonly<AudioCardProps>) {
   const {
     title,
     date,
@@ -63,7 +62,9 @@ export default function AudioCard(props: AudioCardProps) {
             controls
             className="w-full mt-2 sm:mt-3 h-8 sm:h-10"
             src={audioUrl}
-          />
+          >
+            <track kind="captions" />
+          </audio>
         )}
       </div>
     </div>

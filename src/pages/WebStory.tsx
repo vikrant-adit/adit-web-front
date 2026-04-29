@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-'use client';
+"use client";
 
+import Image from "next/image";
 import React, {
   useCallback,
   useEffect,
@@ -25,13 +26,11 @@ const SLIDE_DURATION_MS = 8000;
 const defaultSlides: Slide[] = [
   {
     bg: "https://stories.adit.com/integrating-advanced-optometry-software-into-your-practice/assets/2.jpeg",
-    title:
-      "Integrating Advanced \nOptometry Software Into Your Practice",
+    title: "Integrating Advanced \nOptometry Software Into Your Practice",
   },
   {
     bg: "https://stories.adit.com/integrating-advanced-optometry-software-into-your-practice/assets/4.jpeg",
-    title:
-      "Are you still managing appointments and forms manually?",
+    title: "Are you still managing appointments and forms manually?",
     subtitle:
       "As a modern optometry provider, integrating the best optometry software into your practice is no longer optional, it's essential.",
   },
@@ -43,16 +42,14 @@ const defaultSlides: Slide[] = [
   },
   {
     bg: "https://stories.adit.com/integrating-advanced-optometry-software-into-your-practice/assets/6.jpeg",
-    title:
-      "What makes Adit the best optometry software?",
+    title: "What makes Adit the best optometry software?",
     subtitle:
       "Unlike generic systems that require clunky integrations, Adit is purpose-built to serve eye care practices.",
   },
   {
     bg: "https://stories.adit.com/integrating-advanced-optometry-software-into-your-practice/assets/7.jpeg",
     title: "Adit is the best optometry software",
-    subtitle:
-      "Because it simplifies every aspect of running a practice.",
+    subtitle: "Because it simplifies every aspect of running a practice.",
   },
   {
     bg: "https://stories.adit.com/integrating-advanced-optometry-software-into-your-practice/assets/8.jpeg",
@@ -83,28 +80,22 @@ function parseAmpStoryToSlides(ampHtml: string): Slide[] {
     const parser = new DOMParser();
     const doc = parser.parseFromString(ampHtml, "text/html");
 
-    const pages = Array.from(
-      doc.querySelectorAll("amp-story-page")
-    );
+    const pages = Array.from(doc.querySelectorAll("amp-story-page"));
 
     const slides: Slide[] = [];
 
     for (const page of pages) {
       const bgImg =
-        page.querySelector(
-          'amp-story-grid-layer[template="fill"] amp-img'
-        ) || page.querySelector("amp-img");
+        page.querySelector('amp-story-grid-layer[template="fill"] amp-img') ||
+        page.querySelector("amp-img");
 
       const bg = bgImg?.getAttribute("src") || "";
 
       const title =
-        page
-          .querySelector("h1, h2")
-          ?.textContent?.trim() || undefined;
+        page.querySelector("h1, h2")?.textContent?.trim() || undefined;
 
       const subtitle =
-        page.querySelector("h3")?.textContent?.trim() ||
-        undefined;
+        page.querySelector("h3")?.textContent?.trim() || undefined;
 
       const aEl = page.querySelector("a[href]");
       const href = aEl?.getAttribute("href") || undefined;
@@ -139,18 +130,11 @@ const WebStory: React.FC = () => {
 
   const goTo = useCallback(
     (i: number) => setIndex(((i % total) + total) % total),
-    [total]
+    [total],
   );
 
-  const next = useCallback(() => goTo(index + 1), [
-    goTo,
-    index,
-  ]);
-
-  const prev = useCallback(() => goTo(index - 1), [
-    goTo,
-    index,
-  ]);
+  const next = useCallback(() => goTo(index + 1), [goTo, index]);
+  const prev = useCallback(() => goTo(index - 1), [goTo, index]);
 
   useInterval(() => {
     if (!paused) next();
@@ -163,18 +147,18 @@ const WebStory: React.FC = () => {
       if (e.key === " ") setPaused((p) => !p);
     };
 
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    globalThis.addEventListener("keydown", onKey);
+    return () => globalThis.removeEventListener("keydown", onKey);
   }, [next, prev]);
 
   const progressPct = useMemo(
     () => ((index + 1) / total) * 100,
-    [index, total]
+    [index, total],
   );
 
   const slide = slides[index];
 
-  // ✅ FIX: null safety added
+  // Fetch AMP story
   useEffect(() => {
     if (!searchParams) return;
 
@@ -215,60 +199,88 @@ const WebStory: React.FC = () => {
     };
   }, [searchParams]);
 
+  // ✅ FIX: removed nested ternary
+  let footerText: string;
+  if (loading) {
+    footerText = "Loading...";
+  } else if (error) {
+    footerText = error;
+  } else {
+    footerText = `${index + 1} / ${total}`;
+  }
+
   return (
+<div
+  className="ws-root"
+  role="switch"
+  aria-label="Web Story Player"
+  aria-checked={!paused}
+  tabIndex={0}
+  onMouseEnter={() => setPaused(true)}
+  onMouseLeave={() => setPaused(false)}
+  onFocus={() => setPaused(true)}
+  onBlur={() => setPaused(false)}
+  onKeyDown={(e) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      setPaused((prevState) => !prevState);
+    }
+  }}
+>
+  <div className="ws-stage">
     <div
-      className="ws-root"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
+      className="ws-slide"
+      style={{ backgroundImage: `url(${slide.bg})` }}
     >
-      <div className="ws-stage">
-        <div
-          className="ws-slide"
-          style={{ backgroundImage: `url(${slide.bg})` }}
-        >
-          <img
-            className="ws-logo"
-            src={LOGO_URL}
-            alt="Logo"
-          />
+      <Image
+        className="ws-logo"
+        src={LOGO_URL}
+        alt="Logo"
+        width={120}
+        height={40}
+        priority
+      />
 
-          <div className="ws-overlay">
-            {slide.title && (
-              <h2 className="ws-title">{slide.title}</h2>
-            )}
-            {slide.subtitle && (
-              <p className="ws-subtitle">{slide.subtitle}</p>
-            )}
-            {slide.cta && (
-              <a
-                className="ws-cta"
-                href={slide.cta.href}
-                target="_blank"
-              >
-                {slide.cta.text}
-              </a>
-            )}
-          </div>
-
-          <div className="ws-controls">
-            <div className="ws-hotspot left" onClick={prev} />
-            <div className="ws-hotspot right" onClick={next} />
-          </div>
-        </div>
+      <div className="ws-overlay">
+        {slide.title && <h2 className="ws-title">{slide.title}</h2>}
+        {slide.subtitle && (
+          <p className="ws-subtitle">{slide.subtitle}</p>
+        )}
+        {slide.cta && (
+          <a
+            className="ws-cta"
+            href={slide.cta.href}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {slide.cta.text}
+          </a>
+        )}
       </div>
 
-      <div className="ws-progress">
-        <span style={{ width: `${progressPct}%` }} />
-      </div>
-
-      <div className="ws-footer">
-        {loading
-          ? "Loading..."
-          : error
-          ? error
-          : `${index + 1} / ${total}`}
+      <div className="ws-controls">
+        <button
+          type="button"
+          className="ws-hotspot left"
+          onClick={prev}
+          aria-label="Previous slide"
+        />
+        <button
+          type="button"
+          className="ws-hotspot right"
+          onClick={next}
+          aria-label="Next slide"
+        />
       </div>
     </div>
+  </div>
+
+  <div className="ws-progress">
+    <span style={{ width: `${progressPct}%` }} />
+  </div>
+
+  <div className="ws-footer">{footerText}</div>
+</div>
   );
 };
 

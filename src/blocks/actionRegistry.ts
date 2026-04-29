@@ -1,12 +1,11 @@
 // src/components/actionRegistry.ts
-export type ActionParams = any;
 export type ActionCtx = {
   router?: { push: (path: string) => void };
   openModal?: (id: string) => void;
   track?: (event: string, props?: any) => void;
 };
 
-const registry: Record<string, (params: ActionParams, ctx: ActionCtx) => void | Promise<void>> = {
+const registry: Record<string, (params: any, ctx: ActionCtx) => void | Promise<void>> = {
   none: () => {},
 
  // actionRegistry.ts (openModal handler)
@@ -38,7 +37,7 @@ openModal: (params, ctx) => {
     return;
   }
 
-  window.dispatchEvent(
+  globalThis.dispatchEvent(
     new CustomEvent('open-modal', {
       detail: { id: modalId, props },
     })
@@ -50,14 +49,14 @@ openModal: (params, ctx) => {
     const url = typeof params === "string" ? params : params?.url;
     if (!url) return console.warn("[action] navigate missing url");
     if (ctx.router?.push) ctx.router.push(url);
-    else window.location.assign(url);
+    else globalThis.location.assign(url);
   },
 
   external: (params) => {
     const url = typeof params === "string" ? params : params?.url;
     if (!url) return console.warn("[action] external missing url");
     const newTab = (typeof params === "object" && params?.newTab) || true;
-    window.open(url, newTab ? "_blank" : "_self", "noopener,noreferrer");
+    globalThis.open(url, newTab ? "_blank" : "_self", "noopener,noreferrer");
   },
 
   scrollTo: (params) => {
@@ -68,7 +67,7 @@ openModal: (params, ctx) => {
   }
 };
 
-export function runAction(name: string | undefined | null, params: ActionParams | undefined | null, ctx: ActionCtx = {}) {
+export function runAction(name: string | undefined | null, params?: any, ctx: ActionCtx = {}) {
   if (!name) return;
   const fn = registry[name];
   if (!fn) return console.warn("[action] unknown action:", name);

@@ -1,7 +1,6 @@
 'use client';
 import React from 'react';
-import Card from '../CardsBlock/component.client';
-import { CardProps } from '../CardsBlock/component.client';
+import Card, { CardProps }  from '../CardsBlock/component.client';
 import { useEditorGlow } from '@/hooks/useEditorGlow';
 
 export type CardsContainerProps = {

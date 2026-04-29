@@ -58,7 +58,7 @@ const getColorStyle = (color: string): React.CSSProperties | undefined => {
   if (!color || isTailwindClass(color)) return undefined;
   return { backgroundColor: color };
 };
-export default function TasksBenefitsGrid(props: TasksBenefitsGridProps) {
+export default function TasksBenefitsGrid(props: Readonly<TasksBenefitsGridProps>) {
   const heading = props.heading ?? "Here is what Adit’s Tasks does for your practice";
   const items = props.items?.length ? props.items : DEFAULT_ITEMS;
 

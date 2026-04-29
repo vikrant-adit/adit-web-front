@@ -11,11 +11,11 @@ export interface LinkBlockProps {
 }
 
 export default function LinkBlock({
-  text = "Click Here",
+  text = "Click  Here",
   url = "#",
   newTab = false,
   variant = "link",
-}: LinkBlockProps) {
+}: Readonly<LinkBlockProps>) {
   const baseStyle = "inline-flex items-center font-medium transition";
 
   const variants = {

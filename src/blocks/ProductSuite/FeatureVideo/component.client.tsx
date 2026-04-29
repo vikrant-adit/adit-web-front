@@ -4,7 +4,7 @@
 import React from 'react';
 import DOMPurify from 'dompurify';
 
-export type MediaVideo = { src?: string; poster?: string; alt?: string | undefined };
+export type MediaVideo = { src?: string; poster?: string; alt?: string };
 
 export type FeatureVideoProps = {
   title?: string;
@@ -58,17 +58,188 @@ const looksLikeEmbed = (src?: string) => {
 
 const extractSrcFromIframeString = (iframeStr: string | undefined) => {
   if (!iframeStr) return undefined;
-  const match = iframeStr.match(/src=['"]([^'"]+)['"]/i);
+  const match = new RegExp(/src=['"]([^'"]+)['"]/i).exec(iframeStr);
   return match ? match[1] : undefined;
 };
 
 const parseAspectRatio = (ratio?: string) => {
   if (!ratio) return undefined;
-  const parts = ratio.split('/').map((p) => Number(p));
+  const parts = ratio.split('/').map(Number);
   if (parts.length === 2 && parts.every((n) => Number.isFinite(n) && n > 0)) {
     return (parts[1] / parts[0]) * 100; // padding-top percentage (height / width * 100)
   }
   return undefined;
+};
+const getPresetStyle = (mediaPreset: string): React.CSSProperties => {
+  switch (mediaPreset) {
+    case 'small':
+      return { maxWidth: '320px' };
+    case 'medium':
+      return { maxWidth: '520px' };
+    case 'large':
+      return { maxWidth: '820px' };
+    case 'contain':
+      return { maxWidth: '100%', height: 'auto' };
+    case 'cover':
+      return { width: '100%', height: '320px', objectFit: 'cover' } as React.CSSProperties;
+    case 'custom':
+    default:
+      return {};
+  }
+};
+
+const getTitleStyles = (titleSize: string, titleColor: string) => {
+  const isTailwindTextClass = typeof titleSize === 'string' && titleSize.trim().startsWith('text-');
+  const isTailwindColorClass = typeof titleColor === 'string' && titleColor.trim().startsWith('text-');
+  
+  const inlineStyle: React.CSSProperties = {};
+  if (!isTailwindTextClass && titleSize) inlineStyle.fontSize = titleSize as any;
+  if (!isTailwindColorClass && titleColor) inlineStyle.color = titleColor as any;
+
+  const className = [
+    'font-extrabold',
+    'leading-tight',
+    'mb-6',
+    'text-slate-900',
+    isTailwindTextClass ? titleSize : 'text-[1.5rem] sm:text-[2rem] md:text-[2.25rem] lg:text-[36px]',
+    isTailwindColorClass ? titleColor : '',
+  ]
+    .filter(Boolean)
+    .join(' ');
+
+  return { titleInlineStyle: Object.keys(inlineStyle).length ? inlineStyle : undefined, titleClassName: className };
+};
+
+const resolveVideoData = (video: any) => {
+  let rawVideoSrc: string | undefined = undefined;
+  if (typeof video === 'string') {
+    rawVideoSrc = video;
+  } else if (typeof video === 'object') {
+    rawVideoSrc = video?.src as string | undefined;
+  }
+  const rawPoster = typeof video === 'object' ? video?.poster : undefined;
+  const videoSrcFromIframeString = rawVideoSrc?.trim().startsWith('<iframe')
+    ? extractSrcFromIframeString(rawVideoSrc)
+    : undefined;
+  
+  return {
+    rawVideoSrc,
+    rawPoster,
+    finalSrc: videoSrcFromIframeString || rawVideoSrc,
+    isEmbed: looksLikeEmbed(rawVideoSrc) || !!videoSrcFromIframeString
+  };
+};
+
+const getBorderStyles = (borderColor: string, showBorder: boolean, borderWidth: number) => {
+  const isTailwindBorderClass = typeof borderColor === 'string' && borderColor.trim().startsWith('border-');
+  const borderInlineStyle: React.CSSProperties | undefined =
+    !isTailwindBorderClass && borderColor ? { borderColor: borderColor as any, borderStyle: 'solid' } : undefined;
+  const borderClassPart = isTailwindBorderClass ? borderColor : '';
+  
+  const additionalWrapperStyle = {
+    ...(showBorder ? { borderWidth: `${borderWidth}px` } : {}),
+    ...borderInlineStyle,
+  };
+
+  return { borderClassPart, additionalWrapperStyle };
+};
+
+const getContainerLayout = (layout: string, flexDirection: string, className: string, gap: number) => {
+  let containerClass = '';
+  let containerStyle: React.CSSProperties = { gap: `${gap}px` };
+  let mdBehavior = '';
+
+  if (layout === 'grid') {
+    containerClass = `grid ${className}`;
+    containerStyle.gridTemplateColumns = 'repeat(1, minmax(0, 1fr))';
+    mdBehavior = 'md:grid-cols-2';
+  } else {
+    const mdFlex = flexDirection === 'row' ? 'md:flex-row' : 'md:flex-col';
+    containerClass = `flex flex-col ${className} ${mdFlex} items-center justify-center md:justify-start`;
+    mdBehavior = mdFlex;
+  }
+
+  return { containerClass, containerStyle, mdBehavior };
+};
+
+const renderMediaContent = ({
+  finalSrc,
+  useAspectRatio,
+  paddingTopPercent,
+  isEmbed,
+  title,
+  rawPoster,
+  controls,
+  autoplay,
+  loop,
+  muted,
+  videoWrapperStyle,
+}: any) => {
+  if (!finalSrc) {
+    return <div className="w-full h-56 bg-slate-100 flex items-center justify-center">No video selected</div>;
+  }
+
+  if (useAspectRatio) {
+    return (
+      <div style={{ position: 'relative', width: '100%', paddingTop: `${paddingTopPercent}%` }}>
+        {isEmbed ? (
+          <iframe
+            src={finalSrc}
+            title={title || 'Embedded video'}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+            allowFullScreen
+            referrerPolicy="no-referrer"
+            style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', border: 0 }}
+          />
+        ) : (
+          <video
+            src={finalSrc}
+            poster={rawPoster}
+            controls={controls}
+            autoPlay={autoplay}
+            loop={loop}
+            muted={muted}
+            playsInline
+            style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover' }}
+          >
+            <track kind="captions" />
+          </video>
+        )}
+      </div>
+    );
+  }
+
+  const staticHeight = videoWrapperStyle.height ? `${videoWrapperStyle.height}` : '100%';
+
+  if (isEmbed) {
+    return (
+      <iframe
+        src={finalSrc}
+        title={title || 'Embedded video'}
+        width="100%"
+        height={staticHeight}
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+        allowFullScreen
+        referrerPolicy="no-referrer"
+        style={{ display: 'block', width: '100%', height: staticHeight, border: 0 }}
+      />
+    );
+  }
+
+  return (
+    <video
+      src={finalSrc}
+      poster={rawPoster}
+      controls={controls}
+      autoPlay={autoplay}
+      loop={loop}
+      muted={muted}
+      playsInline
+      style={{ display: 'block', width: '100%', height: staticHeight, objectFit: 'cover' }}
+    >
+      <track kind="captions" />
+    </video>
+  );
 };
 
 const FeatureVideo: React.FC<FeatureVideoProps> = (props) => {
@@ -108,70 +279,19 @@ const FeatureVideo: React.FC<FeatureVideoProps> = (props) => {
   const isTailwindBg = typeof background === 'string' && background.startsWith('bg-');
   const wrapperStyle: React.CSSProperties = isTailwindBg ? { zIndex } : { background, zIndex };
 
-  // baseline style from presets (applies maxWidth unless custom width provided)
-  const getPresetStyle = (): React.CSSProperties => {
-    switch (mediaPreset) {
-      case 'small':
-        return { maxWidth: '320px' };
-      case 'medium':
-        return { maxWidth: '520px' };
-      case 'large':
-        return { maxWidth: '820px' };
-      case 'contain':
-        return { maxWidth: '100%', height: 'auto' };
-      case 'cover':
-        return { width: '100%', height: '320px', objectFit: 'cover' } as React.CSSProperties;
-      case 'custom':
-        return {};
-      default:
-        return {};
-    }
-  };
-
-  const presetStyle = getPresetStyle();
+  const presetStyle = getPresetStyle(mediaPreset);
 
   // aspect ratio handling
-  const paddingTopPercent = parseAspectRatio(aspectRatio); // e.g. 56.25 for 16/9
+  const paddingTopPercent = parseAspectRatio(aspectRatio);
 
   // title handling
-  const isTailwindTextClass = typeof titleSize === 'string' && titleSize.trim().startsWith('text-');
-  const isTailwindColorClass = typeof titleColor === 'string' && titleColor.trim().startsWith('text-');
-  const titleInlineStyle: React.CSSProperties | undefined = (() => {
-    const s: React.CSSProperties = {};
-    if (!isTailwindTextClass && titleSize) s.fontSize = titleSize as any;
-    if (!isTailwindColorClass && titleColor) s.color = titleColor as any;
-    return Object.keys(s).length ? s : undefined;
-  })();
+  const { titleInlineStyle, titleClassName } = getTitleStyles(titleSize, titleColor);
 
-  const titleClassName = [
-    'font-extrabold',
-    'leading-tight',
-    'mb-6',
-    'text-slate-900',
-    isTailwindTextClass ? titleSize : 'text-[1.5rem] sm:text-[2rem] md:text-[2.25rem] lg:text-[36px]',
-    isTailwindColorClass ? titleColor : '',
-  ]
-    .filter(Boolean)
-    .join(' ');
-
-  // resolve video src/poster when video prop is string or object
-  const rawVideoSrc =
-    typeof video === 'string' ? video : typeof video === 'object' ? (video?.src as string | undefined) : undefined;
-  const rawPoster = typeof video === 'object' ? video?.poster : undefined;
-
-  // if video prop contains an iframe string, extract src
-  const videoSrcFromIframeString = rawVideoSrc && rawVideoSrc.trim().startsWith('<iframe')
-    ? extractSrcFromIframeString(rawVideoSrc)
-    : undefined;
-
-  const finalSrc = videoSrcFromIframeString || rawVideoSrc;
-  const isEmbed = looksLikeEmbed(rawVideoSrc) || !!videoSrcFromIframeString;
+  // resolve video src/poster
+  const { rawPoster, finalSrc, isEmbed } = resolveVideoData(video);
 
   // border handling
-  const isTailwindBorderClass = typeof borderColor === 'string' && borderColor.trim().startsWith('border-');
-  const borderInlineStyle: React.CSSProperties | undefined =
-    !isTailwindBorderClass && borderColor ? { borderColor: borderColor as any, borderStyle: 'solid' } : undefined;
-  const borderClassPart = isTailwindBorderClass ? borderColor : '';
+  const { borderClassPart, additionalWrapperStyle } = getBorderStyles(borderColor, showBorder, borderWidth);
 
   // compute wrapper style that will hold iframe or video
   const videoWrapperBase: React.CSSProperties = {
@@ -187,8 +307,6 @@ const FeatureVideo: React.FC<FeatureVideoProps> = (props) => {
     if (customMediaHeight) {
       videoWrapperBase.height = customMediaHeight;
     }
-  } else {
-    // when no custom width, use preset maxWidth (already included). If preset included height (cover), keep it.
   }
 
   // if aspectRatio provided and height not explicitly set, use padding-top trick and position children absolute
@@ -196,18 +314,12 @@ const FeatureVideo: React.FC<FeatureVideoProps> = (props) => {
 
   // assemble wrapper style including border width and inline border color if required
   const videoWrapperStyle: React.CSSProperties = {
-    ...(videoWrapperBase || {}),
-    ...(showBorder ? { borderWidth: `${borderWidth}px` } : {}),
-    ...(borderInlineStyle || {}),
+    ...videoWrapperBase,
+    ...additionalWrapperStyle,
   };
 
   // container classes/styles
-  const containerClass =
-    layout === 'grid' ? `grid ${className}` : `flex flex-col ${className} ${flexDirection === 'row' ? 'md:flex-row' : 'md:flex-col'} items-center justify-center md:justify-start`;
-
-  const containerStyle: React.CSSProperties = layout === 'grid' ? { gap: `${gap}px`, gridTemplateColumns: 'repeat(1, minmax(0, 1fr))' } : { gap: `${gap}px` };
-
-  const mdBehavior = layout === 'grid' ? 'md:grid-cols-2' : flexDirection === 'row' ? 'md:flex-row' : 'md:flex-col';
+  const { containerClass, containerStyle, mdBehavior } = getContainerLayout(layout, flexDirection, className, gap);
 
   const content = (
     <div className="w-full md:max-w-xl text-center md:text-left">
@@ -235,70 +347,27 @@ const FeatureVideo: React.FC<FeatureVideoProps> = (props) => {
   const mediaEl = (
     <div className="flex justify-center items-center w-full">
       <div className={`${borderRadius} overflow-hidden ${borderClassPart} w-full`} style={videoWrapperStyle}>
-        {finalSrc ? (
-          useAspectRatio ? (
-            // Aspect-ratio container
-            <div style={{ position: 'relative', width: '100%', paddingTop: `${paddingTopPercent}%` }}>
-              {isEmbed ? (
-                <iframe
-                  src={finalSrc}
-                  title={title || 'Embedded video'}
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
-                  allowFullScreen
-                  referrerPolicy="no-referrer"
-                  style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', border: 0 }}
-                />
-              ) : (
-                <video
-                  src={finalSrc}
-                  poster={rawPoster}
-                  controls={controls}
-                  autoPlay={autoplay}
-                  loop={loop}
-                  muted={muted}
-                  playsInline
-                  style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover' }}
-                />
-              )}
-            </div>
-          ) : (
-            // Fixed width/height container (no padding trick)
-            isEmbed ? (
-              <iframe
-                src={finalSrc}
-                title={title || 'Embedded video'}
-                width="100%"
-                height={videoWrapperStyle.height ? `${videoWrapperStyle.height}` : '100%'}
-                frameBorder={0}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
-                allowFullScreen
-                referrerPolicy="no-referrer"
-                style={{ display: 'block', width: '100%', height: videoWrapperStyle.height ? `${videoWrapperStyle.height}` : '100%', border: 0 }}
-              />
-            ) : (
-              <video
-                src={finalSrc}
-                poster={rawPoster}
-                controls={controls}
-                autoPlay={autoplay}
-                loop={loop}
-                muted={muted}
-                playsInline
-                style={{ display: 'block', width: '100%', height: videoWrapperStyle.height ? `${videoWrapperStyle.height}` : '100%', objectFit: 'cover' }}
-              />
-            )
-          )
-        ) : (
-          <div className="w-full h-56 bg-slate-100 flex items-center justify-center">No video selected</div>
-        )}
+        {renderMediaContent({
+          finalSrc,
+          useAspectRatio,
+          paddingTopPercent,
+          isEmbed,
+          title,
+          rawPoster,
+          controls,
+          autoplay,
+          loop,
+          muted,
+          videoWrapperStyle,
+        })}
       </div>
     </div>
   );
 
   return (
-    <section className={`${position} ${padding} ${className}`} style={isTailwindBg ? wrapperStyle : { background, zIndex }} role="region" aria-label="Feature video" data-video-position={videoPosition}>
+    <section className={`${position} ${padding} ${className}`} style={isTailwindBg ? wrapperStyle : { background, zIndex }} aria-label="Feature video" data-video-position={videoPosition}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className={`${containerClass} ${mdBehavior} items-center w-full`} style={containerStyle as React.CSSProperties}>
+        <div className={`${containerClass} ${mdBehavior} items-center w-full`} style={containerStyle}>
           {videoPosition === 'left' ? (
             <>
               <div className="w-full md:w-auto">{mediaEl}</div>

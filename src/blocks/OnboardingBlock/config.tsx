@@ -2,6 +2,7 @@
 'use client';
 import type { ComponentConfig } from '@wecre8websites/strapi-page-builder-react';
 import OnboardingBlock, { OnboardingBlockProps } from './component.client';
+import { buildImageUrl } from '@/lib/defaults';
 
 export const OnboardingBlockConfig: Omit<
   ComponentConfig<OnboardingBlockProps, OnboardingBlockProps>,
@@ -150,7 +151,7 @@ export const OnboardingBlockConfig: Omit<
           {
             number: 1,
             title: 'Kickoff and Connect Phones',
-            icon: `${process.env.STRAPI_API_FOR_IMAGES}/uploads/placeholder.png`,
+            icon: buildImageUrl('placeholder.png'),
             iconAlt: 'Icon',
             bulletPoints: ['Action item 1', 'Action item 2'],
             time: '2.5 hours',

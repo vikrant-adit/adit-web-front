@@ -1,6 +1,7 @@
 import { JSX, useState } from "react";
 import "../../styles/Features.css";
 import Image from "next/image";
+import { buildImageUrl } from "@/lib/defaults";
 
 interface Feature {
   title: string;
@@ -58,7 +59,7 @@ export default function Features(): JSX.Element {
         <p>{features[activeIndex].desc}</p>
         <button className="btn-primary read-more-btn">Read More</button>
       </div>
-          <Image src={`${process.env.STRAPI_API_FOR_IMAGES}/uploads/centralize_communication_heroimg_152e9d1abd.png`} alt="Adit Features" loading="lazy" width={500} height={400} />
+          <Image src={buildImageUrl("centralize_communication_heroimg_152e9d1abd.png")} alt="Adit Features" loading="lazy" width={500} height={400} />
         </div>
       </div>
 

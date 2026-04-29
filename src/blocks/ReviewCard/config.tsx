@@ -56,7 +56,7 @@ export const ReviewCardConfig: Omit<
 
   render: (data) => {
     // ensure unique key per instance to avoid shared image cache
-    const uniqueKey = useMemo(() => Math.random().toString(36).slice(2), []);
+    const uniqueKey = useMemo(() => crypto.randomUUID(), []);
 
     const normalized: any = { ...data };
 

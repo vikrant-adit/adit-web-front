@@ -71,8 +71,8 @@ const [authorDetails, setAuthorDetails] = useState<Author | null>(null);
       const text = el.textContent || `Heading ${index + 1}`;
       const headingSlug = text
         .toLowerCase()
-        .replace(/[^\w]+/g, "-")
-        .replace(/^-+|-+$/g, "");
+        .replaceAll(/[^\w]+/g, "-")
+        .replaceAll(/^-+|-+$/g, "");
       el.id = headingSlug;
       return { id: headingSlug, text };
     });

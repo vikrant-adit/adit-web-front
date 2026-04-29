@@ -2,11 +2,11 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import "../../styles/Features.css";
-import { useRouter } from "next/navigation";
 import { useState, useEffect, useCallback } from "react";
 import config from "@/lib/config";
 import Image from "next/image";
-import { getStrapiApiUrl, getEnvVar } from "@/lib/defaults";
+import { buildImageUrl, getStrapiApiUrl, getEnvVar } from "@/lib/defaults";
+import Link from "next/link";
 interface Feature {
   id: string;
   name: string;
@@ -22,7 +22,6 @@ interface Feature {
 }
 
 const CompleteSuiteSection = () => {
-  const router = useRouter();
   const apiUrl = config.localApi.baseUrl;
 
   const [suiteFeatures, setSuiteFeatures] = useState<Feature[]>([]);
@@ -36,25 +35,36 @@ const CompleteSuiteSection = () => {
       const endpoints = "complete-suite-home-pages";
       let data = null;
 
-      // normalize base URL
-      const base = String(apiUrl).replace(/\/$/, "");
+      const envBaseUrl = getStrapiApiUrl();
+      const defaultBaseUrl = apiUrl ? String(apiUrl).replace(/\/$/, "") : envBaseUrl;
+
+      if (!defaultBaseUrl ||
+          defaultBaseUrl.includes("undefined") ||
+          defaultBaseUrl.includes("ngrok-free.app") ||
+          !defaultBaseUrl.startsWith("http")) {
+        console.warn("CompleteSuiteSection: invalid API base URL", defaultBaseUrl);
+        setSuiteFeatures([]);
+        return;
+      }
+
       const buildUrl = (path: string) =>
-        `${base}/${String(path).replace(/^\//, "")}`;
+        `${defaultBaseUrl}/${String(path).replace(/^\//, "")}`;
 
-      // Strapi token for local API
-      const STRAPI_BASE_URL = getStrapiApiUrl();
-      const STRAPI_TOKEN = getEnvVar('STRAPI_API_AUTH_TOKEN');
-
+      const STRAPI_TOKEN = getEnvVar("STRAPI_API_AUTH_TOKEN");
       const finalUrl = buildUrl(endpoints);
 
-      const headers: Record<string, string> = {};
-      if (finalUrl.startsWith(STRAPI_BASE_URL) && STRAPI_TOKEN) {
+      const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+      };
+      if (finalUrl.startsWith(envBaseUrl) && STRAPI_TOKEN) {
         headers["Authorization"] = `Bearer ${STRAPI_TOKEN}`;
       }
 
       try {
         const res = await fetch(finalUrl, { headers });
-        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
         data = await res.json();
       } catch (err) {
         console.error("❌ Fetch error:", err);
@@ -63,25 +73,34 @@ const CompleteSuiteSection = () => {
       const items = data?.data || data?.features || data || [];
 
       if (Array.isArray(items) && items.length > 0) {
-        const mapped: Feature[] = items.map((it, idx: number) => ({
-          id: (it.id ?? it.slug ?? it.name ?? `feature-${idx}`).toString(),
-          name: it.name ?? it.title ?? it.short_title ?? `Feature ${idx + 1}`,
-          title: it.title ?? it.name ?? "",
-          description: it.description ?? it.excerpt ?? "",
-          list: Array.isArray(it.list)
-            ? it.list
-            : it.bullets ?? it.features ?? [],
-          // image_url:apiUrl+it.image_url
-          image_url: it.image_url
-            ? `${process.env.STRAPI_API_FOR_IMAGES}${it.image_url}`
-            : "",
-          route:
-            it.route ?? it.url ?? (it.slug ? `/feature/${it.slug}` : "/demo"),
-            order: it.order ?? idx
-        }));
-  const sortedMappedFeatures = mapped.sort((a, b) => a.order - b.order);
+        const mapped: Feature[] = items.map((it, idx: number) => {
+          let imageUrl = "";
+          if (it.image_url) {
+            if (/^https?:\/\//i.test(it.image_url)) {
+              imageUrl = it.image_url;
+            } else if (it.image_url.startsWith("/")) {
+              imageUrl = buildImageUrl(it.image_url.replace(/^\/uploads\//, ""));
+            } else {
+              imageUrl = buildImageUrl(it.image_url);
+            }
+          }
 
-        setSuiteFeatures(sortedMappedFeatures);
+          return {
+            id: (it.id ?? it.slug ?? it.name ?? `feature-${idx}`).toString(),
+            name: it.name ?? it.title ?? it.short_title ?? `Feature ${idx + 1}`,
+            title: it.title ?? it.name ?? "",
+            description: it.description ?? it.excerpt ?? "",
+            list: Array.isArray(it.list)
+              ? it.list
+              : it.bullets ?? it.features ?? [],
+            image_url: imageUrl,
+            route:
+              it.route ?? it.url ?? (it.slug ? `/feature/${it.slug}` : "/demo"),
+            order: it.order ?? idx
+          };
+        });
+        mapped.sort((a, b) => a.order - b.order);
+        setSuiteFeatures(mapped);
       } else {
         setSuiteFeatures([]); // no features if API returns empty
       }
@@ -143,13 +162,13 @@ const CompleteSuiteSection = () => {
                       {feature.list.length > 0 && (
                         <div className="grid grid-cols-3 gap-4 mb-6">
                           {feature.list.map((item, index) => (
-                            <div
-                              key={index}
-                              className="border-2 border-black-500 rounded-lg px-6 py-4 text-center text-slate-900 font-semibold bg-white hover:bg-teal-50 transition-colors cursor-pointer"
-                              onClick={() => router.push(item.route)} // Optional navigation
+                            <Link
+                              key={item.route}
+                              href={item.route}
+                              className="border-2 border-black-500 rounded-lg px-6 py-4 text-center text-slate-900 font-semibold bg-white hover:bg-teal-50 transition-colors cursor-pointer block"
                             >
                               {item.name}
-                            </div>
+                            </Link>
                           ))}
                         </div>
                       )}
@@ -157,9 +176,9 @@ const CompleteSuiteSection = () => {
                       <Button
                         variant="link"
                         className="text-orange-500 font-semibold p-0 btn-primary"
-                        onClick={() => router.push(feature.route ?? "/")}
+                        asChild
                       >
-                        Read More →
+                        <Link href={feature.route ?? "/"}>Read More →</Link>
                       </Button>
                     </div>
 

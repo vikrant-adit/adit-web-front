@@ -24,7 +24,7 @@ export function FeatureStepRow({
   title,
   cards,
   showArrows,
-}: FeatureStepRowProps) {
+}: Readonly<FeatureStepRowProps>) {
   const scrollRef = useRef<HTMLDivElement | null>(null);
 
   const scrollByCards = (dir: "left" | "right") => {
@@ -83,11 +83,11 @@ export function FeatureStepRow({
           className="mt-6 flex gap-5 overflow-x-auto pb-2 scrollbar-hide md:snap-x md:snap-mandatory"
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
-          {cards.map((card,index) => {
+          {cards.map((card) => {
             const imageUrl = resolveImageUrl(card.image);
             return (
             <div
-              key={index}
+              key={card.alt}
               className="flex w-[260px] flex-shrink-0 snap-start flex-col md:w-[300px]"
             >
               <div className="relative overflow-hidden rounded-[22px] bg-white/5">

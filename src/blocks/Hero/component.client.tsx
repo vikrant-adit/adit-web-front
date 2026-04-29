@@ -2,7 +2,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import '../../styles/Hero.css';
 import { useEditorGlow } from '@/hooks/useEditorGlow';
-// import Link from 'next/link';
 
 export interface HeroTypedProps {
   heading: string;
@@ -33,7 +32,7 @@ const HeroTyped: React.FC<HeroTypedProps> = ({
 
   const [lineIndex, setLineIndex] = useState(0);
   const [typed, setTyped] = useState('');
-  const timers = useRef<number[]>([]);
+  const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
 
   useEffect(() => {
     timers.current.forEach(clearTimeout);
@@ -53,19 +52,20 @@ const HeroTyped: React.FC<HeroTypedProps> = ({
 
       if (char < text.length) {
         timers.current.push(
-          window.setTimeout(type, typingSpeed)
+          globalThis.setTimeout(type, typingSpeed)
         );
       } else {
+        const handleNextLine = () => {
+          setTyped('');
+          setLineIndex((lineIndex + 1) % lines.length);
+        };
         timers.current.push(
-          window.setTimeout(() => {
-            setTyped('');
-            setLineIndex((i) => (i + 1) % lines.length);
-          }, delayAfterTyping)
+          globalThis.setTimeout(handleNextLine, delayAfterTyping)
         );
       }
     };
 
-    timers.current.push(window.setTimeout(type, 150));
+    timers.current.push(globalThis.setTimeout(type, 150));
 
     return () => {
       timers.current.forEach(clearTimeout);
@@ -84,28 +84,6 @@ const HeroTyped: React.FC<HeroTypedProps> = ({
           </span>
         </h2>
 
-        {/* <p>{subtitle}</p> */}
-
-        {/* <div className="video-wrapper">
-          {videoSrc ? (
-            <iframe
-              src={videoSrc}
-              title="Hero Video"
-              allow="autoplay; fullscreen"
-              allowFullScreen
-            />
-          ) : null}
-        </div> */}
-
-        {/* <div className="mt-6">
-          <Link
-            href={buttonUrl}
-            className="book-btn"
-            onClick={(e) => editable && e.preventDefault()}
-          >
-            {buttonText}
-          </Link>
-        </div> */}
       </section>
     </div>
   );

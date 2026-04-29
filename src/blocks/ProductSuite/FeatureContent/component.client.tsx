@@ -1,21 +1,20 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import React from 'react';
 import DOMPurify from 'dompurify';
+import Image from 'next/image';
+import { buildImageUrl } from '@/lib/defaults';
 
 export type FeatureSplitProps = {
   title?: string;
-
-  // dynamic styles
   titleSize?: string;
   titleColor?: string;
-  titleAlign?: 'left' | 'center' | 'right'; // ✅ NEW
+  titleAlign?: 'left' | 'center' | 'right';
 
   description?: string;
   descriptionSize?: string;
   descriptionColor?: string;
-  descriptionAlign?: 'left' | 'center' | 'right'; // ✅ NEW
+  descriptionAlign?: 'left' | 'center' | 'right';
 
   buttonText?: string;
   buttonUrl?: string;
@@ -23,71 +22,46 @@ export type FeatureSplitProps = {
   image?: { src?: string; alt?: string };
   imagePosition?: 'left' | 'right';
 
-  // layout
   layout?: 'grid' | 'flex';
   flexDirection?: 'row' | 'column';
   gap?: number;
+
   imagePreset?: 'small' | 'medium' | 'large' | 'contain' | 'cover' | 'custom';
   customWidth?: string;
+
   padding?: string;
   className?: string;
 
-  background?: string;
+  backgroundClass?: string;
+  backgroundStyle?: string;
+
   position?: 'relative' | 'absolute' | 'fixed';
   zIndex?: number;
 };
 
 const DEFAULT_BG =
-  'bg-[radial-gradient(109.01%_109.01%_at_46.76%_154.25%,_#25A8E0_0%,_rgba(255,255,255,0)_100%)]';
+  'transparent';
 
-function isTailwindClass(v?: string) {
-  if (!v) return false;
-  return (
-    v.startsWith('bg-') ||
-    v.startsWith('text-') ||
-    v.startsWith('from-') ||
-    v.startsWith('to-') ||
-    v.startsWith('via-') ||
-    v.includes('gradient')
-  );
-}
+// ----------------------
+// Helpers
+// ----------------------
 
-function getTextStyle(value?: string) {
-  if (!value) return { className: '', style: undefined as React.CSSProperties | undefined };
+const getAlignClass = (align: 'left' | 'center' | 'right' = 'left') => {
+  if (align === 'center') return 'text-center';
+  if (align === 'right') return 'text-right';
+  return 'text-left';
+};
 
-  const trimmed = value.trim();
+const getButtonAlignment = (align: 'left' | 'center' | 'right' = 'left') => {
+  if (align === 'center') return 'justify-center';
+  if (align === 'right') return 'justify-end';
+  return 'justify-start';
+};
 
-  if (trimmed.startsWith('text-') || trimmed.startsWith('leading-') || trimmed.startsWith('font-')) {
-    return { className: trimmed, style: undefined };
-  }
-
-  if (trimmed.includes('px') || trimmed.includes('rem') || trimmed.includes('em')) {
-    return { className: '', style: { fontSize: trimmed } };
-  }
-
-  if (trimmed.startsWith('#') || trimmed.startsWith('rgb')) {
-    return { className: '', style: { color: trimmed } };
-  }
-
-  return { className: trimmed, style: undefined };
-}
-
-// ✅ NEW helper
-function getAlignClass(align?: 'left' | 'center' | 'right') {
-  switch (align) {
-    case 'center':
-      return 'text-center';
-    case 'right':
-      return 'text-right';
-    default:
-      return 'text-left';
-  }
-}
-
-function getImageWidth(
-  preset?: string,
+const getImageStyles = (
+  preset: FeatureSplitProps['imagePreset'],
   customWidth?: string
-): { className?: string; style?: React.CSSProperties } {
+) => {
   switch (preset) {
     case 'small':
       return { className: 'max-w-[320px]' };
@@ -96,15 +70,34 @@ function getImageWidth(
     case 'large':
       return { className: 'max-w-[820px]' };
     case 'contain':
-      return { style: { objectFit: 'contain' } };
+      return { style: { objectFit: 'contain' as const } };
     case 'cover':
-      return { style: { objectFit: 'cover' } };
+      return { style: { objectFit: 'cover' as const } };
     case 'custom':
-      return customWidth ? { style: { maxWidth: customWidth } } : { className: 'max-w-[520px]' };
+      return customWidth
+        ? { style: { maxWidth: customWidth } }
+        : { className: 'max-w-[520px]' };
     default:
       return { className: 'max-w-[680px]' };
   }
-}
+};
+
+const getLayoutClass = (
+  layout: 'grid' | 'flex',
+  flexDirection: 'row' | 'column'
+) => {
+  if (layout === 'flex') {
+    return flexDirection === 'column'
+      ? 'flex flex-col'
+      : 'flex flex-col sm:flex-row';
+  }
+
+  return 'grid grid-cols-1 md:grid-cols-2 items-center';
+};
+
+// ----------------------
+// Component
+// ----------------------
 
 export default function FeatureSplit({
   title = "Keep your team aligned with Adit’s task management software",
@@ -127,48 +120,53 @@ export default function FeatureSplit({
   layout = 'grid',
   flexDirection = 'row',
   gap = 48,
+
   imagePreset = 'medium',
   customWidth = '520px',
+
   padding = 'py-12 sm:py-16 md:py-20 px-3 sm:px-6 md:px-8',
   className = '',
 
-  background = DEFAULT_BG,
+  backgroundClass = DEFAULT_BG,
+  backgroundStyle,
+
   position = 'relative',
   zIndex = 10,
-}: FeatureSplitProps) {
-  const safeDescription = DOMPurify.sanitize(description, { USE_PROFILES: { html: true } });
+}: Readonly<FeatureSplitProps>) {
+  const safeDescription = DOMPurify.sanitize(description, {
+    USE_PROFILES: { html: true },
+  });
 
-  const bgClass = isTailwindClass(background) ? background : '';
-  const bgStyle: React.CSSProperties | undefined = isTailwindClass(background)
-    ? undefined
-    : { background };
-
-  const titleSizeStyle = getTextStyle(titleSize);
-  const titleColorStyle = getTextStyle(titleColor);
-
-  const descSizeStyle = getTextStyle(descriptionSize);
-  const descColorStyle = getTextStyle(descriptionColor);
-
-  const resolvedImageSrc = image?.src
-    ? image.src.startsWith('http')
-      ? image.src
-      : `${process.env.STRAPI_API_FOR_IMAGES}${image.src}`
+  // ✅ FIXED: using correct helper
+  const resolvedImage = image?.src
+    ? buildImageUrl(image.src)
     : null;
+  console.log('resolvedImage', resolvedImage);
+  const imageStyles = getImageStyles(imagePreset, customWidth);
+
+  const layoutClass = getLayoutClass(layout, flexDirection);
+  const alignClass = getAlignClass(titleAlign);
+  const buttonAlign = getButtonAlignment(titleAlign);
+
+  const sectionStyle: React.CSSProperties = {
+    ...(backgroundStyle ? { background: backgroundStyle } : {}),
+    ...(zIndex ? { zIndex } : {}),
+  };
+
+  // ----------------------
+  // Content
+  // ----------------------
 
   const Content = (
-    <div className={`w-full max-w-xl mx-auto ${getAlignClass(titleAlign)}`}>
+    <div className={`w-full max-w-xl mx-auto ${alignClass}`}>
       {title && (
         <h2
           className={[
             'font-extrabold leading-[1.05]',
-            getAlignClass(titleAlign),
-            titleSizeStyle.className,
-            'text-xl md:text-4xl',
-            titleColorStyle.className,
-          ]
-            .filter(Boolean)
-            .join(' ')}
-          style={{ ...(titleSizeStyle.style || {}), ...(titleColorStyle.style || {}) }}
+            alignClass,
+            titleSize,
+            titleColor,
+          ].join(' ')}
         >
           {title}
         </h2>
@@ -179,26 +177,15 @@ export default function FeatureSplit({
           className={[
             'mt-4 sm:mt-6 md:mt-8 leading-relaxed space-y-3 sm:space-y-4',
             getAlignClass(descriptionAlign),
-            descSizeStyle.className,
-            descColorStyle.className,
-          ]
-            .filter(Boolean)
-            .join(' ')}
-          style={{ ...(descSizeStyle.style || {}), ...(descColorStyle.style || {}) }}
+            descriptionSize,
+            descriptionColor,
+          ].join(' ')}
           dangerouslySetInnerHTML={{ __html: safeDescription }}
         />
       )}
 
       {buttonText && (
-        <div
-          className={`mt-6 sm:mt-8 md:mt-10 flex ${
-            titleAlign === 'center'
-              ? 'justify-center'
-              : titleAlign === 'right'
-              ? 'justify-end'
-              : 'justify-start'
-          }`}
-        >
+        <div className={`mt-6 sm:mt-8 md:mt-10 flex ${buttonAlign}`}>
           <a
             href={buttonUrl}
             className="inline-flex items-center justify-center rounded-full bg-orange-500 hover:bg-orange-600 text-white font-medium px-4 sm:px-6 md:px-7 py-2 sm:py-3 text-sm sm:text-base transition"
@@ -211,25 +198,30 @@ export default function FeatureSplit({
     </div>
   );
 
-  const imageWidthStyle = getImageWidth(imagePreset, customWidth);
+  // ----------------------
+  // Media
+  // ----------------------
 
   const Media = (
     <div className="flex justify-center w-full">
-      {resolvedImageSrc ? (
+      {resolvedImage ? (
         <div
-          className={`${imageWidthStyle.className || ''} overflow-hidden w-full sm:w-auto`}
-          style={imageWidthStyle.style}
+          className={`${imageStyles.className || ''} w-full sm:w-auto overflow-hidden`}
+          style={imageStyles.style}
         >
-          <img
-            src={resolvedImageSrc}
+          <Image
+            src={resolvedImage}
             alt={image?.alt ?? 'Feature image'}
+            width={800}
+            height={600}
             className="w-full h-auto object-contain"
+            unoptimized
           />
         </div>
       ) : (
         <div
-          className={`${imageWidthStyle.className || ''} h-[240px] sm:h-[280px] md:h-[320px] bg-white overflow-hidden flex items-center justify-center text-slate-400 w-full sm:w-auto`}
-          style={imageWidthStyle.style}
+          className={`${imageStyles.className || ''} h-[260px] bg-white flex items-center justify-center text-slate-400`}
+          style={imageStyles.style}
         >
           No image selected
         </div>
@@ -237,37 +229,33 @@ export default function FeatureSplit({
     </div>
   );
 
-  const layoutClass =
-    layout === 'flex'
-      ? `flex flex-col sm:flex-${flexDirection} ${
-          flexDirection === 'column' ? 'flex-col' : 'sm:flex-row'
-        }`
-      : 'grid grid-cols-1 md:grid-cols-2 items-center';
-
-  const sectionClass = position ? `${position}` : 'relative';
-  const sectionStyle: React.CSSProperties = {
-    ...(zIndex !== undefined && { zIndex }),
-  };
+  // ----------------------
+  // Render
+  // ----------------------
 
   return (
     <section
-      className={`${bgClass} ${padding} ${className} ${sectionClass}`}
-      style={{ ...bgStyle, ...sectionStyle }}
+      className={`${backgroundClass} ${padding} ${className} ${position}`}
+      style={sectionStyle}
     >
-      <div className="max-w-7xl mx-auto w-full px-0">
+      <div className="max-w-7xl mx-auto w-full">
         <div
-          className={`${layoutClass} items-center`}
-          style={{ gap: layout === 'flex' ? `clamp(1.5rem, 5vw, ${gap}px)` : undefined }}
+          className={layoutClass}
+          style={{ gap: `clamp(1.5rem, 5vw, ${gap}px)` }}
         >
-          <div className={imagePosition === 'left' ? 'md:order-last' : ''}>
-            {Content}
-          </div>
-          <div className={imagePosition === 'left' ? 'md:order-first' : ''}>
-            {Media}
-          </div>
+          {imagePosition === 'left' ? (
+            <>
+              {Media}
+              {Content}
+            </>
+          ) : (
+            <>
+              {Content}
+              {Media}
+            </>
+          )}
         </div>
       </div>
     </section>
   );
 }
-

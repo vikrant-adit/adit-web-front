@@ -42,6 +42,15 @@ const CaseStudyBlock: React.FC<CaseStudyBlockProps> = ({
 }) => {
   const { shouldGlow } = useEditorGlow(isGlobal);
 
+  const titleSegments = React.useMemo(() => {
+    const parts = highlightedName ? title.split(highlightedName) : [title];
+
+    return parts.map((part, index) => ({
+      text: part,
+      key: `${part}-${index}`,
+    }));
+  }, [title, highlightedName]);
+
   return (
     <section className={shouldGlow ? 'editor-global-glow' : "" + "bg-[#ffffff] py-8 sm:py-12 md:py-16 lg:py-20 px-3 sm:px-5 md:px-8 lg:px-10 font-[Inter]"}>
       <div className="flex flex-col md:flex-row items-center max-w-[95%] md:max-w-[90%] mx-auto gap-6 md:gap-8 lg:gap-10">
@@ -49,12 +58,9 @@ const CaseStudyBlock: React.FC<CaseStudyBlockProps> = ({
         <div className="flex-1 min-w-[280px] text-left w-full md:w-auto">
           {/* Dynamic Title */}
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[2.2rem] leading-snug mb-3 md:mb-4">
-            {(highlightedName
-              ? title.split(highlightedName)
-              : [title]
-            ).map((part, index, arr) => (
-              <React.Fragment key={index}>
-                {part}
+            {titleSegments.map((segment, index, arr) => (
+              <React.Fragment key={segment.key}>
+                {segment.text}
                 {highlightedName && index < arr.length - 1 && (
                   <span className="text-[#0a4a6d] font-extrabold">
                     {highlightedName}
@@ -86,9 +92,9 @@ const CaseStudyBlock: React.FC<CaseStudyBlockProps> = ({
           {/* Dynamic Stats Row */}
           <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 md:gap-5 mb-4 md:mb-6">
             {Array.isArray(stats) &&
-              stats.map((stat, i) => (
+              stats.map((stat) => (
                 <div
-                  key={i}
+                  key={stat.value}
                   className="flex-1 min-w-[140px] sm:min-w-[160px] md:min-w-[180px] bg-[#D8F2FF] border border-[#d6e9f5] rounded-lg md:rounded-xl px-3 sm:px-4 md:px-6 py-2 sm:py-3 text-center"
                 >
                   <h3 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#0a4a6d] border-b-2 border-[#316ac0b9] pb-1">

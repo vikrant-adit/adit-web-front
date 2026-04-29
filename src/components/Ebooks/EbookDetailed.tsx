@@ -81,7 +81,7 @@ export default function EbookDetail() {
 
         if (Array.isArray(data.ebook?.published_sections)) {
           const sortedSections = [...data.ebook.published_sections].sort(
-            (a, b) => a.position - b.position
+            (a, b) => a.position - b.position,
           );
           setSections(sortedSections);
         }
@@ -91,9 +91,7 @@ export default function EbookDetail() {
         }
       } catch (err) {
         console.error("Failed to fetch ebook:", err);
-        setError(
-          err instanceof Error ? err.message : "Failed to load ebook"
-        );
+        setError(err instanceof Error ? err.message : "Failed to load ebook");
       } finally {
         setLoading(false);
       }
@@ -135,25 +133,19 @@ export default function EbookDetail() {
         <div className="mx-auto space-y-10">
           {/* Sections */}
           {sections.map((section, index) => {
-            const isTabSection =
-              section.body.en.includes("ebkinsidetab-sec");
+            const isTabSection = section.body.en.includes("ebkinsidetab-sec");
 
             if (isTabSection) {
               const parser = new DOMParser();
-              const doc = parser.parseFromString(
-                section.body.en,
-                "text/html"
-              );
+              const doc = parser.parseFromString(section.body.en, "text/html");
 
               const tabMenuItems = Array.from(
-                doc.querySelectorAll(".ebktab-menu a")
+                doc.querySelectorAll(".ebktab-menu a"),
               );
-              const tabBoxes = Array.from(
-                doc.querySelectorAll(".ebktab-box")
-              );
+              const tabBoxes = Array.from(doc.querySelectorAll(".ebktab-box"));
 
               tabMenuItems.forEach((a) => {
-                const rel = a.getAttribute("data-rel") || "";
+                const rel = a.dataset.rel || "";
                 if (rel === activeTab) a.classList.add("active");
                 else a.classList.remove("active");
               });
@@ -164,33 +156,35 @@ export default function EbookDetail() {
               });
 
               return (
-                <div
-                  key={section.id}
-                  className="prose prose-lg max-w-none second-section"
-                  onClick={(e) => {
-                    const target = e.target as HTMLElement;
-                    const anchor = target.closest("a");
+<button
+  type="button"
+  key={section.id}
+  className="prose prose-lg max-w-none second-section text-left w-full bg-transparent border-0 p-0"
+  onClick={(e) => {
+    const target = e.target as HTMLElement;
+    const anchor = target.closest("a");
 
-                    if (anchor?.dataset.rel) {
-                      e.preventDefault();
-                      setActiveTab(anchor.dataset.rel);
-                    }
-                  }}
-                >
-                  <SafeHtml
-                    html={DOMPurify.sanitize(doc.body.innerHTML)}
-                    className="prose prose-lg max-w-none second-section"
-                  />
-                </div>
+    if (anchor?.dataset.rel) {
+      e.preventDefault();
+      setActiveTab(anchor.dataset.rel);
+    }
+  }}
+>
+  <SafeHtml
+    html={DOMPurify.sanitize(doc.body.innerHTML)}
+    className="prose prose-lg max-w-none second-section"
+  />
+</button>
               );
             }
 
-            const sectionClass =
-              index === 0
-                ? "first-section"
-                : index === 1
-                ? "second-section"
-                : "third-section";
+            let sectionClass = "third-section";
+
+            if (index === 0) {
+              sectionClass = "first-section";
+            } else if (index === 1) {
+              sectionClass = "second-section";
+            }
 
             return (
               <SafeHtml
@@ -205,9 +199,7 @@ export default function EbookDetail() {
           {similarEbooks.length > 0 && (
             <div className="mt-16 px-10">
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-3xl font-bold">
-                  Similar Content
-                </h2>
+                <h2 className="text-3xl font-bold">Similar Content</h2>
 
                 <Link
                   href="/dental-success-ebooks"
@@ -265,9 +257,7 @@ export default function EbookDetail() {
                     onClick={scrollLeft}
                     disabled={!canScrollLeft}
                     className={`bg-white shadow rounded-full p-2 ${
-                      !canScrollLeft
-                        ? "opacity-50 cursor-not-allowed"
-                        : ""
+                      !canScrollLeft ? "opacity-50 cursor-not-allowed" : ""
                     }`}
                   >
                     <ChevronLeft size={20} />
@@ -277,9 +267,7 @@ export default function EbookDetail() {
                     onClick={scrollRight}
                     disabled={!canScrollRight}
                     className={`bg-white shadow rounded-full p-2 ${
-                      !canScrollRight
-                        ? "opacity-50 cursor-not-allowed"
-                        : ""
+                      !canScrollRight ? "opacity-50 cursor-not-allowed" : ""
                     }`}
                   >
                     <ChevronRight size={20} />

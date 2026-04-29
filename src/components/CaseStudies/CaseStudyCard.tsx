@@ -38,17 +38,19 @@ category,
 
         {/* Stats */}
         <div className="grid grid-cols-3 gap-3 mb-4">
-          {stats.map((stat, i) => (
-            <div
-              key={i}
-              className="flex flex-col items-center bg-blue-50 rounded-xl p-3"
-            >
-              <span className="text-blue-900 font-bold text-xl">
-                {stat.value}
-              </span>
-              <p className="text-gray-600 text-xs text-center">{stat.label}</p>
-            </div>
-          ))}
+         {stats.map((stat) => (
+  <div
+    key={stat.label}
+    className="flex flex-col items-center bg-blue-50 rounded-xl p-3"
+  >
+    <span className="text-blue-900 font-bold text-xl">
+      {stat.value}
+    </span>
+    <p className="text-gray-600 text-xs text-center">
+      {stat.label}
+    </p>
+  </div>
+))}
         </div>
 
         {/* CTA */}

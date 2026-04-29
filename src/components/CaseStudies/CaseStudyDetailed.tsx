@@ -26,10 +26,13 @@ const addClassesToClassAttr = (
   targetClass: string,
   classesToAdd: string
 ): string => {
-  return html.replace(
-    new RegExp(`class="([^"]*\\b${targetClass}\\b[^"]*)"`, "gi"),
-    (_, existing) => `class="${existing} ${classesToAdd}"`
-  );
+return html.replaceAll(
+  new RegExp(
+  String.raw`class="([^"]*\b${targetClass}\b[^"]*)"`,
+  "gi"
+),
+  (_, existing) => `class="${existing} ${classesToAdd}"`
+);
 };
 
 /* ----------------------- Utility: Style CMS HTML ----------------------- */
@@ -62,15 +65,15 @@ const styleBodyContent = (html: string): string => {
     "max-w-7xl mx-auto grid md:grid-cols-3 gap-6 items-center text-center px-6"
   );
 
-  styled = styled.replace(
+  styled = styled.replaceAll(
     /(<div[^>]*class="[^"]*ournumber-box[^"]*"[^>]*>)([\s\S]*?)<\/div>/gi,
     (m, open, inner) => {
       const replaced = inner
-        .replace(
+        .replaceAll(
           /<strong([^>]*)>([\s\S]*?)<\/strong>/gi,
           `<strong class="text-4xl md:text-5xl font-bold block"$1>$2</strong>`
         )
-        .replace(
+        .replaceAll(
           /<p(?![^>]*class=)([^>]*)>([\s\S]*?)<\/p>/gi,
           `<p class="mt-2"$1>$2</p>`
         );
@@ -79,39 +82,39 @@ const styleBodyContent = (html: string): string => {
   );
 
   // Headings and Text
-  styled = styled.replace(
+  styled = styled.replaceAll(
     /<h1([^>]*)>([\s\S]*?)<\/h1>/gi,
     `<h1 class="text-4xl md:text-5xl leading-tight text-[#06374A] mb-4"$1>$2</h1>`
   );
-  styled = styled.replace(
+  styled = styled.replaceAll(
     /<h2([^>]*)>([\s\S]*?)<\/h2>/gi,
     `<h2 class="text-2xl md:text-3xl font-semibold text-[#06374A] mt-4 mb-3"$1>$2</h2>`
   );
-  styled = styled.replace(
+  styled = styled.replaceAll(
     /<p(?![^>]*class=)([^>]*)>([\s\S]*?)<\/p>/gi,
     `<p class="text-lg leading-relaxed text-gray-700 mb-4"$1>$2</p>`
   );
 
   // Images
-  styled = styled.replace(
+  styled = styled.replaceAll(
     /<img([^>]*)\/?>/gi,
     `<img class="w-full object-cover rounded-2xl shadow-lg my-6"$1 />`
   );
 
   // Buttons & Links
-  styled = styled.replace(
+  styled = styled.replaceAll(
     /<a([^>]*)class="([^"]*(site-button|download-case-study|download-case-study1|download-case-study-ppt1)[^"]*)"([^>]*)>([\s\S]*?)<\/a>/gi,
     `<a$1 class="$2 hover:bg-orange-600 text-white px-6 py-3 rounded-full font-semibold inline-block"$4>$5</a>`
   );
 
   // Blockquotes
-  styled = styled.replace(
+  styled = styled.replaceAll(
     /<blockquote([^>]*)>([\s\S]*?)<\/blockquote>/gi,
     `<blockquote class="pl-6 border-l-4 border-blue-100 text-lg italic text-gray-700"$1>$2</blockquote>`
   );
 
   // Strong tags (without class)
-  styled = styled.replace(
+  styled = styled.replaceAll(
     /<strong(?![^>]*class=)([^>]*)>([\s\S]*?)<\/strong>/gi,
     `<strong class="text-[#06374A] font-semibold"$1>$2</strong>`
   );

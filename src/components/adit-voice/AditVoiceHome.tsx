@@ -1,11 +1,9 @@
 'use client';
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { buildImageUrl } from "@/lib/defaults";
 
 const AditVoiceHomeComponent = () => {
-  const router = useRouter();
 
   return (
     <section className="bg-[radial-gradient(109.01%_109.01%_at_46.76%_154.25%,_#25A8E0_0%,_rgba(255,255,255,0)_100%)] py-16 mx-8 my-4 rounded-b-[40px]">

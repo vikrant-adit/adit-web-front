@@ -69,7 +69,7 @@ const CaseStudySlider: React.FC<CaseStudySliderProps> = ({
             console.log('Rendering item', i, item);
             return (
               <div
-                key={i}
+                key={item.description ?? `slide-${i}`}
                 className="min-w-[280px] sm:min-w-[300px] md:min-w-[320px] max-w-[280px] sm:max-w-[300px] md:max-w-[320px] snap-center bg-white rounded-lg sm:rounded-xl md:rounded-2xl shadow-lg px-4 sm:px-6 py-6 sm:py-8 text-center flex flex-col justify-between"
               >
                 {/* Image */}

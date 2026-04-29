@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import { ComponentConfig } from "@wecre8websites/strapi-page-builder-react";
 import CallIntelBLock, { CallIntelBLockProps } from "./component.client";
 

@@ -21,7 +21,11 @@ export type SelectableCardsProps = {
 function isTailwindClass(s?: string) {
   return typeof s === 'string' && /^bg-|^text-|^rounded-|^p-|^m-/.test(s);
 }
-
+const stripHtml = (value: string): string => {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(value, 'text/html');
+  return doc.body.textContent || '';
+};
 export default function SelectableCards({
   items = [],
   columns = 3,
@@ -34,7 +38,7 @@ export default function SelectableCards({
   selectedTextColor = '#fff',
   multiple = false,
   initialSelected = null,
-}: SelectableCardsProps) {
+}: Readonly<SelectableCardsProps>) {
   const safeItems = Array.isArray(items) ? items : [];
 
   const initial: number[] = useMemo(() => {
@@ -53,7 +57,7 @@ export default function SelectableCards({
       label: safeItems[i]?.label ?? '',
     }));
     try {
-      window.dispatchEvent(new CustomEvent('cards:selected', { detail: payload }));
+      globalThis.dispatchEvent(new CustomEvent('cards:selected', { detail: payload }));
     } catch {}
   };
 
@@ -134,53 +138,85 @@ export default function SelectableCards({
     userSelect: 'none',
   };
 
+  const twBgClass = isTailwindClass(background) ? background : '';
+  const twTextClass = isTailwindClass(textColor) ? textColor : '';
+  const twSelectedBg = isTailwindClass(selectedBg) ? selectedBg : '';
+  const twHoverBg = isTailwindClass(hoverBg) ? hoverBg : '';
+  const twSelectedText = isTailwindClass(selectedTextColor) ? selectedTextColor : '';
+
+  const getCssVars = (isSelected: boolean): React.CSSProperties => {
+    let cardBg: string | undefined = undefined;
+    if (!twBgClass) {
+      cardBg = isSelected ? selectedBg : background;
+    }
+
+    return {
+      ['--card-bg' as any]: cardBg,
+      ['--card-color' as any]: twTextClass ? undefined : textColor,
+      ['--card-hover' as any]: twHoverBg ? undefined : hoverBg,
+      ['--card-selected' as any]: twSelectedBg ? undefined : selectedBg,
+      ['--card-selected-color' as any]: twSelectedText ? undefined : selectedTextColor,
+    };
+  };
+
+  const getComposedClassName = (isSelected: boolean) => [
+    'card-item',
+    'group',
+    'focus:outline-none',
+    'focus:ring-2',
+    'focus:ring-offset-2',
+    twBgClass,
+    twTextClass,
+    isSelected && twSelectedBg ? twSelectedBg : '',
+    isSelected && twSelectedText ? twSelectedText : '',
+    isSelected ? 'is-selected' : '',
+  ]
+    .filter(Boolean)
+    .join(' ');
+
   return (
     <div className="selectable-cards-block" style={wrapperStyle}>
+      <style jsx>{`
+        .card-item {
+          background: var(--card-bg, ${background});
+          color: var(--card-color, ${textColor});
+          border-radius: ${typeof radius === 'string' && radius.startsWith('rounded-') ? 'inherit' : radius};
+        }
+        .card-item:hover {
+          background: var(--card-hover, ${hoverBg});
+        }
+        .card-item.is-selected {
+          background: var(--card-selected, ${selectedBg});
+          color: var(--card-selected-color, ${selectedTextColor});
+        }
+        .card-item:focus {
+          box-shadow: 0 8px 30px rgba(6, 38, 58, 0.08);
+        }
+        .card-item:hover .card-inner {
+          transform: translateY(-3px);
+        }
+      `}</style>
       {safeItems.map((it, idx) => {
         const isSelected = selectedIdxs.includes(idx);
-
-        const twBgClass = isTailwindClass(background) ? background : '';
-        const twTextClass = isTailwindClass(textColor) ? textColor : '';
-        const twSelectedBg = isTailwindClass(selectedBg) ? selectedBg : '';
-        const twHoverBg = isTailwindClass(hoverBg) ? hoverBg : '';
-        const twSelectedText = isTailwindClass(selectedTextColor) ? selectedTextColor : '';
-
+        const cssVars = getCssVars(isSelected);
+        const composedClassName = getComposedClassName(isSelected);
         const labelHtml = it?.label ?? '';
 
-        const cssVars: React.CSSProperties = {
-          ['--card-bg' as any]: twBgClass ? undefined : (isSelected ? selectedBg : background),
-          ['--card-color' as any]: twTextClass ? undefined : textColor,
-          ['--card-hover' as any]: twHoverBg ? undefined : hoverBg,
-          ['--card-selected' as any]: twSelectedBg ? undefined : selectedBg,
-          ['--card-selected-color' as any]: twSelectedText ? undefined : selectedTextColor,
-        };
-
-        const composedClassName = [
-          'card-item',
-          'group',
-          'focus:outline-none',
-          'focus:ring-2',
-          'focus:ring-offset-2',
-          twBgClass,
-          twTextClass,
-          isSelected && twSelectedBg ? twSelectedBg : '',
-          isSelected && twSelectedText ? twSelectedText : '',
-          isSelected ? 'is-selected' : '',
-        ]
-          .filter(Boolean)
-          .join(' ');
-
         return (
-          <button
-            key={it?.id ?? idx}
-            type="button"
-            onClick={(e) => handleToggle(idx, e)}
-            onKeyDown={(e) => onKey(e as any, idx)}
-            aria-pressed={isSelected}
-            className={composedClassName}
-            style={{ ...cardBaseStyle, ...cssVars }}
-            title={typeof it?.label === 'string' ? it.label.replace(/<[^>]*>/g, '') : undefined}
-          >
+         <button
+  key={it?.id ?? idx}
+  type="button"
+  onClick={(e) => handleToggle(idx, e)}
+  onKeyDown={(e) => onKey(e as any, idx)}
+  aria-pressed={isSelected}
+  className={composedClassName}
+  style={{ ...cardBaseStyle, ...cssVars }}
+  title={
+    typeof it?.label === 'string'
+      ? stripHtml(it.label)
+      : undefined
+  }
+>
             <div
               className="card-inner"
               style={{
@@ -191,31 +227,10 @@ export default function SelectableCards({
                 justifyContent: 'center',
                 textAlign: 'center',
                 padding: 0,
-                borderRadius: typeof radius === 'string' && radius.startsWith('rounded-') ? undefined : undefined,
                 transform: 'translateZ(0)',
               }}
               dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(labelHtml) }}
             />
-            <style jsx>{`
-              .card-item {
-                background: var(--card-bg, ${background});
-                color: var(--card-color, ${textColor});
-                border-radius: ${typeof radius === 'string' && radius.startsWith('rounded-') ? 'inherit' : radius};
-              }
-              .card-item:hover {
-                background: var(--card-hover, ${hoverBg});
-              }
-              .card-item.is-selected {
-                background: var(--card-selected, ${selectedBg});
-                color: var(--card-selected-color, ${selectedTextColor});
-              }
-              .card-item:focus {
-                box-shadow: 0 8px 30px rgba(6, 38, 58, 0.08);
-              }
-              .card-item:hover .card-inner {
-                transform: translateY(-3px);
-              }
-            `}</style>
           </button>
         );
       })}

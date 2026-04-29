@@ -1,6 +1,5 @@
 import { ComponentConfig } from "@wecre8websites/strapi-page-builder-react";
-import { SimilarBlogsBlockProps } from "./component.client";
-import SimilarBlogsBlock from "./component.client";
+import SimilarBlogsBlock, { SimilarBlogsBlockProps } from "./component.client";
 
 const config: ComponentConfig<SimilarBlogsBlockProps> = {
   label: "Similar Blogs",

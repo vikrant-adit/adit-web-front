@@ -1,6 +1,7 @@
 "use client";
 
 import { resolveImageUrl } from "@/lib/imageResolver";
+import { buildImageUrl } from "@/lib/defaults";
 import Image from "next/image";
 
 export type OnboardingPhase = {
@@ -43,7 +44,7 @@ export type OnboardingBlockProps = {
   accentColor?: string;
 };
 
-export default function OnboardingBlock(props: OnboardingBlockProps) {
+export default function OnboardingBlock(props: Readonly<OnboardingBlockProps>) {
   const heading = props.heading ?? "Our Onboarding Process";
 
   const defaultPhases: OnboardingPhase[] = [
@@ -55,7 +56,7 @@ export default function OnboardingBlock(props: OnboardingBlockProps) {
         {
           number: 1,
           title: "Step 1",
-          icon: `${process.env.STRAPI_API_FOR_IMAGES}/uploads/placeholder.png`,
+          icon: buildImageUrl('placeholder.png'),
           iconAlt: "Icon",
           bulletPoints: ["Action item 1", "Action item 2"],
           time: "2.5 hours",
@@ -149,7 +150,7 @@ export default function OnboardingBlock(props: OnboardingBlockProps) {
 
                       <ul className="space-y-2 text-sm">
                         {step.bulletPoints?.map((point, idx) => (
-                          <li key={idx} className="flex items-start gap-2">
+                          <li key={`${point}-${idx}`} className="flex items-start gap-2">
                             <span
                               style={{ color: props.accentColor || "#F97316" }}
                             >
@@ -224,7 +225,7 @@ export default function OnboardingBlock(props: OnboardingBlockProps) {
 
                     <ul className="space-y-2 text-sm">
                       {step.bulletPoints?.map((point, idx) => (
-  <li key={idx} className="flex items-start gap-2">
+  <li key={`${point}-${idx}`} className="flex items-start gap-2">
     <span style={{ color: props.accentColor || "#F97316" }}>
       •
     </span>

@@ -1,6 +1,5 @@
 import { ComponentConfig } from "@wecre8websites/strapi-page-builder-react";
-import BlogRichTextBlock from "./component.client"; // make sure it's imported
-import { BlogRichTextBlockProps } from "./component.client";
+import BlogRichTextBlock, { BlogRichTextBlockProps } from "./component.client";
 
 const BlockConfig: ComponentConfig<BlogRichTextBlockProps> = {
   label: "Blog Rich Text",

@@ -9,18 +9,18 @@ const RatingsSection = () => {
       <div className="hmratingstrip-line"></div>
       <div className="ratings-section">
         <img
-          src={buildImageUrl("software_advice_rating_e558d5a6a8.svg")}
+          src={buildImageUrl("uploads/software_advice_rating_e558d5a6a8.svg")}
           loading="lazy"
           alt="software-advice-rating"
         />
         <img
-          src={buildImageUrl("g2_rating_3e83a9ed91.svg")}
+          src={buildImageUrl("uploads/g2_rating_3e83a9ed91.svg")}
           loading="lazy"
           alt="g2-rating"
         />
 
         <img
-          src={buildImageUrl("capterra_rating_7de1721209.svg")}
+          src={buildImageUrl("uploads/capterra_rating_7de1721209.svg")}
           loading="lazy"
           alt="capterra-rating"
         />

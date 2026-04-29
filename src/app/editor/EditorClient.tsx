@@ -9,16 +9,16 @@ const apiUrlForImages = getStrapiImagesUrl();
 const authToken = getEnvVar('STRAPI_API_AUTH_TOKEN');
 
 const siteOrigin =
-  typeof window !== "undefined"
-    ? window.location.origin
-    : getStrapiImagesUrl();
+  globalThis.window === undefined
+    ? getStrapiImagesUrl()
+    : globalThis.location.origin;
 
-// const proxyBase = `${siteOrigin}/api/strapi-proxy`;
+
 
 const strapiConfig = {
   url: siteOrigin,
-  authToken: authToken as string,
-  imageUrl: apiUrlForImages as string,
+  authToken: authToken,
+  imageUrl: apiUrlForImages,
 };
 console.log("[EditorClient] using config", config);
 console.log("proxyBase used by editor:");

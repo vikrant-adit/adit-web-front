@@ -26,7 +26,7 @@ export default function ImageSliderBlock({
   backgroundTo = "to-teal-900",
   titleSize = "text-xl md:text-2xl",
   descriptionSize = "text-base md:text-lg",
-}: ImageSliderBlockProps) {
+}: Readonly<ImageSliderBlockProps>) {
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const getImageUrl = (media: any): string | undefined => {
@@ -129,18 +129,21 @@ export default function ImageSliderBlock({
 
         {/* Dots */}
         <div className="flex justify-center gap-2 mt-4 sm:mt-6">
-          {slides.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => setCurrentSlide(index)}
-              className={`h-2 rounded-full transition-all duration-300 ${
-                index === currentSlide
-                  ? "bg-cyan-400 w-8"
-                  : "bg-cyan-800 w-2 hover:bg-cyan-600"
-              }`}
-              aria-label={`Go to slide ${index + 1}`}
-            />
-          ))}
+          {slides.map((slide, index) => {
+            const key = slide.title || getImageUrl(slide.src) || `slide-dot-${index}`;
+            return (
+              <button
+                key={key}
+                onClick={() => setCurrentSlide(index)}
+                className={`h-2 rounded-full transition-all duration-300 ${
+                  index === currentSlide
+                    ? "bg-cyan-400 w-8"
+                    : "bg-cyan-800 w-2 hover:bg-cyan-600"
+                }`}
+                aria-label={`Go to slide ${index + 1}`}
+              />
+            );
+          })}
         </div>
       </div>
     </div>

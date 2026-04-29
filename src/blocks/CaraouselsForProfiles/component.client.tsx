@@ -1,5 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 import React from 'react';
+import { getStrapiImagesUrl, getStrapiApiUrl } from '@/lib/defaults';
+import Image from 'next/image';
 
 export type CarouselItem = {
   id?: string | number;
@@ -44,14 +47,11 @@ const resolveSrc = (input: any) => {
 
   if (!raw || typeof raw !== 'string') return '';
 
-  if (/^https?:\/\//i.test(raw) || /^\/\//.test(raw)) {
+  if (/^https?:\/\//i.test(raw) || raw.startsWith("//")) {
     return raw;
   }
 
-  const base =
-    (process.env.STRAPI_API_FOR_IMAGES ||
-      process.env.STRAPI_API ||
-      '').replace(/\/$/, '');
+  const base = getStrapiImagesUrl() || getStrapiApiUrl();
 
   if (!base) return raw;
 
@@ -61,7 +61,7 @@ const resolveSrc = (input: any) => {
 };
 
 
-export default function Carousel({ items = [] }: CarouselProps) {
+export default function Carousel({ items = [] }: Readonly<CarouselProps>) {
   const safeItems = Array.isArray(items) ? items : [];
 
   return (
@@ -78,11 +78,13 @@ const src = resolveSrc(it.image);
             >
               <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2">
                 {src ? (
-                  <img
-                    src={src}
-                    alt={alt || 'Image'}
-                    className="w-22 h-22 rounded-full object-cover border-4 border-white shadow-md bg-white"
-                  />
+                <Image
+  src={src}
+  alt={alt || "Image"}
+  width={88}
+  height={88}
+  className="w-22 h-22 rounded-full object-cover border-4 border-white shadow-md bg-white"
+/>
                 ) : (
                   <div className="w-20 h-20 rounded-full bg-slate-200 border-4 border-white shadow-md" />
                 )}

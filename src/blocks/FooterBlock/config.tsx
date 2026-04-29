@@ -3,6 +3,7 @@
 import React from "react";
 import { ComponentConfig } from "@wecre8websites/strapi-page-builder-react";
 import Footer, { FooterProps } from "./component.client";
+import { buildImageUrl } from "@/lib/defaults";
 // helper (put near top of your config file)
 function summaryLabel(item: any): string {
   if (!item) return "";
@@ -112,7 +113,7 @@ export const FooterConfig: Omit<ComponentConfig<FooterProps, FooterProps>, "type
   label: "Footer",
 
   defaultProps: {
-    logoUrl: `${process.env.STRAPI_API_FOR_IMAGES}/uploads/logo_9fe8b06174.svg`,
+    logoUrl: buildImageUrl('logo_9fe8b06174.svg'),
     tagline: "The All In One AI-Powered Platform",
     contact: {
       email: "info@adit.com",

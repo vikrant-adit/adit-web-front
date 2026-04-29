@@ -9,6 +9,7 @@ import { resolveGlobalRefs } from "@/lib/globalComponentResolver";
 import { FormMapProvider } from "@/context/FormMapContext";
 import SiteLayout from "@/components/layout/SiteLayout";
 import { getStrapiImagesUrl, getStrapiApiUrl, getEnvVar } from "../../lib/defaults";
+import crypto from "crypto";
 
 /* -------------------------------------------------
  * ENV
@@ -16,7 +17,6 @@ import { getStrapiImagesUrl, getStrapiApiUrl, getEnvVar } from "../../lib/defaul
 const STRAPI_BASE = getStrapiApiUrl(); // already includes /api/
 const STRAPI_TOKEN = getEnvVar('STRAPI_API_AUTH_TOKEN');
 
-type StrapiRaw = any;
 
 /* -------------------------------------------------
  * HELPERS
@@ -43,14 +43,12 @@ function ensureBlockIds(templateJson: any) {
       if (block?.props?.id) return block;
 
       return {
-        ...block,
-        props: {
-          ...block.props,
-          id: `${block.type}-${index}-${Math.random()
-            .toString(36)
-            .slice(2, 8)}`,
-        },
-      };
+  ...block,
+  props: {
+    ...block.props,
+    id: `${block.type}-${index}-${crypto.randomUUID()}`,
+  },
+};
     }),
   };
 }
@@ -64,21 +62,24 @@ async function getCMSContent(locale: string, slug: string | undefined) {
   const routePath = normalizePath(slug);
 
   // ✅ STRAPI_BASE already has /api/
-  const url = new URL(`${STRAPI_BASE}react-pages`);
-  // url.searchParams.set("populate", "*");
+  const url = new URL(`${STRAPI_BASE}/react-pages`);
 
   if (locale) url.searchParams.set("locale", locale);
 
   url.searchParams.set("filters[enabled][$eq]", "true");
   url.searchParams.set("filters[routePath][$eq]", routePath);
 url.searchParams.set("populate", "*");
-
+  // Guard against offline ngrok tunnels
+  // if (url.toString().includes('ngrok-free.app')) {
+    // console.warn('Skipping CMS content fetch due to offline ngrok tunnel:', url.toString());
+    // return { templateJson: null, content: null, raw: null };
+  // }
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
   };
 
   if (STRAPI_TOKEN) headers["Authorization"] = `Bearer ${STRAPI_TOKEN}`;
-
+  console.log("Fetching CMS content from:", url.toString(), "with headers:", headers);
   const res = await fetch(url.toString(), {
     method: "GET",
     headers,
@@ -90,9 +91,8 @@ url.searchParams.set("populate", "*");
     throw new Error(`Failed to fetch react-pages: ${res.status} - ${text}`);
   }
 
-  const json: StrapiRaw = await res.json();
+  const json: any = await res.json();
   const rawEntry = json?.data?.[0] ?? null;
-// console.log("Fetching CMS content from:", json?.data[0].layout);
   if (!rawEntry) {
     return { templateJson: null, content: null, raw: json };
   }
@@ -103,10 +103,7 @@ url.searchParams.set("populate", "*");
     content?.template?.json ??
     content?.template?.data?.attributes?.json ??
     null;
-console.log(
-  "getCMSContent runtime:",
-  typeof window === "undefined" ? "SERVER" : "BROWSER"
-);
+
   return { templateJson, content, raw: json, layout };
 }
 
@@ -114,9 +111,15 @@ console.log(
  * FETCH REDIRECT (redirects)
  * ------------------------------------------------- */
 async function getRedirectByOldSlug(oldSlug: string) {
-  const url = new URL(`${STRAPI_BASE}redirects`);
+  const url = new URL(`${STRAPI_BASE}/redirects`);
   url.searchParams.set("populate", "*");
   url.searchParams.set("filters[oldSlug][$eq]", normalizePath(oldSlug));
+
+  // Guard against offline ngrok tunnels
+  if (url.toString().includes('ngrok-free.app')) {
+    console.warn('Skipping redirect fetch due to offline ngrok tunnel:', url.toString());
+    return null;
+  }
 
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
@@ -129,6 +132,16 @@ async function getRedirectByOldSlug(oldSlug: string) {
     headers,
     next: { revalidate: 0 },
   });
+
+  if (!res.ok) {
+    return null;
+  }
+
+  const contentType = res.headers.get("content-type") || "";
+  if (!contentType.includes("application/json")) {
+    console.warn("Redirect fetch returned non-JSON response", url.toString(), contentType);
+    return null;
+  }
 
   const json: any = await res.json();
 
@@ -174,9 +187,9 @@ export async function generateMetadata({
  * ------------------------------------------------- */
 export default async function Page({
   params,
-}: {
+}: Readonly<{
   params: Promise<{ slug?: string; locale?: string }>;
-}) {
+}>) {
   const { slug, locale } = await params;
 
   const routePath = normalizePath(slug);
@@ -189,7 +202,7 @@ export default async function Page({
     console.log("❌ getCMSContent error:", err?.message || err);
   }
 
-  const { templateJson, content, raw, layout } = data ?? {};
+  const { templateJson, content, layout } = data ?? {};
 
   // ✅ If page not found or disabled, check redirects
 if (!templateJson || !content) {
@@ -204,8 +217,7 @@ if (!templateJson || !content) {
 
 return (
   <div style={{ padding: 20 }}>
-    <h1
-      className="text-[42px] text-center"
+    <h1 className="text-[42px] text-center"
       style={{ color: "#f97316", fontFamily: "system-ui" }}
     >
       Oops! That page can’t be found.
@@ -225,7 +237,6 @@ return (
 const formsData = content?.form
   ? [content.form]
   : [];
-  // console.log("[Page] formsData:", content);
   const formMap = Object.fromEntries(
     (Array.isArray(formsData) ? formsData : [])
       .map((f: any) => f?.attributes ?? f)
@@ -234,7 +245,7 @@ const formsData = content?.form
         f.slug,
         {
           id: f.slug,
-          ...(f.schema ?? {}),
+          ...f.schema,
         },
       ])
   );

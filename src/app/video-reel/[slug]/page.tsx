@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, JSX } from "react";
+import { useEffect, useState } from "react";
 import SiteLayout from "@/components/layout/SiteLayout";
 type VideoType = {
   video: {
@@ -13,7 +13,7 @@ type VideoType = {
 };
 export default function ShowVideo() {
   // Extract slug from URL pathname
-  const slug = window.location.pathname.split("/").pop();
+  const slug = globalThis.location.pathname.split("/").pop();
 
 const [videoData, setVideoData] = useState<VideoType | null>(null);  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -70,7 +70,7 @@ const [videoData, setVideoData] = useState<VideoType | null>(null);  const [load
     );
   }
 
-  if (!videoData || !videoData.video) {
+  if (!videoData?.video) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-50">
         <p className="text-gray-600">No video found</p>
@@ -101,11 +101,6 @@ const [videoData, setVideoData] = useState<VideoType | null>(null);  const [load
 
             <div className="p-6">
               <h1 className="text-3xl font-bold text-gray-900 mb-4">{title}</h1>
-              {/*             
-            {description && (
-              <SafeHtml html={description} className="text-gray-700 mb-6 prose max-w-none" />
-            )}
-             */}
               <div className="flex flex-wrap gap-6 text-sm text-gray-600 border-t pt-4">
                 {video.video_duration && (
                   <div className="flex items-center gap-2">
@@ -150,16 +145,6 @@ const [videoData, setVideoData] = useState<VideoType | null>(null);  const [load
                   </div>
                 )}
               </div>
-
-              {/* {thumbnailUrl && (
-              <div className="mt-6">
-                <img 
-                  src={thumbnailUrl} 
-                  alt={title}
-                  className="w-32 h-32 object-cover rounded-lg shadow-md"
-                />
-              </div>
-            )} */}
             </div>
           </div>
         </div>

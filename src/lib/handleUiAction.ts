@@ -9,7 +9,7 @@ export function handleUiAction(action?: UiAction) {
       break;
 
     case "redirect":
-      window.location.href = action.url;
+      globalThis.location.href = action.url;
       break;
 
     case "none":

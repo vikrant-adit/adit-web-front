@@ -5,6 +5,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useEditorGlow } from '@/hooks/useEditorGlow';
+import { getStrapiImagesUrl } from '@/lib/defaults';
 
 export type LogoCarouselItem = {
   id?: string | number;
@@ -30,7 +31,7 @@ export interface LogoCarouselProps {
 const resolveLogoSrc = (logo?: string): string => {
   if (!logo) return '';
   if (logo.startsWith('http://') || logo.startsWith('https://')) return logo;
-  return `${process.env.STRAPI_API_FOR_IMAGES || ''}${logo}`;
+  return `${getStrapiImagesUrl() || ''}${logo}`;
 };
 
 const LogoCarousel: React.FC<LogoCarouselProps> = ({
@@ -93,6 +94,26 @@ const LogoCarousel: React.FC<LogoCarouselProps> = ({
     };
   }, [autoScroll, scrollSpeed, isHovering, loopItems.length]);
 
+  useEffect(() => {
+    const container = scrollRef.current;
+    if (!container) return;
+
+    const onEnter = () => setIsHovering(true);
+    const onLeave = () => setIsHovering(false);
+
+    container.addEventListener('mouseenter', onEnter);
+    container.addEventListener('mouseleave', onLeave);
+    container.addEventListener('touchstart', onEnter, { passive: true });
+    container.addEventListener('touchend', onLeave, { passive: true });
+
+    return () => {
+      container.removeEventListener('mouseenter', onEnter);
+      container.removeEventListener('mouseleave', onLeave);
+      container.removeEventListener('touchstart', onEnter);
+      container.removeEventListener('touchend', onLeave);
+    };
+  }, []);
+
   if (!normalizedItems.length) return null;
 
   return (
@@ -120,10 +141,6 @@ const LogoCarousel: React.FC<LogoCarouselProps> = ({
             scrollBehavior: 'smooth',
             WebkitOverflowScrolling: 'touch',
           }}
-          onMouseEnter={() => setIsHovering(true)}
-          onMouseLeave={() => setIsHovering(false)}
-          onTouchStart={() => setIsHovering(true)}
-          onTouchEnd={() => setIsHovering(false)}
         >
           {loopItems.map((item, idx) => {
             const key = item.id ?? `${idx}-${item.logo}`;

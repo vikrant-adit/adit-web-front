@@ -47,7 +47,7 @@ const FaqBlock: React.FC<FaqBlockProps> = ({
       <div className={spacing}>
         {items?.map((item, index) => (
           <div
-            key={index}
+            key={item.question + index}
             className={`border rounded-lg shadow-sm overflow-hidden ${borderColor}`}
           >
             <button

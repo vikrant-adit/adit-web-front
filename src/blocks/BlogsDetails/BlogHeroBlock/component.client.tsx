@@ -13,7 +13,7 @@ export interface BlogHeroBlockProps {
 export default function BlogHeroBlock({
   title,
   image,
-}: BlogHeroBlockProps) {
+}: Readonly<BlogHeroBlockProps>) {
   return (
     <section className="py-12 text-center">
       {image?.src && (

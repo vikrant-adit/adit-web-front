@@ -48,7 +48,7 @@ export default function ScheduleDemo() {
   ];
 const handlePhoneChange = (value: string) => {
   // Remove all non-digit characters
-  const digits = value.replace(/\D/g, "");
+  const digits = value.replaceAll(/\D/g, "");
 
   // Limit to max 10 digits
   const limited = digits.slice(0, 10);
@@ -97,16 +97,16 @@ const submitScheduleDemo = async (payload: typeof form) => {
   return res.json();
 };
 
-const handleSubmit = async (e: React.FormEvent) => {
+const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
   e.preventDefault();
 
   if (!form.workEmail || !form.officePhone || !form.practiceName) return;
 
-  if (!validatePhone(form.officePhone)) {
+  if (validatePhone(form.officePhone)) {
+    setPhoneError("");
+  } else {
     setPhoneError("Phone number must be in format (XXX) XXX-XXXX");
     return;
-  } else {
-    setPhoneError("");
   }
 
   setSubmitting(true);
@@ -167,7 +167,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                   <div
                     key={s.label}
                     className={`flex flex-col text-center items-center ${
-                      idx % 3 !== 2 ? "sm:border-r sm:pr-6" : ""
+                      idx % 3 === 2 ? "" : "sm:border-r sm:pr-6"
                     }`}
                   >
                     <span className="text-3xl md:text-4xl font-extrabold text-orange-500">

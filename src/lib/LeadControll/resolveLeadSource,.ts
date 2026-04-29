@@ -14,15 +14,25 @@ export function resolveLeadSource(params: {
   }
 
   // 2) Referrer domain mapping
-  if (referrer) {
-    try {
-      const host = new URL(referrer).hostname.replace("www.", "").toLowerCase();
-      if (config?.domain_map?.[host]) return config.domain_map[host];
+if (referrer) {
+  try {
+    const host = new URL(referrer)
+      .hostname
+      .replace("www.", "")
+      .toLowerCase();
 
-      // optional: clutch special case
-      if (host.includes("clutch.co")) return "Online Referral";
-    } catch (e) {}
+    if (config?.domain_map?.[host]) {
+      return config.domain_map[host];
+    }
+
+    // optional: clutch special case
+    if (host.includes("clutch.co")) {
+      return "Online Referral";
+    }
+  } catch (e) {
+    console.warn("Invalid referrer URL:", referrer, e);
   }
+}
 
   // 3) Default
   return config?.default_source || "Website";

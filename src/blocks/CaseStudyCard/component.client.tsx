@@ -73,9 +73,9 @@ const CaseStudyCard: React.FC<CaseStudyCardProps> = ({
           {/* Stats */}
           {stats.length > 0 && (
             <div className="grid grid-cols-3 gap-3 mb-4">
-              {stats.map((stat, i) => (
+              {stats.map((stat) => (
                 <div
-                  key={i}
+                  key={`${stat.label}-${stat.value}`}
                   className="flex flex-col items-center bg-blue-50 rounded-xl p-3"
                 >
                   <span className="text-blue-900 font-bold text-xl">

@@ -3,6 +3,7 @@ import React from "react";
 import Link from "next/link";
 import { Mail, Clock, Phone } from "lucide-react";
 import Image from "next/image";
+import { buildImageUrl } from "@/lib/defaults";
 
 /**
  * Props definition for page builder (can come from Strapi template.json)
@@ -27,7 +28,7 @@ interface FooterProps {
 }
 
 const Footer: React.FC<FooterProps> = ({
-  logoUrl = `${process.env.STRAPI_API_FOR_IMAGES}/uploads/logo_9fe8b06174.svg`,
+  logoUrl = buildImageUrl('logo_9fe8b06174.svg'),
   tagline = "The All In One AI-Powered Platform",
   contact = {
     email: "info@adit.com",

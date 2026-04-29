@@ -5,7 +5,7 @@ import ReviewsWidget,{ReviewsWidgetProps} from './component.client';
 
 export type ReviewItem = {
   id?: string | number;
-  source?: 'google' | 'facebook' | string;
+  source?: string;
   name?: string;
   date?: string;
   rating?: number;

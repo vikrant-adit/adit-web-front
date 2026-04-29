@@ -46,10 +46,11 @@ const FormCheckbox: React.FC<FormCheckboxProps> = ({
 }) => {
   const { shouldGlow } = useEditorGlow(isGlobal);
 
-  const generatedId = React.useMemo(
-    () => id ?? `checkbox-${Math.random().toString(36).slice(2, 9)}`,
-    [id]
-  );
+const generatedId = React.useMemo(() => {
+  if (id) return id;
+
+  return `checkbox-${crypto.randomUUID()}`;
+}, [id]);
 
   const isTwWidth = width?.startsWith?.('w-');
   const isTwText = textColor?.startsWith?.('text-');

@@ -2,6 +2,7 @@
 'use client';
 import type { ComponentConfig } from '@wecre8websites/strapi-page-builder-react';
 import MorningHuddleBlock, { MorningHuddleBlockProps } from './component.client';
+import { buildImageUrl } from '@/lib/defaults';
 
 export const MorningHuddleBlockConfig: Omit<
   ComponentConfig<MorningHuddleBlockProps, MorningHuddleBlockProps>,
@@ -59,7 +60,7 @@ export const MorningHuddleBlockConfig: Omit<
     description:
       'Our dedicated onboarding experts will work at your pace to get your team and practice up to speed and fully integrated with Adit\'s all‑in‑one software.',
     imageSrc:
-      `${process.env.STRAPI_API_FOR_IMAGES}/uploads/practice_analytics_video_ezgif_com_video_to_gif_converter_cc85c26835.gif`,
+      buildImageUrl('practice_analytics_video_ezgif_com_video_to_gif_converter_cc85c26835.gif'),
     imageAlt: 'Practice analytics morning huddle dashboard',
     buttonText: 'Schedule a Demo',
     buttonUrl: '/schedule-a-demo',

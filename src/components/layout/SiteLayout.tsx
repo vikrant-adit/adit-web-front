@@ -5,10 +5,13 @@ import Footer from "../../components/layout/Footer";
 export default async function SiteLayout({
   children,
   pageLayout,
-}: {
+}: Readonly<{
   children: React.ReactNode;
-  pageLayout?: { showHeader?: boolean; showFooter?: boolean };
-}) {
+  pageLayout?: {
+    showHeader?: boolean;
+    showFooter?: boolean;
+  };
+}>) {
   let global = null;
 
   try {
@@ -17,7 +20,6 @@ export default async function SiteLayout({
     console.error("Global API failed:", err);
   }
 
-  // 🚫 If API fails → block page (your requirement)
   if (!global) {
     return (
       <div style={{ padding: 40, textAlign: "center" }}>
